@@ -1,0 +1,3 @@
+component_depth: 3
+exclude:
+- /resources/js/test/spec/
