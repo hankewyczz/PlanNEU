@@ -1,30 +1,67 @@
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="resources/css/addCourses.css">
+<head>
+	<!-- Meta -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Plan NEU | Select courses</title>
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- Stylesheets -->
+	<!-- Bootstrap stylesheets -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<!-- Personal stylesheets -->
+	<link rel="stylesheet" href="resources/css/addCourses.css">
+	<link rel="stylesheet" href="resources/css/main.css">
+</head>
 
-<body onload="initInputs()">
-<div id="message-div"></div>
+
+<body>
+	<div id="message-div"></div>
+
+	<div id="main">
+		<div id="course-left-col">
+			<!-- Semester selector -->
+			<select id="semester-selector" name="semester-selector" class="custom-select">
+		        <option value="202130">Spring 2021</option>
+		        <option value="202110">Fall 2020</option>
+		        <option value="202040">Summer I 2020</option>
+		        <option value="202060">Summer II 2020</option>
+		        <option value="202050">Summer Full 2020</option>
+		  	</select>
+
+		  	<!-- The main input -->
+			<div id="course-left-col-main">
+			    <input type="text" placeholder="Enter subject and class ID" class="form-control"
+		    		onkeyup="validateInput(this.value, event)" id="user-course-input" />
+		    		
+			    <button class="btn btn-success submit-input-button" 
+			    	onclick="handleSingleCourse(document.getElementById('user-course-input').value)">&#x2192;</button>
+			</div>
+			<hr>	
+			<h3 style="text-align: center">Instructions</h3>
+			<ul>
+				<li>First, select a semester from the dropdown selector</li>
+				<li>To add a class, simply type its subject and course ID</li>
+				<ul>
+					<li>For example, if I wanted to add the course "CS 4550: Web Development", I would type "CS4550".</li>
+				</ul>
+				<li>Next, hit the "Enter" key or press the button</li>
+				<ul>
+					<li>If we can find the course, you'll get a 'Success!' message, and the course will show up in the 
+					"Courses Selected" section below</li>
+					<li>If the course has any corequisites, you'll see an option to add them</li>
+				</ul>
+				<li>Once you've added all the courses, simple press "Submit"!</li>
+			</ul>
 
 
-<div class="course-input-group" >
-	<div class="left-input-col">
-		<!-- TODO semester selection --> 
-		<input id="semester-selector" value="202130" />
-	    <div id="container"></div>
+			
+		</div>
+
+		<div id="course-right-col">
+			<h3>Courses Selected</h3>
+			<hr>
+
+		</div>
 	</div>
-	<button class="btn btn-success add-input-button" onclick="addInputField()">+</button>
-</div>
-
-<div id="added-courses">
-	<h3>Courses Selected</h3>
-	<hr>
-
-</div>
-
-
-
 </body>
 
 

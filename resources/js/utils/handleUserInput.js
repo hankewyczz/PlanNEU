@@ -1,4 +1,4 @@
-var COURSES_DIV = document.getElementById("added-courses");
+var COURSES_DIV = document.getElementById("course-right-col");
 
 
 /*
@@ -56,11 +56,14 @@ async function handleGetCourse(subject, courseId, semester) {
 
 
 /*
-
-	- @throws
+This is the user-level handling for a single course, from input to end
+	- input (String): user input representing a class
+	- @return (void)
 */
-async function handleSingleCourse(input, semester) {
+async function handleSingleCourse(input) {
 	try {
+		// Get the semester 
+		var semester = document.getElementById("semester-selector").value;
 		// Handle the input and getting the course
 		var parsedInput = await handleUserInput(input);
 		var subject = parsedInput[0];
@@ -81,9 +84,14 @@ async function handleSingleCourse(input, semester) {
 		courseEntry += "[X]</span><br></span>"
 	    COURSES_DIV.innerHTML += courseEntry;
 
+	    var messageStr = "Successfully added course! "
+
 	    if (coreqStr != null) {
-            handleMessage(coreqStr);
+            messageStr += coreqStr;
         }
+
+        // Send the message
+        handleMessage(messageStr);
 	}
     catch (err) {
         handleErr(err.message);
@@ -92,7 +100,14 @@ async function handleSingleCourse(input, semester) {
 
 
 
+/*
+Handle removing a course we added
+	- subject (String): the subject of the course
+	- courseId (String): the numerical ID of the course
+	- @return (void)
+*/
 function handleRemove(subject, courseId) {
+	// Remove the course internally
 	removeCourse(subject, courseId);
 	var elemToRemove = document.getElementById(subject + courseId);
 	COURSES_DIV.removeChild(elemToRemove);
