@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="resources/css/addCourses.css">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<body onload="initInputs()">
+<div id="message-div"></div>
+
+
+<div class="course-input-group" >
+	<div class="left-input-col">
+		<!-- TODO semester selection --> 
+		<input id="semester-selector" value="202130" />
+	    <div id="container"></div>
+	</div>
+	<button class="btn btn-success add-input-button" onclick="addInputField()">+</button>
+</div>
+
+<div id="added-courses">
+	<h3>Courses Selected</h3>
+	<hr>
+
+</div>
+
+
+
+</body>
+
+
+<script src="resources/js/page-js/addCourses.js"></script>
+<script src="resources/js/utils/userInputUtils.js"></script>
+<script src="resources/js/utils/handleUserInput.js"></script>

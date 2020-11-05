@@ -1,3 +1,31 @@
+beforeEach(function() {
+	USER_COURSES = {};
+})
+
+// Tests alreadyAdded, getCourse, addCourse, and removeCourse
+describe("Check CRD for stored courses", function() {
+	it("Not added yet", function() {
+		expect(function() { getCourse("CS", "3500"); }).toThrow();
+	});
+
+	it("Create, Read, Delete", function() {
+		addCourse("CS", "3500", {results: [1]});
+
+		expect(alreadyAdded("CS", "3500")).toBe(true);
+		expect(getCourse("CS", "3500")).toBe(1);
+
+		removeCourse("CS", "3500");
+		
+		expect(function() { getCourse("CS", "3500"); }).toThrow();
+		expect(alreadyAdded("CS", "3500")).toBe(false);
+	});
+
+	it("Empty get", function() {
+		expect(function() { getCourse("CS", "3500"); }).toThrow();
+	})
+})
+
+
 // Test parseInputCourse()
 describe("Parse input representing a single course", function() {
 
@@ -76,22 +104,6 @@ describe("Parse input representing a single course", function() {
 });
 
 
-// Tests alreadyAdded
-/*describe("Check if this course has already been added", function() {
-	it("Not added yet", function() {
-		var str = parseInputCourse("fina 2319 ");
-		var out = alreadyAdded(str.join(''));
-
-		expect(out).toBe(false);
-
-		// Go again
-		parseInputCourse("fina 2319 ");
-		var out2 = alreadyAdded(str.join(''));
-
-		expect(out2).toBe(true);
-	})
-})*/
-
 
 // Tests getQueryUrl
 describe("Check the construction of the query URL", function() {
@@ -103,14 +115,15 @@ describe("Check the construction of the query URL", function() {
 			"https://cors-anywhere.herokuapp.com/https://searchneu.com/search?&query=&termId=202130&minIndex=0&"
 			+ "maxIndex=1&apiVersion=2&filters={%22subject%22%3A[%22CS%22]%2C%22classIdRange%22%3A{"
 			+ "%22min%22%3A3500%2C%22max%22%3A3500}}"));
-	})
-})
+	});
+});
+
+
 
 // Tests getCourseFromApi
 describe("Fetching data from SearchNEU", function() {
 	it("Is API working (Spring, 2021)", async function() {
 		// Reset the gotten courses
-		USER_COURSES = {};
 		// Initial
 		expect(alreadyAdded("CS", "3500", "")).toBe(false);
 		// Actually get the class this time
@@ -125,9 +138,8 @@ describe("Fetching data from SearchNEU", function() {
 describe("Fetching data, parsing the name", function() {
 	it("Gets the course name", async function() {
 		// Reset the gotten courses
-		USER_COURSES = {};
 		var response = await getCourseFromApi("CS", "3500", "202130");
 		expect(alreadyAdded("CS", "3500", response)).toBe(true); // Spring 2021
 		expect(getCourseName("CS", "3500")).toBe("CS3500: Object-Oriented Design");
 	})
-})
+});

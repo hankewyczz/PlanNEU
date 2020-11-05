@@ -1,0 +1,52 @@
+#message-div {
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	height: 2em;
+	background-color: #f66;
+	visibility: hidden;
+	text-align: center;
+}
+
+.course-input-group {
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 10%;
+	background-color:#EDEDED;
+	border-radius: 5px;
+	padding: 30px 10px;
+	width: 45%;
+	display: flex;
+}
+
+#added-courses {
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 5%;
+	background-color:#EDEDED;
+	border-radius: 5px;
+	padding: 10px;
+	width: 30%;
+	text-align: center;
+}
+
+.course-input {
+	margin-bottom: 2%;
+}
+
+.add-input-button {
+	height: calc(2.25rem + 2px);
+	width: calc(2.25rem + 2px);
+	padding: 0px;
+	font-size: 1.5em;
+}
+
+.left-input-col {
+	width: 80%; 
+	margin-right: 5%;
+}
+
+.remove-course {
+	color: red;
+	cursor: pointer;
+}

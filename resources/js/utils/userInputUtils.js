@@ -1,22 +1,120 @@
 // Keeps track of all the classes the user has added
 var USER_COURSES = {};
 
-// API Constants
+
+//////////////////////////////////////
+////////    API Constants     ////////
+//////////////////////////////////////
+
 // TODO: Ask them to add the Access-Control-Allow-Origin response header
-// Otherwise, I can't GET right from this script, so we use a proxy
-// https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+// 		Otherwise, I can't GET right from this script, so we use a proxy
+// 		https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
 var PROXY_URL = "https://cors-anywhere.herokuapp.com/";
 var BASE_API_URL = PROXY_URL + "https://searchneu.com/search?"; 
 var API_VERSION = 2;
 
 
+//////////////////////////////////////////////////
+////////    Dealing with USER_COURSES     ////////
+//////////////////////////////////////////////////
+
+
+/*
+Removes a course which has already been gotten
+	- subject (String): the subject of the course
+	- courseId (String): the numerical ID of the course
+	- @return (void)
+*/
+function removeCourse(subject, courseId) {
+	delete USER_COURSES[(subject + courseId)];
+}
+
+
+/*
+Gets the course data from a course which has already been added
+	- subject (String): the subject of the course
+	- courseId (String): the numerical ID of the course
+	- @return (Dictionary): the results struct of this class (does not include filters)
+	- @throws If the class has not been added yet
+*/
+function getCourse(subject, courseId) {
+	if (!alreadyAdded(subject, courseId)) {
+		throw new Error("Class has not yet been added");
+	}
+
+	return USER_COURSES[subject + courseId]["results"][0];
+}
+
+
+/*
+Adds a new course and data to the dictionary
+	- subject (String): the subject of the course
+	- courseId (String): the numerical ID of the course
+	- body (Dictionary): the contents of the class
+	- @return (void)
+	- @throws if the stored value is not a dictionary, and doesn't contain "results"
+*/
+function addCourse(subject, courseId, body) {
+	if (typeof body === "object" && !Array.isArray(body)) {
+		if ('results' in body && body['results'].length > 0) {
+			USER_COURSES[(subject + courseId)] = body;
+			return;
+		}
+	}
+	throw new Error("Course content is not properly formatted (requires 'results' key)")	
+}
+
+
+
+/*
+Checks if the user has already added this course.
+	- subject (String): the subject of the course
+	- courseId (String): the numerical ID of the course
+	- @return (boolean): boolean indicating if we have already gotten this course
+*/
+function alreadyAdded(subject, courseId) {
+	return (subject + courseId) in USER_COURSES;
+}
+
+
+/*
+Gets the full name of a course (which has already been gotten)
+	- subject (String): the subject of the course
+	- courseId (String): the numerical ID of the course
+	- @return (String): the full name of the requested course
+	- @throws If the class has not yet been added
+*/
+function getCourseName(subject, courseId) {
+	// We can't get the course name if we haven't added the course yet
+	if (!alreadyAdded(subject, courseId)) {
+		throw new Error("Class has not yet been added");
+	}
+
+	// Generate the combined name
+	var combinedName = subject + courseId;
+	try {		
+		return combinedName + ": " + getCourse(subject, courseId)["class"]["name"];
+	}
+	catch (err) {
+		// If we can't get the full name, just return the combined name
+		return combinedName;
+	}
+}
+
+
+
+
+
+///////////////
+//// Other ////
+///////////////
+
 /*
 Parses user input representing a single class
-
 	- input (String): User input containing the subject and course number of a class (eg. "cs3500", "CS 3500", etc)
-
-	- return (Array): An array of the subject (String, capitalized), and the course number (String)
+	- @return (Array): An array of the subject (String, capitalized), and the course number (String)
 		eg. ["CS", "3500"]
+	- @throws if the input is invalid or cannot be parsed
 */
 function parseInputCourse(input) {
 	// Remove all whitespace (\s) globally (g), for both single and groups of whitespace (+)
@@ -62,35 +160,18 @@ function parseInputCourse(input) {
 
 
 /*
-Checks if the user has already added this course.
-
-subject: subject of a course
-courseId: the numerical id of a course
-
-returns: a boolean indicating if we've seen this course before
-*/
-function alreadyAdded(subject, courseId) {
-	return (subject + courseId) in USER_COURSES;
-}
-
-
-/*
 Sets up the query URL to get a single class
-
-subject: the course subject
-courseId: the courseID of the course (as a string)
-semester: the semester we're searching in (as a string)
-
-return: the query URL
+	- subject (String): the subject of the course
+	- courseId (String): the numerical ID of the course
+	- semester (String): the semester we're searching in
+	- @return (String): The query URL
 */
 function getQueryUrl(subject, courseId, semester) {
 	/*
 	Returns a structured query
-
-	name: the name of the query
-	value: the value of the query
-
-	Returns a structured URL query
+		- name (String): the name of the query
+		- value (String): the value of the query
+		- @return (String): a structured URL query
 	*/
 	function addQuery(name, value) {
 		return "&" + name + "=" + value;
@@ -108,14 +189,12 @@ function getQueryUrl(subject, courseId, semester) {
 	// Set the API version we're using
 	queryURL += addQuery("apiVersion", API_VERSION);
 
-	// Create the filters
-	// Create the subject filter
+	// Create the filters, starting with the subject filter
 	var filters = "{\"subject\":[\"" + subject + "\"],";
-	// Then, we add the classIdRange filter (we only want our specific class ID)
+	// Then, we add the classIdRange filter (so we only get the one class ID)
 	filters += "\"classIdRange\":{\"min\":" + courseId + ",\"max\":" + courseId + "}}";
 	// We encode the filters to be URL safe
 	filters = encodeURIComponent(filters);
-
 	// Add the filters to the URL
 	queryURL += addQuery("filters", filters);
 
@@ -125,90 +204,49 @@ function getQueryUrl(subject, courseId, semester) {
 
 /*
 Fetches the data for a single course
-
-subject: the subject of the course
-courseId: the numerical ID of a source
-semester: the semester we're searching in 
-
-returns: a Promise
+	- subject (String): the subject of the course
+	- courseId (String): the numerical ID of the course
+	- semester (String): the semester we're searching in
+	- @return (Promise): the course body request as a Promise (resolves to response when done)
+	- @throws if the response was unexpected or improperly formatted
 */
 async function getCourseFromApi(subject, courseId, semester) {
 	queryURL = getQueryUrl(subject, courseId, semester);
-	return fetch(queryURL).then(
-		response => response.json().then(
+
+	return fetch(queryURL).then(response => response.json().then(
 			function(response) {
-				// Check if the response is a dictionary
+				// Check if the response is a dictionary (it should be)
 				if (typeof response === "object" && !Array.isArray(response)) {
+					// Check if we have any hits for our search
 					if ('results' in response && response['results'].length > 0) {
-						USER_COURSES[(subject + courseId)] = response;
+						// If we do, then we add this course to the USER_COURSES
+						addCourse(subject, courseId, response);
 					}
 					else {
+						// Nothing came up for our search
 						throw new Error("No matching course found");
 					}
 				}
+				// The API gave us something unexpected
 				else {
 					throw new Error("Invalid response from API");
 				}
-			})
-		);
+			}));
 }
-
-
-/*
-Gets the course data from a course which has already been added
-
-subject: the course subject
-courseId: the courseID of the course (as a string)
-
-return: the results struct of this class (does not include filters)
-
-*/
-function getCourse(subject, courseId) {
-	if (!alreadyAdded(subject, courseId)) {
-		throw new Error("Class has not yet been added");
-	}
-
-	return USER_COURSES[subject + courseId]["results"][0];
-}
-
-
-
-/*
-Gets the full name of a course (which has already been gotten)
-
-subject: the course subject
-courseId: the courseID of the course (as a string)
-
-return: the full name of the requested course
-*/
-function getCourseName(subject, courseId) {
-	if (!alreadyAdded(subject, courseId)) {
-		throw new Error("Class has not yet been added");
-	}
-	var combinedName = subject + courseId;
-	try {		
-		return combinedName + ": " + getCourse(subject, courseId)["class"]["name"];
-	}
-	catch (err) {
-		return combinedName;
-	}
-}
-
 
 
 /*
 Gets the corequisites of a course (which has already been gotten)
-
-subject: the course subject
-courseId: the courseID of the course (as a string)
-semester: the semester we're searching in 
-
-return: A string representing a list of hyperlinked coreqs OR null, if no coreqs available
+	- subject (String): the subject of the course
+	- courseId (String): the numerical ID of the course
+	- semester (String): the semester we're searching in
+	- @return (String or null): A list of hyperlinked coreqs OR null, if no coreqs available
+	- @throws if the course has not been added yet
 */
 function getCoreqs(subject, courseId, semester) {
 	var combinedName = subject + courseId;
 
-	// TO run this, the course needs to have been already added
+	// To run this, the course needs to have been already added
 	if (!alreadyAdded(subject, courseId)) {
 		throw new Error("Course has not been added yet");
 	}
@@ -217,19 +255,24 @@ function getCoreqs(subject, courseId, semester) {
 	var coreqs = getCourse(subject, courseId)["class"]["coreqs"];
 
 
-	// Creates a link which will add this class when clicked
-	// Example: <a href="#" onclick="handleGetCourse('CS', '3001', '202130')">CS3001</a>
+	/*
+	Creates a link which will add this class when clicked
+		- @return (String): A hyperlinked class, which, when clicked, will add this class
+	Example: <a href="#" onclick="handleSingleCourse('CS3000', '202130')">CS3001</a>
+	*/
 	function addCourseLink(subject, courseId) {
 		var link = "<a href=\"#\"";
-		link += "onclick=\"handleGetCourse('" + subject + "', '" + courseId + "', '" + semester + "')\">";
+		link += "onclick=\"handleSingleCourse('" + subject + courseId + "', '" + semester + "')\">";
 		link += subject + courseId + "</a>";
 		return link;
 	}
 
 	
-	// Generates our corequisite case
-	// Handles two types: "or" and "and"
-	// Very handy for recursive generation (which we do come across)
+	/*
+	Generates our corequisite case recursively
+	Handles two types: "or" and "and"
+		- @return (String): A list of hyperlinked classes
+	*/
 	function coreqCase(values, type) {
 		var outputStr = "";
 		// We store the results in an array first to check how many coreqs we have
@@ -237,6 +280,7 @@ function getCoreqs(subject, courseId, semester) {
 		// Loop over all the values
 		for (var i = 0; i < values.length; i++) {
 			var strVal = valueToStr(values[i]);
+			// Only add if it's non-null
 			if (strVal != null) {
 				outputArr.push(strVal);
 			}
@@ -257,11 +301,10 @@ function getCoreqs(subject, courseId, semester) {
 			outputStr += ") ";
 		}
 		else if (outputArr.length == 1) {
-			outputStr = outputArr[0] + " ";
+			outputStr = outputArr[0] + " "; // Single case
 		}
 		else {
-			// The values array was empty
-			return null;
+			return null; // The values array was empty
 		}
 		return outputStr;
 	}
@@ -272,8 +315,8 @@ function getCoreqs(subject, courseId, semester) {
 	// 	- A typed group (eg. a group of classes which MUST be taken [and], or a group of classes of which ONE must
 	//		be taken [or])
 	//  - A single class
+	// 	- @return (String or null): A list of hyperlinked classes
 	function valueToStr(value) {
-		console.log(value);
 		// Check if the value is a single course
 		if ("subject" in value) {
 			var subject = value["subject"];
@@ -286,8 +329,7 @@ function getCoreqs(subject, courseId, semester) {
 					return addCourseLink(subject, courseId, semester);
 				}				
 			}
-			// If either of those fails, we return an empty string (we check for this)
-			return null;
+			return null;	// The class is missing - the user can't add it, so we don't show them
 		}
 
 		// Dealing with a typed group
@@ -308,19 +350,4 @@ function getCoreqs(subject, courseId, semester) {
 
 	var coStr = valueToStr(coreqs);
 	return coStr === null ? null : "Corequisite courses (click to add): " + coStr;
-}
-
-
-
-/*
-Removes a course which has already been gotten
-
-subject: the course subject
-courseId: the courseID of the course (as a string)
-
-returns nothing
-*/
-function removeCourse(subject, courseId) {
-	USER_COURSES.remove(subject + courseId);
-	// Return nothing
 }
