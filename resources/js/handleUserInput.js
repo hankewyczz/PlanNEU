@@ -76,13 +76,18 @@ async function handleSingleCourse(input) {
 		var output = [courseName, coreqStr];
 
 		
-		var simpleName = subject + courseId;
 
 		// Add it to the courses
-		var courseEntry = "<span id='" + simpleName + "'>" + output[0];
-		courseEntry += " <span onclick='handleRemove(\"" + subject + "\", \"" + courseId + "\")' class='remove-course'>";
-		courseEntry += "[X]</span><br></span>"
-	    COURSES_DIV.innerHTML += courseEntry;
+		var courseEntry = document.createElement("span");
+		courseEntry.innerHTML = output[0];
+
+		var remove = document.createElement("span");
+		remove.onclick = function() { handleRemove(subject, courseId, courseEntry) };
+		remove.className = 'remove-course';
+		remove.innerHTML ="  [X]<br>";
+
+		courseEntry.appendChild(remove);
+	    COURSES_DIV.appendChild(courseEntry);
 
 	    var messageStr = "Successfully added course! "
 
@@ -106,9 +111,9 @@ Handle removing a course we added
 	- courseId (String): the numerical ID of the course
 	- @return (void)
 */
-function handleRemove(subject, courseId) {
+function handleRemove(subject, courseId, obj) {
 	// Remove the course internally
 	removeCourse(subject, courseId);
-	var elemToRemove = document.getElementById(subject + courseId);
-	COURSES_DIV.removeChild(elemToRemove);
+	COURSES_DIV.removeChild(obj);
+	handleMessage("Removed class " + subject + courseId);
 }

@@ -23,7 +23,6 @@ function handleErr(message) {
     messageDiv.style.backgroundColor = '#f66';
     messageDiv.innerHTML = message;
     messageDiv.style.visibility = "visible";
-    setTimeout(function(){ messageDiv.style.visibility = "hidden"; }, 5000);
 }
 
 /*
