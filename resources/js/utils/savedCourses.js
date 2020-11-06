@@ -8,44 +8,58 @@ var USER_COURSES = {};
 
 
 /*
+A single Course.
+*/
+class Course {
+  constructor(subject, courseId) {
+    this.subject = subject;
+    this.courseId = courseId;
+    this.name = subject + courseId;
+  }
+  addContent(content) {
+  	this.content = content;
+  }
+}
+
+
+/*
 Removes a course which has already been gotten
-	- subject (String): the subject of the course
-	- courseId (String): the numerical ID of the course
+	- courseName (String): The name of the course (subject + courseId)
 	- @return (void)
 */
-function removeCourse(subject, courseId) {
-	delete USER_COURSES[(subject + courseId)];
+function removeCourse(courseName) {
+	delete USER_COURSES[courseName];
 }
 
 
 /*
 Gets the course data from a course which has already been added
-	- subject (String): the subject of the course
-	- courseId (String): the numerical ID of the course
+	- courseName (String): The name of the course (subject + courseId)
 	- @return (Dictionary): the results struct of this class (does not include filters)
 	- @throws If the class has not been added yet
 */
-function getCourse(subject, courseId) {
-	if (!alreadyAdded(subject, courseId)) {
+function getCourse(courseName) {
+	if (!alreadyAdded(courseName)) {
 		throw new Error("Class has not yet been added");
 	}
 
-	return USER_COURSES[subject + courseId]["results"][0];
+	var courseContent = USER_COURSES[courseName].content;
+	return courseContent["results"][0];
 }
 
 
 /*
 Adds a new course and data to the dictionary
-	- subject (String): the subject of the course
-	- courseId (String): the numerical ID of the course
+	- course (Course): The course which we're adding to the dictionary
 	- body (Dictionary): the contents of the class
 	- @return (void)
 	- @throws if the stored value is not a dictionary, and doesn't contain "results"
 */
-function addCourse(subject, courseId, body) {
+function addCourse(course, body) {
 	if (typeof body === "object" && !Array.isArray(body)) {
 		if ('results' in body && body['results'].length > 0) {
-			USER_COURSES[(subject + courseId)] = body;
+			course.addContent(body);
+			USER_COURSES[course.name] = course;
 			return;
 		}
 	}
@@ -56,35 +70,31 @@ function addCourse(subject, courseId, body) {
 
 /*
 Checks if the user has already added this course.
-	- subject (String): the subject of the course
-	- courseId (String): the numerical ID of the course
+	- courseName (String): The name of the course (subject + courseId)
 	- @return (boolean): boolean indicating if we have already gotten this course
 */
-function alreadyAdded(subject, courseId) {
-	return (subject + courseId) in USER_COURSES;
+function alreadyAdded(courseName) {
+	return courseName in USER_COURSES;
 }
 
 
 /*
 Gets the full name of a course (which has already been gotten)
-	- subject (String): the subject of the course
-	- courseId (String): the numerical ID of the course
+	- course (Course): The course we're getting the full name of
 	- @return (String): the full name of the requested course
 	- @throws If the class has not yet been added
 */
-function getCourseName(subject, courseId) {
+function getCourseName(course) {
 	// We can't get the course name if we haven't added the course yet
-	if (!alreadyAdded(subject, courseId)) {
+	if (!alreadyAdded(course.name)) {
 		throw new Error("Class has not yet been added");
 	}
 
-	// Generate the combined name
-	var combinedName = subject + courseId;
 	try {		
-		return combinedName + ": " + getCourse(subject, courseId)["class"]["name"];
+		return course.name + ": " + course["class"]["name"];
 	}
 	catch (err) {
 		// If we can't get the full name, just return the combined name
-		return combinedName;
+		return course.name;
 	}
 }

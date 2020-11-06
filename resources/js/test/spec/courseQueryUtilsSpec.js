@@ -1,76 +1,76 @@
-// Test parseInputCourse()
+// Test parseCourseInput()
 describe("Parse input representing a single course", function() {
 
 	it("Empty case", function() {
 		// We expect an error from the empty case
-		expect(function() { parseInputCourse(""); }).toThrow(); 			// No input
-		expect(function() { parseInputCourse(" "); }).toThrow();			// A space
-		expect(function() { parseInputCourse("	"); }).toThrow();			// A tab
-		expect(function() { parseInputCourse(" 	\n   "); }).toThrow();		// Mixed whitespace
+		expect(function() { parseCourseInput(""); }).toThrow(); 			// No input
+		expect(function() { parseCourseInput(" "); }).toThrow();			// A space
+		expect(function() { parseCourseInput("	"); }).toThrow();			// A tab
+		expect(function() { parseCourseInput(" 	\n   "); }).toThrow();		// Mixed whitespace
 	});
 
 	it("Invalid input, too short", function() {
-		expect(function() { parseInputCourse("cs12"); }).toThrow();
-		expect(function() { parseInputCourse("cs1"); }).toThrow();
-		expect(function() { parseInputCourse("a1"); }).toThrow();
-		expect(function() { parseInputCourse("a"); }).toThrow();
+		expect(function() { parseCourseInput("cs12"); }).toThrow();
+		expect(function() { parseCourseInput("cs1"); }).toThrow();
+		expect(function() { parseCourseInput("a1"); }).toThrow();
+		expect(function() { parseCourseInput("a"); }).toThrow();
 	})
 
 	it("Valid input, no spaces", function() {
-		var out = parseInputCourse("acct1201");
+		var out = parseCourseInput("acct1201");
 		expect(out[0]).toBe("ACCT");
 		expect(out[1]).toBe("1201");
 
-		var out1 = parseInputCourse("aCcT1201");
+		var out1 = parseCourseInput("aCcT1201");
 		expect(out1[0]).toBe(out[0]);
 		expect(out1[1]).toBe(out[1]);
 	})
 
 	it("Valid input, trailing/leading spaces", function() {
-		var out = parseInputCourse("   	hist2211");
+		var out = parseCourseInput("   	hist2211");
 		expect(out[0]).toBe("HIST");
 		expect(out[1]).toBe("2211");
 
-		var out1 = parseInputCourse("hIsT2211\n ");
+		var out1 = parseCourseInput("hIsT2211\n ");
 		expect(out1[0]).toBe(out[0]);
 		expect(out1[1]).toBe(out[1]);
 	})
 
 	it("Valid input, mixed spaces", function() {
-		var out = parseInputCourse("fina 2319 ");
+		var out = parseCourseInput("fina 2319 ");
 		expect(out[0]).toBe("FINA");
 		expect(out[1]).toBe("2319");
 
-		var out1 = parseInputCourse(" FINA2319 ");
+		var out1 = parseCourseInput(" FINA2319 ");
 		expect(out1[0]).toBe(out[0]);
 		expect(out1[1]).toBe(out[1]);
 
-		var out2 = parseInputCourse(" fina 2 3 1 9 ");
+		var out2 = parseCourseInput(" fina 2 3 1 9 ");
 		expect(out2[0]).toBe(out[0]);
 		expect(out2[1]).toBe(out[1]);
 	})
 
 
 	it("Invalid input, invalid subject", function() {
-		expect(function() { parseInputCourse("cs/cy 1234"); }).toThrow();
-		expect(function() { parseInputCourse("accounting - 1210"); }).toThrow();
-		expect(function() { parseInputCourse("УКР 1234"); }).toThrow();
-		expect(function() { parseInputCourse("12345"); }).toThrow();
-		expect(function() { parseInputCourse("c0mputerscience 1234"); }).toThrow();
-		expect(function() { parseInputCourse("test.1234"); }).toThrow();
-		expect(function() { parseInputCourse("hist-1234"); }).toThrow();
-		expect(function() { parseInputCourse("Object Orientehistd Design: cs3500"); }).toThrow();
+		expect(function() { parseCourseInput("cs/cy 1234"); }).toThrow();
+		expect(function() { parseCourseInput("accounting - 1210"); }).toThrow();
+		expect(function() { parseCourseInput("УКР 1234"); }).toThrow();
+		expect(function() { parseCourseInput("12345"); }).toThrow();
+		expect(function() { parseCourseInput("c0mputerscience 1234"); }).toThrow();
+		expect(function() { parseCourseInput("test.1234"); }).toThrow();
+		expect(function() { parseCourseInput("hist-1234"); }).toThrow();
+		expect(function() { parseCourseInput("Object Orientehistd Design: cs3500"); }).toThrow();
 	})
 
 
 	it("Invalid input, invalid courseId", function() {
-		expect(function() { parseInputCourse("computer"); }).toThrow();
-		expect(function() { parseInputCourse("history"); }).toThrow();
-		expect(function() { parseInputCourse("hist -123"); }).toThrow();
-		expect(function() { parseInputCourse("ARMY 1e12"); }).toThrow();
-		expect(function() { parseInputCourse("FINA 9e99"); }).toThrow();
-		expect(function() { parseInputCourse("hist null"); }).toThrow();
-		expect(function() { parseInputCourse("acct 0x11"); }).toThrow();
+		expect(function() { parseCourseInput("computer"); }).toThrow();
+		expect(function() { parseCourseInput("history"); }).toThrow();
+		expect(function() { parseCourseInput("hist -123"); }).toThrow();
+		expect(function() { parseCourseInput("ARMY 1e12"); }).toThrow();
+		expect(function() { parseCourseInput("FINA 9e99"); }).toThrow();
+		expect(function() { parseCourseInput("hist null"); }).toThrow();
+		expect(function() { parseCourseInput("acct 0x11"); }).toThrow();
 	})
 
 });
@@ -78,7 +78,7 @@ describe("Parse input representing a single course", function() {
 // Tests getQueryUrl
 describe("Check the construction of the query URL", function() {
 	it("Basic check", function() {
-		var parse = parseInputCourse("cs 3500");
+		var parse = parseCourseInput("cs 3500");
 		var semester = "202130"; // Spring 2021
 		var out = getQueryUrl(parse[0], parse[1], semester);
 		expect(decodeURI(out)).toBe(decodeURI(

@@ -19,11 +19,10 @@ var API_VERSION = 2;
 /*
 Parses user input representing a single class
 	- input (String): User input containing the subject and course number of a class (eg. "cs3500", "CS 3500", etc)
-	- @return (Array): An array of the subject (String, capitalized), and the course number (String)
-		eg. ["CS", "3500"]
+	- @return (Course): A new Course instance
 	- @throws if the input is invalid or cannot be parsed
 */
-function parseInputCourse(input) {
+function parseCourseInput(input) {
 	// Remove all whitespace (\s) globally (g), for both single and groups of whitespace (+)
 	var input = input.replace(/\s+/g, '');
 
@@ -61,7 +60,7 @@ function parseInputCourse(input) {
 	}
 
 
-	return [subject, courseId];
+	return new Course(subject, courseId);
 }
 
 
