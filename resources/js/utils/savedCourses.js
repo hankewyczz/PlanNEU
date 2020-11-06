@@ -11,9 +11,10 @@ var USER_COURSES = {};
 A single Course.
 */
 class Course {
-  constructor(subject, courseId) {
+  constructor(subject, courseId, semester) {
     this.subject = subject;
     this.courseId = courseId;
+    this.semester = semester;
     this.name = subject + courseId;
   }
   addContent(content) {
