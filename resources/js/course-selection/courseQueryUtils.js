@@ -138,11 +138,8 @@ async function getCourseFromApi(course) {
 					throw new Error("Invalid response from API");
 				}
 			})
-	    .catch(error => {
-	    	// Error doesn't propogate
-	        throw new Error(error.message);
-	    });
-
+	    // Error doesn't propogate, so we force it
+	    .catch(error => { throw new Error(error.message); });
 }
 
 
