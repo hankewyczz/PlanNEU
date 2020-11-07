@@ -82,9 +82,9 @@ describe("Check the construction of the query URL", function() {
 	it("Basic check", function() {
 		var out = getQueryUrl(parseCourseInput("cs 3500", SEMESTER));
 		expect(decodeURI(out)).toBe(decodeURI(
-			"https://cors-anywhere.herokuapp.com/https://searchneu.com/search?&query=&termId=202130&minIndex=0&"
-			+ "maxIndex=1&apiVersion=2&filters={%27subject%27%3A[%27CS%27]%2C%27classIdRange%27%3A{"
-			+ "%27min%27%3A3500%2C%27max%27%3A3500}}"));
+			"https://cors-anywhere.herokuapp.com/https://searchneu.com/search?&query=&termId="
+			+ "202130&minIndex=0&maxIndex=1&apiVersion=2&filters={\"subject\"%3A[\"CS\"]%2C\"classIdRange\"%3A"
+			+ "{\"min\"%3A3500%2C\"max\"%3A3500}}"));
 	});
 });
 
@@ -97,8 +97,7 @@ describe("Fetching data from SearchNEU", function() {
 		// Initial
 		expect(alreadyAdded("CS3500")).toBe(false);
 		// Actually get the class this time
-		var response = getCourseFromApi(new Course("CS", "3500", SEMESTER));
-		console.log(response);
+		var response = await getCourseFromApi(new Course("CS", "3500", SEMESTER));
 		expect(alreadyAdded("CS3500")).toBe(true); // Spring 2021
 		// Same call as the first time, but now we've gotten the class before
 		expect(alreadyAdded("CS3500")).toBe(true);
@@ -108,10 +107,10 @@ describe("Fetching data from SearchNEU", function() {
 // Tests getCourseName
 describe("Fetching data, parsing the name", function() {
 	it("Gets the course name", async function() {
-		// Reset the gotten courses
 
-		var response = await getCourseFromApi(new Course("CS", "3500", SEMESTER));
-		expect(alreadyAdded("CS", "3500", response)).toBe(true); // Spring 2021
-		expect(getCourseName("CS", "3500")).toBe("CS3500: Object-Oriented Design");
+		var course = new Course("CS", "3500", SEMESTER);
+		var response = await getCourseFromApi(course);
+		expect(alreadyAdded("CS3500")).toBe(true); // Spring 2021
+		expect(getCourseName(course)).toBe("CS3500: Object-Oriented Design");
 	})
 });

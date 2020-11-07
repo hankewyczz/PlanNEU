@@ -86,7 +86,7 @@ function getQueryUrl(course) {
 		- value (String): the value of the query
 		- @return (String): a structured URL query */
 	function addQuery(name, value) {
-		return "&" + name + "=" + value;
+		return `&${name}=${value}`;
 	}
 
 	// Setup the base query URL
@@ -99,9 +99,9 @@ function getQueryUrl(course) {
 	queryURL += addQuery("apiVersion", API_VERSION);	// Set the API version
 
 	// Create the filters
-	var subjectFilter = "'subject':['" + course.subject + "'],";
-	var classIdFilter = "'classIdRange':{'min':" + course.courseId + ",'max':" + course.courseId + "}";
-	var filters = "{" + subjectFilter + classIdFilter + "}";
+	var subjectFilter = `"subject":["${course.subject}"],`;
+	var classIdFilter = `"classIdRange":{"min":${course.courseId},"max":${course.courseId}}`;
+	var filters = `{${subjectFilter}${classIdFilter}}`;
 
 	// We encode the filters to be URL safe
 	filters = encodeURIComponent(filters);
@@ -113,12 +113,14 @@ function getQueryUrl(course) {
 
 /*
 Fetches the data for a single course
-	- course (Course): The course we're querying
+	- course (Course): The course we"re querying
 	- @return (Promise): the course body request as a Promise (resolves to response when done)
 	- @throws if the response was unexpected or improperly formatted
 */
 async function getCourseFromApi(course) {
-	return fetch(getQueryUrl(course)).then(response => response.json().then(function(response) {
+	return fetch(getQueryUrl(course))
+	    .then(response => response.json())
+	    .then(function(response) {
 				// Check if the response is a dictionary (it should be)
 				if (typeof response === "object" && !Array.isArray(response)) {
 					// Check if we have any hits for our search
@@ -135,7 +137,12 @@ async function getCourseFromApi(course) {
 				else {
 					throw new Error("Invalid response from API");
 				}
-			}));
+			})
+	    .catch(error => {
+	    	// Error doesn't propogate
+	        throw new Error(error.message);
+	    });
+
 }
 
 
@@ -161,8 +168,8 @@ function getCoreqs(course) {
 	Example: <a href="#" onclick="handleSingleCourse('CS3000', '202130')">CS3001</a>
 	*/
 	function addCourseLink(name) {
-		var onclick = "onclick=\"handleSingleCourse('" + name + "', '" + course.semester + "')\"";
-		var link = "<a href=\"#\" " + onclick + ">" + name + "</a>";
+		var onclick = `onclick="handleSingleCourse('${name}', '${course.semester}')"`;
+		var link = `<a href="#" ${onclick}>${name}</a>`;
 		return link;
 	}
 
@@ -192,7 +199,7 @@ function getCoreqs(course) {
 			// Loop thru all the coreqs
 			for (i = 0; i < outputArr.length; i++) {
 				// eg: "CS3500 and "
-				outputStr += outputArr[i] + " " + type + " ";
+				outputStr += `${outputArr[i]} ${type} `;
 			}
 			// Trim the trailing text
 			var lastWord = type.length + 2;	// Length of the type, plus 2 spaces
@@ -201,7 +208,7 @@ function getCoreqs(course) {
 		}
 		// If we only have one, we don't need to add the word
 		else if (outputArr.length == 1) {
-			outputStr = outputArr[0] + " "; // Single case
+			outputStr = `${outputArr[0]} `; // Single case
 		}
 		else {
 			return null; // The values array was empty
@@ -236,9 +243,9 @@ function getCoreqs(course) {
 			return coreqCase(value["values"], value["type"]);
 		}
 		// Neither a course nor a typed group - we don't know what it is
-		throw new Error("Invalid value coreq value: " + value);
+		throw new Error(`Invalid value coreq value: ${value}`);
 	}
 
 	var coStr = valueToStr(coreqs);
-	return coStr === null ? null : "Corequisite courses (click to add): " + coStr;
+	return coStr === null ? null : `Corequisite courses (click to add): ${coStr}`;
 }

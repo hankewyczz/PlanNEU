@@ -1,8 +1,8 @@
 ////////////////////////////
 //// DOCUMENT VARIABLES ////
 ////////////////////////////
-
-var COURSES_DIV_ID = "course-right-col";
+var MESSAGE_DIV_ID = "message-div";
+var COURSES_DIV_ID = "side-course-col";
 var SEMESTER_SELECTOR_ID = "semester-selector";
 
 
@@ -15,7 +15,7 @@ Handles the user input
 async function handleUserInput(input, semester) {
 	// First, we try parsing the input
 	try {
-		var course = parseInputCourse(input, semester);
+		var course = parseCourseInput(input, semester);
 	} catch (err) {
 		throw new Error("No matching course");
 	}
@@ -47,11 +47,11 @@ async function handleGetCourse(course) {
 	}
 
 	// Making sure we've gotten the course already
-	if (!alreadyAdded(course)) {
+	if (!alreadyAdded(course.name)) {
 		throw new Error("Course could not be added");
 	}
 
-	return courseName;
+	return getCourseName(course);
 }
 
 
@@ -111,13 +111,52 @@ function addToCourseDiv(course, fullCourseName) {
 
 /*
 Handle removing a course we added
-	- subject (String): the subject of the course
-	- courseId (String): the numerical ID of the course
+	- name (String): the course to remove
+	- obj (Object): the parent object of the span
 	- @return (void)
 */
-function handleRemove(subject, courseId, obj) {
+function handleRemove(name, obj) {
 	// Remove the course internally
-	removeCourse(subject, courseId);
+	removeCourse(name);
 	document.getElementById(COURSES_DIV_ID).removeChild(obj);
-	handleMessage("Removed class " + subject + courseId);
+	handleMessage(`Removed class ${name}`);
+}
+
+
+
+/*
+Validates user input, and fetches the corresponding class
+    - obj (Object): The input field which called this
+    - event (KeyEvent): the keyEvent
+    - @return (void)
+*/
+async function validateInput(input, event) {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        await handleSingleCourse(input);
+    }
+}
+
+
+
+/*
+Displays an error message
+    - message (String) the message to display
+    - @return (void)
+*/
+function handleErr(message) {
+    handleMessage(message, true);
+}
+
+/*
+Displays an informational (ie. non-error) message
+    - message (String) the message to display
+    - @return (void)
+*/
+function handleMessage(message, error=false) {
+    var messageDiv = document.getElementById(MESSAGE_DIV_ID);
+    // The color is different depending on whether it's an error or not
+    messageDiv.style.backgroundColor = error ? '#f66' : '#9d9';
+    messageDiv.innerHTML = message;
+    messageDiv.style.visibility = "visible";
 }

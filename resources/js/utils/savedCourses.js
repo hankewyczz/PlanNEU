@@ -92,9 +92,10 @@ function getCourseName(course) {
 	}
 
 	try {		
-		return course.name + ": " + course["class"]["name"];
+		return `${course.name}: ${getCourse(course.name)["class"]["name"]}`;
 	}
 	catch (err) {
+		console.log(err);
 		// If we can't get the full name, just return the combined name
 		return course.name;
 	}

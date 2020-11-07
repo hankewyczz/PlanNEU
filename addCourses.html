@@ -14,12 +14,15 @@
 
 
 <body>
-	<div id="message-div"></div>
+    <div id="message-div"></div>
 
-	<div id="main">
-		<div id="course-left-col">
-			<!-- Semester selector -->
-			<select id="semester-selector" name="semester-selector" class="custom-select">
+    <h1 class="title">Course Selection</h1>
+
+
+    <div class="row">
+        <div id="main-course-col">
+            <!-- Semester selector -->
+            <select id="semester-selector" name="semester-selector" class="custom-select">
 		        <option value="202130">Spring 2021</option>
 		        <option value="202110">Fall 2020</option>
 		        <option value="202040">Summer I 2020</option>
@@ -27,44 +30,43 @@
 		        <option value="202050">Summer Full 2020</option>
 		  	</select>
 
-		  	<!-- The main input -->
-			<div id="course-left-col-main">
-			    <input type="text" placeholder="Enter subject and class ID" class="form-control"
-		    		onkeyup="validateInput(this.value, event)" id="user-course-input" />
-		    		
-			    <button class="btn btn-success submit-input-button" 
-			    	onclick="handleSingleCourse(document.getElementById('user-course-input').value)">&#x2192;</button>
-			</div>
-			<hr>	
-			<h3 style="text-align: center">Instructions</h3>
-			<ul>
-				<li>First, select a semester from the dropdown selector</li>
-				<li>To add a class, simply type its subject and course ID</li>
-				<ul>
-					<li>For example, if I wanted to add the course "CS 4550: Web Development", I would type "CS4550".</li>
-				</ul>
-				<li>Next, hit the "Enter" key or press the button</li>
-				<ul>
-					<li>If we can find the course, you'll get a 'Success!' message, and the course will show up in the 
-					"Courses Selected" section below</li>
-					<li>If the course has any corequisites, you'll see an option to add them</li>
-				</ul>
-				<li>Once you've added all the courses, simple press "Submit"!</li>
-			</ul>
+            <!-- The main input -->
+            <div id="course-left-col-main">
+                <input type="text" placeholder="Enter subject and class ID" class="form-control" onkeyup="validateInput(this.value, event)" id="user-course-input" />
 
+                <button class="btn btn-success submit-input-button" onclick="handleSingleCourse(document.getElementById('user-course-input').value)">&#x2192;</button>
+            </div>
+            <hr>
+            <h3 style="text-align: center">Instructions</h3>
+            <ul>
+                <li>First, select a semester from the dropdown selector</li>
+                <li>To add a class, simply type its subject and course ID</li>
+                <ul>
+                    <li>For example, if I wanted to add the course "CS 4550: Web Development", I would type "CS4550".</li>
+                </ul>
+                <li>Next, hit the "Enter" key or press the button</li>
+                <ul>
+                    <li>If we can find the course, you'll get a 'Success!' message, and the course will show up in the "Courses Selected" section below</li>
+                    <li>If the course has any corequisites, you'll see an option to add them</li>
+                </ul>
+                <li>Once you've added all the courses, simple press "Submit"!</li>
+            </ul>
 
-			
-		</div>
+        </div>
+        <div id="side-course-col">
+            <h3>Courses Selected</h3>
+            <hr>
+        </div>
+    </div>
+    <hr>
 
-		<div id="course-right-col">
-			<h3>Courses Selected</h3>
-			<hr>
-
-		</div>
-	</div>
+    <!-- Footer -->
+    <div class="footer">
+        <h2><img src="https://raw.githubusercontent.com/sandboxnu/searchneu/5f3d2c089ad1dfb9fe00f6f11ea991ab6a3b5112/frontend/components/images/boston.svg" width="80%"/></h2>
+    </div>
 </body>
 
 
-<script src="resources/js/page-js/addCourses.js"></script>
-<script src="resources/js/utils/userInputUtils.js"></script>
-<script src="resources/js/utils/handleUserInput.js"></script>
+<script src="resources/js/course-selection/courseQueryUtils.js"></script>
+<script src="resources/js/utils/savedCourses.js"></script>
+<script src="resources/js/course-selection/handleUserInput.js"></script>
