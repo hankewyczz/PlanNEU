@@ -1,55 +1,55 @@
-var COURSES_DIV = document.getElementById("course-right-col");
+////////////////////////////
+//// DOCUMENT VARIABLES ////
+////////////////////////////
+
+var COURSES_DIV_ID = "course-right-col";
+var SEMESTER_SELECTOR_ID = "semester-selector";
 
 
 /*
 Handles the user input
 	- input (String): the user input for a single course
-	- @return (Array): The capitalized subject, and the course number (both as strings)
+	- @return (Course): the course matching the user input
 	- @throws if the input could not be parsed, or if the course has already been added
 */
-async function handleUserInput(input) {
+async function handleUserInput(input, semester) {
 	// First, we try parsing the input
 	try {
-		var parsedInput = parseInputCourse(input);
+		var course = parseInputCourse(input, semester);
 	} catch (err) {
 		throw new Error("No matching course");
 	}
 
-	if (alreadyAdded(parsedInput[0], parsedInput[1])) {
+	if (alreadyAdded(course.name)) {
 		throw new Error("Course already added");
 	}
 
-	return parsedInput;
+	return course;
 }
 
 
 /*
 Handles getting a single course
-	- subject (String): the subject of the course
-	- courseId (String): the numerical ID of the course
-	- semester (String): the semester we're searching in
+	- course (Course): The course which we're querying from the API
 	- @return (String): The full name of the course
 	- @throws If the course could not be fetched, or if it could not be properly added
 */
-async function handleGetCourse(subject, courseId, semester) {
-	if (alreadyAdded(subject, courseId)) {
+async function handleGetCourse(course) {
+	if (alreadyAdded(course)) {
 		throw new Error("Course already added");
 	}
 
 	try {
 		// Try getting the course
-		await getCourseFromApi(subject, courseId, semester);
+		await getCourseFromApi(course);
 	} catch (err) {
 		throw new Error("Couldn't get the course: " + err.message);
 	}
 
 	// Making sure we've gotten the course already
-	if (!alreadyAdded(subject, courseId)) {
+	if (!alreadyAdded(course)) {
 		throw new Error("Course could not be added");
 	}
-
-	var courseName = getCourseName(subject, courseId);
-	console.log("Got course \"" + courseName + "\"");
 
 	return courseName;
 }
@@ -62,38 +62,22 @@ This is the user-level handling for a single course, from input to end
 */
 async function handleSingleCourse(input) {
 	try {
-		// Get the semester 
-		var semester = document.getElementById("semester-selector").value;
+		var semester = document.getElementById(SEMESTER_SELECTOR_ID).value;
+
 		// Handle the input and getting the course
-		var parsedInput = await handleUserInput(input);
-		var subject = parsedInput[0];
-		var courseId = parsedInput[1];
+		var course = await handleUserInput(input, semester);
 
-		// Get the course, and return the course name
-		var courseName = await handleGetCourse(subject, courseId, semester);
+		// Get the course, the course name, and the coreqs
+		var fullCourseName = await handleGetCourse(course);
+		var coreqStr = getCoreqs(course);
 
-		var coreqStr = getCoreqs(subject, courseId, semester);
-		var output = [courseName, coreqStr];
+		// Add it to the UI 
+		addToCourseDiv(course, fullCourseName);
 
-		
 
-		// Add it to the courses
-		var courseEntry = document.createElement("span");
-		courseEntry.innerHTML = output[0];
-
-		var remove = document.createElement("span");
-		remove.onclick = function() { handleRemove(subject, courseId, courseEntry) };
-		remove.className = 'remove-course';
-		remove.innerHTML ="  [X]<br>";
-
-		courseEntry.appendChild(remove);
-	    COURSES_DIV.appendChild(courseEntry);
-
-	    var messageStr = "Successfully added course! "
-
-	    if (coreqStr != null) {
-            messageStr += coreqStr;
-        }
+	    var messageStr = "Successfully added " + fullCourseName + "! ";
+	    // If we have any coreqs, we add them
+	    messageStr += (coreqStr != null) ? coreqStr : "";
 
         // Send the message
         handleMessage(messageStr);
@@ -101,6 +85,26 @@ async function handleSingleCourse(input) {
     catch (err) {
         handleErr(err.message);
     }
+}
+
+
+/*
+Adds the course to the user interface
+	- course (Course): the course to add
+	- fullCourseName (String): the full course name
+	- @return (void) */
+function addToCourseDiv(course, fullCourseName) {
+	// Add it to the courses
+	var courseEntry = document.createElement("span");
+	courseEntry.innerHTML = fullCourseName;
+
+	var remove = document.createElement("span");
+	remove.onclick = function() { handleRemove(course.name, courseEntry) };
+	remove.className = 'remove-course';
+	remove.innerHTML ="  [X]<br>";
+
+	courseEntry.appendChild(remove);
+    document.getElementById(COURSES_DIV_ID).appendChild(courseEntry);
 }
 
 
@@ -114,6 +118,6 @@ Handle removing a course we added
 function handleRemove(subject, courseId, obj) {
 	// Remove the course internally
 	removeCourse(subject, courseId);
-	COURSES_DIV.removeChild(obj);
+	document.getElementById(COURSES_DIV_ID).removeChild(obj);
 	handleMessage("Removed class " + subject + courseId);
 }

@@ -33,30 +33,38 @@ function parseCourseInput(input, semester) {
 	}
 
 	// Get the subject and course number (Course number is always 4 digits)
-	var subject = input.slice(0, -4);
+	var subject = input.slice(0, -4).toUpperCase();
 	var courseId = input.slice(-4);
 
-	// Capitalize the subject to standardize
-	subject = subject.toUpperCase();
 	// Check if the subject is valid
 	// From start (^) to end ($) check if any characters are NOT A-Z
 	if (!/^[A-Z]+$/.test(subject)) {
 		throw new Error("Subject can only contain English letters (A-Z)");
 	}
-
-	/* We check to make sure the 4-character string is a number. We do this one by one, because Number accepts some
-	unexpected strings as valid numbers (eg.'0x11' == 17 or 'null' == 7, which of course, can't be course numbers!)
-	So, we check each individual digit */
-	for (var i = 0; i < courseId.length; i++) {
-		var num = new Number(courseId.slice(i, i + 1));
-		if (isNaN(num)) {
-			throw new Error("Invalid course number");
-		}
+	if (!isValidNum(courseId)) {
+		throw new Error("Invalid course number");
 	}
 
 	return new Course(subject, courseId, semester);
 }
 
+
+/* Checks if the given string is a valid number
+	- inputNum (String): the input number
+	- @return (boolean): Whether the input is a valid number or not
+	*/
+function isValidNum(inputNum) {
+	/* We check to make sure the 4-character string is a number. We do this one by one, because Number accepts some
+	unexpected strings as valid numbers (eg.'0x11' == 17 or 'null' == 7, which of course, can't be course numbers!)
+	So, we check each individual digit */
+	for (var i = 0; i < inputNum.length; i++) {
+		var num = new Number(inputNum.slice(i, i + 1));
+		if (isNaN(num)) {
+			return false;
+		}
+	}
+	return true;
+}
 
 
 
@@ -91,7 +99,7 @@ function getQueryUrl(course) {
 	queryURL += addQuery("apiVersion", API_VERSION);	// Set the API version
 
 	// Create the filters
-	var subjectFilter = "'subject': ['" + course.subject + "'],";
+	var subjectFilter = "'subject':['" + course.subject + "'],";
 	var classIdFilter = "'classIdRange':{'min':" + course.courseId + ",'max':" + course.courseId + "}";
 	var filters = "{" + subjectFilter + classIdFilter + "}";
 
@@ -110,10 +118,7 @@ Fetches the data for a single course
 	- @throws if the response was unexpected or improperly formatted
 */
 async function getCourseFromApi(course) {
-	queryURL = getQueryUrl(course);
-
-	return fetch(queryURL).then(response => response.json().then(
-			function(response) {
+	return fetch(getQueryUrl(course)).then(response => response.json().then(function(response) {
 				// Check if the response is a dictionary (it should be)
 				if (typeof response === "object" && !Array.isArray(response)) {
 					// Check if we have any hits for our search
