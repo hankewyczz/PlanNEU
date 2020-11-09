@@ -1,9 +1,10 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -29,7 +30,7 @@ function handleUserInput(input, semester) {
     catch (err) {
         throw new Error("No matching course");
     }
-    if (alreadyAdded(course.name)) {
+    if (course.alreadySaved()) {
         throw new Error("Course already added");
     }
     return course;
@@ -42,7 +43,7 @@ Handles getting a single course
 */
 function handleGetCourse(course) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (alreadyAdded(course.name)) {
+        if (course.alreadySaved()) {
             throw new Error("Course already added");
         }
         try {
@@ -53,7 +54,7 @@ function handleGetCourse(course) {
             throw new Error("Couldn't get the course: " + err.message);
         }
         // Making sure we've gotten the course already
-        if (!alreadyAdded(course.name)) {
+        if (!course.alreadySaved()) {
             throw new Error("Course could not be added");
         }
         return getCourseName(course);
@@ -110,7 +111,7 @@ Handle removing a course we added
 */
 function handleRemove(name, obj) {
     // Remove the course internally
-    removeCourse(name);
+    removeSavedCourse(name);
     document.getElementById(COURSES_DIV_ID).removeChild(obj);
     handleMessage(`Removed class ${name}`);
 }

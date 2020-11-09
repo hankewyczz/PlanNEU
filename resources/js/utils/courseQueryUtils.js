@@ -3,10 +3,11 @@
 ////////    API Constants     ////////
 //////////////////////////////////////
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -110,17 +111,19 @@ function getCourseFromApi(course) {
                 // Check if we have any hits for our search
                 if ('results' in response && response['results'].length > 0) {
                     // If we do, then we add this course to the USER_COURSES
-                    addCourse(course, response);
+                    saveCourse(course, response);
                 }
                 else {
                     // Nothing came up for our search
                     throw new Error("No matching course found");
                 }
             }
+            // The API gave us something unexpected
             else {
                 throw new Error("Invalid response from API");
             }
         })
+            // Error doesn't propogate, so we force it
             .catch(error => { throw new Error(error.message); });
     });
 }
@@ -132,11 +135,11 @@ Gets the corequisites of a course (which has already been gotten)
 */
 function getCoreqs(course) {
     // To run this, the course needs to have been already added
-    if (!alreadyAdded(course.name)) {
+    if (!course.alreadySaved()) {
         throw new Error("Course has not been added yet");
     }
     // Gets the coreqs of this course
-    let coreqs = getCourse(course.name)["class"]["coreqs"];
+    let coreqs = getSavedCourse(course.name)["class"]["coreqs"];
     /*
     Creates a link which will add this class when clicked
         - @return (String): A hyperlinked class, which, when clicked, will add this class
@@ -177,6 +180,7 @@ function getCoreqs(course) {
             outputStr = outputStr.slice(0, -lastWord);
             outputStr += ") ";
         }
+        // If we only have one, we don't need to add the word
         else if (outputArr.length == 1) {
             outputStr = `${outputArr[0]} `; // Single case
         }
@@ -196,7 +200,7 @@ function getCoreqs(course) {
         if ("subject" in value) {
             let name = value["subject"] + value["classId"];
             // If the user has already added this coreq, there's no need for us to inform them of it
-            if (!alreadyAdded(name)) {
+            if (!alreadySaved(name)) {
                 // If the coreq is missing, the user can't add it, so we don't show them it
                 if (!("missing" in value) || value["missing"] == false) {
                     return addCourseLink(name);
@@ -204,6 +208,7 @@ function getCoreqs(course) {
             }
             return null; // The class is missing - the user can't add it, so we don't show them
         }
+        // Dealing with a typed group
         else if ("type" in value) {
             return coreqCase(value["values"], value["type"]);
         }

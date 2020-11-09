@@ -19,13 +19,26 @@ class Course {
     addContent(content) {
         this.content = content;
     }
+    alreadySaved() {
+        return alreadySaved(this.name);
+    }
+    sections() {
+        let arrSec = this.content["results"][0]["sections"];
+        let results = [];
+        for (let i = 0; i < arrSec.length; i++) {
+            let sec = new Section(arrSec[i]["crn"], this.name, arrSec[i]);
+            saveSection(sec);
+            results.push(sec);
+        }
+        return results;
+    }
 }
 /*
 Removes a course which has already been gotten
     - courseName (String): The name of the course (subject + courseId)
     - @return (void)
 */
-function removeCourse(courseName) {
+function removeSavedCourse(courseName) {
     delete USER_COURSES[courseName];
 }
 /*
@@ -34,12 +47,14 @@ Gets the course data from a course which has already been added
     - @return (Dictionary): the results struct of this class (does not include filters)
     - @throws If the class has not been added yet
 */
-function getCourse(courseName) {
-    if (!alreadyAdded(courseName)) {
+function getSavedCourse(courseName) {
+    try {
+        let courseContent = USER_COURSES[courseName].content;
+        return courseContent["results"][0];
+    }
+    catch (err) {
         throw new Error("Class has not yet been added");
     }
-    let courseContent = USER_COURSES[courseName].content;
-    return courseContent["results"][0];
 }
 /*
 Adds a new course and data to the dictionary
@@ -48,7 +63,7 @@ Adds a new course and data to the dictionary
     - @return (void)
     - @throws if the stored value is not a dictionary, and doesn't contain "results"
 */
-function addCourse(course, body) {
+function saveCourse(course, body) {
     if (typeof body === "object" && !Array.isArray(body)) {
         if ('results' in body && body['results'].length > 0) {
             course.addContent(body);
@@ -59,14 +74,6 @@ function addCourse(course, body) {
     throw new Error("Course content is not properly formatted (requires 'results' key)");
 }
 /*
-Checks if the user has already added this course.
-    - courseName (String): The name of the course (subject + courseId)
-    - @return (boolean): boolean indicating if we have already gotten this course
-*/
-function alreadyAdded(courseName) {
-    return courseName in USER_COURSES;
-}
-/*
 Gets the full name of a course (which has already been gotten)
     - course (Course): The course we're getting the full name of
     - @return (String): the full name of the requested course
@@ -74,11 +81,11 @@ Gets the full name of a course (which has already been gotten)
 */
 function getCourseName(course) {
     // We can't get the course name if we haven't added the course yet
-    if (!alreadyAdded(course.name)) {
+    if (!course.alreadySaved()) {
         throw new Error("Class has not yet been added");
     }
     try {
-        let courseName = getCourse(course.name)["class"]["name"];
+        let courseName = getSavedCourse(course.name)["class"]["name"];
         return `${course.name}: ${courseName}`;
     }
     catch (err) {
@@ -86,4 +93,11 @@ function getCourseName(course) {
         // If we can't get the full name, just return the combined name
         return course.name;
     }
+}
+/*
+Check if this course has already been added
+    - @return (boolean) Whether this course has been added already or not
+*/
+function alreadySaved(courseName) {
+    return courseName in USER_COURSES;
 }

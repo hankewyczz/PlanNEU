@@ -22,7 +22,7 @@ function handleUserInput(input: string, semester: string): Course {
 		throw new Error("No matching course");
 	}
 
-	if (alreadyAdded(course.name)) {
+	if (course.alreadySaved()) {
 		throw new Error("Course already added");
 	}
 
@@ -37,7 +37,7 @@ Handles getting a single course
 	- @throws If the course could not be fetched, or if it could not be properly added
 */
 async function handleGetCourse(course: Course): Promise<string> {
-	if (alreadyAdded(course.name)) {
+	if (course.alreadySaved()) {
 		throw new Error("Course already added");
 	}
 
@@ -49,7 +49,7 @@ async function handleGetCourse(course: Course): Promise<string> {
 	}
 
 	// Making sure we've gotten the course already
-	if (!alreadyAdded(course.name)) {
+	if (!course.alreadySaved()) {
 		throw new Error("Course could not be added");
 	}
 
@@ -120,7 +120,7 @@ Handle removing a course we added
 */
 function handleRemove(name: string, obj: Node): void {
 	// Remove the course internally
-	removeCourse(name);
+	removeSavedCourse(name);
 	(document.getElementById(COURSES_DIV_ID) as any).removeChild(obj);
 	handleMessage(`Removed class ${name}`);
 }

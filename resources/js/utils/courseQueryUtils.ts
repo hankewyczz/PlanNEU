@@ -126,7 +126,7 @@ async function getCourseFromApi(course: Course): Promise<any> {
 				// Check if we have any hits for our search
 				if ('results' in response && response['results'].length > 0) {
 					// If we do, then we add this course to the USER_COURSES
-					addCourse(course, response);
+					saveCourse(course, response);
 				}
 				else {
 					// Nothing came up for our search
@@ -151,12 +151,12 @@ Gets the corequisites of a course (which has already been gotten)
 */
 function getCoreqs(course: Course): string {
 	// To run this, the course needs to have been already added
-	if (!alreadyAdded(course.name)) {
+	if (!course.alreadySaved()) {
 		throw new Error("Course has not been added yet");
 	}
 
 	// Gets the coreqs of this course
-	let coreqs = (getCourse(course.name) as any)["class"]["coreqs"];
+	let coreqs = (getSavedCourse(course.name) as any)["class"]["coreqs"];
 
 
 	/*
@@ -226,7 +226,7 @@ function getCoreqs(course: Course): string {
 			let name = value["subject"] + value["classId"];
 
 			// If the user has already added this coreq, there's no need for us to inform them of it
-			if (!alreadyAdded(name)) {
+			if (!alreadySaved(name)) {
 				// If the coreq is missing, the user can't add it, so we don't show them it
 				if (!("missing" in value) || value["missing"] == false) {
 					return addCourseLink(name);
