@@ -32,26 +32,27 @@
 
             <!-- The main input -->
             <div id="course-left-col-main">
-                <input type="text" placeholder="Enter subject and class ID" class="form-control" onkeyup="validateInput(this.value, event)" id="user-course-input" />
+                <input type="text" placeholder="Enter subject and class ID" class="form-control" onkeyup="validateInput(event)" id="user-course-input" />
 
-                <button class="btn btn-success submit-input-button" onclick="handleSingleCourse(document.getElementById('user-course-input').value)">&#x2192;</button>
+                <button class="btn btn-success submit-input-button" onclick="handleSingleCourse()">&#x2192;</button>
             </div>
             <hr>
-            <h3 style="text-align: center">Instructions</h3>
-            <ul>
-                <li>First, select a semester from the dropdown selector</li>
-                <li>To add a class, simply type its subject and course ID</li>
+            <h3 style="text-align: center; cursor: pointer" onclick="toggleInstructions()">Instructions <span id="arrow">&#9660;</span></h3>
+            <div id="instructions">
                 <ul>
-                    <li>For example, if I wanted to add the course "CS 4550: Web Development", I would type "CS4550".</li>
+                    <li>First, select a semester from the dropdown selector</li>
+                    <li>To add a class, simply type its subject and course ID</li>
+                    <ul>
+                        <li>For example, if I wanted to add the course "CS 4550: Web Development", I would type "CS4550".</li>
+                    </ul>
+                    <li>Next, hit the "Enter" key or press the button</li>
+                    <ul>
+                        <li>If we can find the course, you'll get a 'Success!' message, and the course will show up in the "Courses Selected" section below</li>
+                        <li>If the course has any corequisites, you'll see an option to add them</li>
+                    </ul>
+                    <li>Once you've added all the courses, simple press "Submit"!</li>
                 </ul>
-                <li>Next, hit the "Enter" key or press the button</li>
-                <ul>
-                    <li>If we can find the course, you'll get a 'Success!' message, and the course will show up in the "Courses Selected" section below</li>
-                    <li>If the course has any corequisites, you'll see an option to add them</li>
-                </ul>
-                <li>Once you've added all the courses, simple press "Submit"!</li>
-            </ul>
-
+            </div>
         </div>
         <div id="side-course-col">
             <h3>Courses Selected</h3>
