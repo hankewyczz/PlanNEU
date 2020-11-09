@@ -1,5 +1,5 @@
 // Keeps track of all the classes the user has added
-const USER_SECTIONS: { [key: string]: Section } = {};
+var USER_SECTIONS: { [key: string]: Section } = {};
 
 
 //////////////////////////////////////////////////

@@ -1,5 +1,5 @@
 // Keeps track of all the classes the user has added
-const USER_COURSES: { [key: string]: Course } = {};
+var USER_COURSES: { [key: string]: Course } = {};
 
 
 //////////////////////////////////////////////////

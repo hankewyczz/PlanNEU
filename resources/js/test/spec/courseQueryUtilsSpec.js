@@ -93,14 +93,15 @@ describe("Check the construction of the query URL", function() {
 // Tests getCourseFromApi
 describe("Fetching data from SearchNEU", function() {
 	it("Is API working (Spring, 2021)", async function() {
-		// Reset the gotten courses
+		let cs3500 = new Course("CS", "3500", SEMESTER);
+
 		// Initial
-		expect(alreadyAdded("CS3500")).toBe(false);
+		expect(cs3500.alreadySaved()).toBe(false);
 		// Actually get the class this time
-		var response = await getCourseFromApi(new Course("CS", "3500", SEMESTER));
-		expect(alreadyAdded("CS3500")).toBe(true); // Spring 2021
+		
+		var response = await getCourseFromApi(cs3500);
 		// Same call as the first time, but now we've gotten the class before
-		expect(alreadyAdded("CS3500")).toBe(true);
+		expect(cs3500.alreadySaved()).toBe(true); 
 	})
 })
 
@@ -110,7 +111,7 @@ describe("Fetching data, parsing the name", function() {
 
 		var course = new Course("CS", "3500", SEMESTER);
 		var response = await getCourseFromApi(course);
-		expect(alreadyAdded("CS3500")).toBe(true); // Spring 2021
+		expect(course.alreadySaved()).toBe(true); // Spring 2021
 		expect(getCourseName(course)).toBe("CS3500: Object-Oriented Design");
 	})
 });
