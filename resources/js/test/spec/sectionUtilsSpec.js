@@ -373,8 +373,69 @@ describe("Test if Sections overlap", function() {
 		}
 
 		expect(counter).toBe(7);
-		//42300  to 48300 
-		// cs2511Secs
-
 	});
+})
+
+
+
+describe("odometerIncrement", function() {
+	it("Empty", function() {
+		expect(odometerIncrement([], [])).toBe(false);
+	})
+
+	it("Basic", function() {
+		let indices = [0, 0, 0]
+		let arrayOfArrays = [[1, 2], [1], [2, 3, 4]]
+
+		expect(indices).toEqual([0, 0, 0])
+		expect(odometerIncrement(indices, arrayOfArrays)).toBe(true);
+		expect(indices).toEqual([0, 0, 1])
+		expect(odometerIncrement(indices, arrayOfArrays)).toBe(true);
+		expect(indices).toEqual([0, 0, 2])
+		expect(odometerIncrement(indices, arrayOfArrays)).toBe(true);
+		expect(indices).toEqual([1, 0, 0])
+		expect(odometerIncrement(indices, arrayOfArrays)).toBe(true);
+		expect(indices).toEqual([1, 0, 1])
+		expect(odometerIncrement(indices, arrayOfArrays)).toBe(true);
+		expect(indices).toEqual([1, 0, 2])
+		expect(odometerIncrement(indices, arrayOfArrays)).toBe(false);
+	})
+})
+
+
+describe("formCombination", function() {
+	it("Empty case", function() {
+		expect(formCombination([], [])).toEqual([]);
+	})
+
+
+	it("Basic", function() {
+		let indices = [2, 2, 0]
+		let arrayOfArrays = [[1, 2, 3], [1, 2, 3], [1, 2, 3]]
+
+		expect(formCombination(indices, arrayOfArrays)).toEqual([3, 3, 1]);
+		odometerIncrement(indices, arrayOfArrays);
+		expect(formCombination(indices, arrayOfArrays)).toEqual([3, 3, 2]);
+		odometerIncrement(indices, arrayOfArrays);
+		expect(formCombination(indices, arrayOfArrays)).toEqual([3, 3, 3]);
+		expect(odometerIncrement(indices, arrayOfArrays)).toBe(false);
+		expect(formCombination(indices, arrayOfArrays)).toEqual([3, 1, 1]);
+	})
+})
+
+
+describe("createCombinations", function() {
+	it("Empty case", function() {
+		expect(createCombinations([])).toEqual([]);
+	})
+
+	it("Basic case", function() {
+		let possible = [[1, 1], [1, 2], [2, 1], [2, 2]]
+
+		expect(createCombinations([[1, 2], [1, 2]])).toEqual(possible);
+
+		let possible2 = [[1, 1, 1], [1, 2, 1], [2, 1, 1], [2, 2, 1]]
+
+		expect(createCombinations([[1, 2], [1, 2], [1]])).toEqual(possible2);
+	})
 })

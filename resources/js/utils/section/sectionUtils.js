@@ -51,3 +51,64 @@ function timesOverlap(s1Times, s2Times) {
         || (start2 >= start1 && start2 <= end1) // start2 is between start1 and end1
         || (end2 >= start1 && end2 <= end1)); // end2 is between start1 and end1
 }
+/*
+Creates all possible combinations from an array of arrays
+https://stackoverflow.com/questions/8936610/how-can-i-create-every-combination-possible-for-the-contents-of-two-arrays
+*/
+function createCombinations(arrayOfArrays) {
+    // Empty case
+    if (arrayOfArrays.length == 0) {
+        return [];
+    }
+    // Empty case for any of the classes
+    for (let i = 0; i < arrayOfArrays.length; i++) {
+        if (arrayOfArrays[i].length == 0) {
+            return [];
+        }
+    }
+    // We create an empty array of the proper length
+    let indices = new Array(arrayOfArrays.length);
+    indices.fill(0); // Fill with zeros
+    let output = [];
+    // Create and push the first combination
+    output.push(formCombination(indices, arrayOfArrays));
+    while (odometerIncrement(indices, arrayOfArrays)) {
+        // Create and push a combination
+        output.push(formCombination(indices, arrayOfArrays));
+    }
+    return output;
+}
+// Take an array of indices, and generate the resulting combination 
+function formCombination(indices, arrayOfArrays) {
+    let output = [];
+    // Iterate over the indices
+    for (let i = 0; i < indices.length; i++) {
+        output.push(arrayOfArrays[i][indices[i]]);
+    }
+    return output;
+}
+// Incements the array of indices 
+function odometerIncrement(indices, arrayOfArrays) {
+    // We start with the rightmost index in indices
+    for (let i = indices.length - 1; i >= 0; i--) {
+        // Here, we check if we can increment without going over the max value
+        if (indices[i] + 1 <= arrayOfArrays[i].length - 1) {
+            indices[i]++;
+            // If we can, we increment and return true
+            return true;
+        }
+        else {
+            // We move one digit to the left (if we can)
+            if (i - 1 < 0) {
+                // Nothing more to increment -- we're done
+                return false;
+            }
+            else {
+                // Cycle this one to 0, and go again with the next one
+                indices[i] = 0;
+                continue;
+            }
+        }
+    }
+    return false;
+}
