@@ -1,9 +1,10 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -14,6 +15,8 @@ const MESSAGE_DIV_ID = "message-div";
 const COURSES_DIV_ID = "side-course-col";
 const SEMESTER_SELECTOR_ID = "semester-selector";
 const USER_INPUT_ID = "user-course-input";
+const MAX_COURSES_ALLOWED = 8;
+const INITIAL_ELEMENTS_IN_COURSES = 2;
 /*
 Handles the user input
     - input (String): the user input for a single course
@@ -70,6 +73,11 @@ function handleSingleCourse(input = document.getElementById(USER_INPUT_ID).value
     return __awaiter(this, void 0, void 0, function* () {
         document.getElementById(USER_INPUT_ID).value = ""; // Reset the input value
         try {
+            let coursesAdded = document.getElementById(COURSES_DIV_ID).children.length
+                - INITIAL_ELEMENTS_IN_COURSES;
+            if (coursesAdded >= MAX_COURSES_ALLOWED) {
+                throw new Error("Max number of courses reached");
+            }
             // Handle the input and getting the course
             let course = yield handleUserInput(input, semester);
             // Get the course, the course name, and the coreqs
@@ -163,4 +171,11 @@ function toggleInstructions() {
         instructions.style.display = "none";
         arrow.innerHTML = "&#9654";
     }
+}
+// TODO temporary (remove when done)
+function handleTestBody() {
+    return __awaiter(this, void 0, void 0, function* () {
+        let response = yield getCoursesFromUrl();
+        console.log(createCombinations(response));
+    });
 }

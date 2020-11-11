@@ -1,3 +1,17 @@
+/* Checks if any sections in an array overlap */
+function anySectionsOverlap(sections: Section[]): boolean {
+	for (let i = 0; i < sections.length - 1; i++) {
+		for (let j = i + 1; j < sections.length; j++) {
+			if (sectionsOverlap(sections[i], sections[j])) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+
+
 /* Checks if two Sections overlap (time-based) */
 function sectionsOverlap(s1: Section, s2: Section): boolean {
 	let s1Times = s1.content["meetings"][0]["times"];
@@ -67,12 +81,11 @@ function timesOverlap(s1Times: { [key: string]: string }, s2Times: { [key: strin
 Creates all possible combinations from an array of arrays 
 https://stackoverflow.com/questions/8936610/how-can-i-create-every-combination-possible-for-the-contents-of-two-arrays
 */
-function createCombinations<K>(arrayOfArrays: K[][]): K[][] {
+function createCombinations(arrayOfArrays: Section[][]): Section[][] {
 	// Empty case
 	if (arrayOfArrays.length == 0) {
 		return [];
 	}
-
 
 	// Empty case for any of the classes
 	for (let i = 0; i < arrayOfArrays.length; i++) {
@@ -81,20 +94,24 @@ function createCombinations<K>(arrayOfArrays: K[][]): K[][] {
 		}
 	}
 
-
 	// We create an empty array of the proper length
 	let indices: number[] = new Array(arrayOfArrays.length);
 	indices.fill(0);	// Fill with zeros
 
-	let output: K[][] = [];
+	let output: Section[][] = [];
 
-	
 	// Create and push the first combination
 	output.push(formCombination(indices, arrayOfArrays));
 
 	while (odometerIncrement(indices, arrayOfArrays)) {
 		// Create and push a combination
-		output.push(formCombination(indices, arrayOfArrays));
+		let result: Section[] = formCombination(indices, arrayOfArrays);
+		// Check if the sections overlap
+		if (anySectionsOverlap(result)) {
+			// If they overlap, we break out of the for loop
+			continue;
+		}
+		output.push(result);
 	}
 
 	return output;

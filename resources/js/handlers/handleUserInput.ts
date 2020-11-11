@@ -5,6 +5,8 @@ const MESSAGE_DIV_ID: string = "message-div";
 const COURSES_DIV_ID: string = "side-course-col";
 const SEMESTER_SELECTOR_ID: string = "semester-selector";
 const USER_INPUT_ID: string = "user-course-input";
+const MAX_COURSES_ALLOWED: number = 8;
+const INITIAL_ELEMENTS_IN_COURSES: number = 2;
 
 
 /*
@@ -70,6 +72,13 @@ async function handleSingleCourse(
 
 	(document.getElementById(USER_INPUT_ID) as HTMLInputElement).value = ""; // Reset the input value
 	try {
+		let coursesAdded: number = (document.getElementById(COURSES_DIV_ID) as HTMLElement).children.length 
+		- INITIAL_ELEMENTS_IN_COURSES;
+
+		if (coursesAdded >= MAX_COURSES_ALLOWED) {
+			throw new Error("Max number of courses reached");
+		}
+
 		// Handle the input and getting the course
 		let course: Course = await handleUserInput(input, semester);
 
@@ -179,4 +188,13 @@ function toggleInstructions(): void {
 		instructions.style.display = "none";
 		arrow.innerHTML = "&#9654";
 	}
+}
+
+
+
+// TODO temporary (remove when done)
+
+async function handleTestBody() {
+	let response: Section[][] = await getCoursesFromUrl();
+	console.log(createCombinations(response));
 }

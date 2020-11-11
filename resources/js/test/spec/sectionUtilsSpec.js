@@ -422,20 +422,3 @@ describe("formCombination", function() {
 		expect(formCombination(indices, arrayOfArrays)).toEqual([3, 1, 1]);
 	})
 })
-
-
-describe("createCombinations", function() {
-	it("Empty case", function() {
-		expect(createCombinations([])).toEqual([]);
-	})
-
-	it("Basic case", function() {
-		let possible = [[1, 1], [1, 2], [2, 1], [2, 2]]
-
-		expect(createCombinations([[1, 2], [1, 2]])).toEqual(possible);
-
-		let possible2 = [[1, 1, 1], [1, 2, 1], [2, 1, 1], [2, 2, 1]]
-
-		expect(createCombinations([[1, 2], [1, 2], [1]])).toEqual(possible2);
-	})
-})

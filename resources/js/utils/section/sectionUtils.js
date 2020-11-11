@@ -1,4 +1,15 @@
 "use strict";
+/* Checks if any sections in an array overlap */
+function anySectionsOverlap(sections) {
+    for (let i = 0; i < sections.length - 1; i++) {
+        for (let j = i + 1; j < sections.length; j++) {
+            if (sectionsOverlap(sections[i], sections[j])) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
 /* Checks if two Sections overlap (time-based) */
 function sectionsOverlap(s1, s2) {
     let s1Times = s1.content["meetings"][0]["times"];
@@ -74,7 +85,13 @@ function createCombinations(arrayOfArrays) {
     output.push(formCombination(indices, arrayOfArrays));
     while (odometerIncrement(indices, arrayOfArrays)) {
         // Create and push a combination
-        output.push(formCombination(indices, arrayOfArrays));
+        let result = formCombination(indices, arrayOfArrays);
+        // Check if the sections overlap
+        if (anySectionsOverlap(result)) {
+            // If they overlap, we break out of the for loop
+            continue;
+        }
+        output.push(result);
     }
     return output;
 }
@@ -97,6 +114,7 @@ function odometerIncrement(indices, arrayOfArrays) {
             // If we can, we increment and return true
             return true;
         }
+        // We can't increment without going over the max
         else {
             // We move one digit to the left (if we can)
             if (i - 1 < 0) {
