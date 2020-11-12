@@ -93,12 +93,8 @@ function createCombinations(arrayOfArrays) {
 }
 // Take an array of indices, and generate the resulting combination 
 function formCombination(indices, arrayOfArrays) {
-    let output = [];
-    // Iterate over the indices
-    for (let i = 0; i < indices.length; i++) {
-        output.push(arrayOfArrays[i][indices[i]]);
-    }
-    return output;
+    // Uses the indices array to create the resulting combination
+    return arrayOfArrays.map((arr, index) => arr[indices[index]]);
 }
 // Incements the array of indices 
 function odometerIncrement(indices, arrayOfArrays) {

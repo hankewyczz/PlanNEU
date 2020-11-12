@@ -2,15 +2,6 @@
   box-sizing: border-box;
 }
 
-#message-div {
-	width: 100%;
-	margin: 0;
-	padding: 7px;
-	height: auto;
-	visibility: hidden;
-	text-align: center;
-}
-
 .title {
 	font-weight: 300;
 	text-align: center;

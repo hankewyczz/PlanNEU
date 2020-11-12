@@ -114,14 +114,8 @@ function createCombinations(arrayOfArrays: Section[][]): Section[][] {
 
 // Take an array of indices, and generate the resulting combination 
 function formCombination<K>(indices: number[], arrayOfArrays: K[][]): K[] {
-	let output = [];
-
-	// Iterate over the indices
-	for (let i = 0; i < indices.length; i++) {
-		output.push(arrayOfArrays[i][indices[i]]);
-	}
-
-	return output;
+	// Uses the indices array to create the resulting combination
+	return arrayOfArrays.map((arr, index) => arr[indices[index]]);
 }
 
 

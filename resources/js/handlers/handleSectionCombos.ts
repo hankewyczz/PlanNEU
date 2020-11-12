@@ -13,7 +13,6 @@ function getCourseInfoFromUrl(): [string, string[]] {
 
 		let courses: string[] = courseStr.split(',').slice(0, 10);
 
-		handleMessage("Fetched all courses", false, true);
 		return [semester, courses];
 	}
 	catch (err) {
@@ -35,7 +34,7 @@ async function getCoursesFromUrl(): Promise<Section[][]> {
 
 	for (let i = 0; i < courses.length; i++) {
 		// Handle the input and getting the course
-		let course: Course = await handleUserInput(courses[i], semester);
+		let course: Course = handleUserInput(courses[i], semester);
 		await handleGetCourse(course);
 		output.push(course.sections());
 	}

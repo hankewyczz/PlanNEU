@@ -96,10 +96,10 @@ async function handleSingleCourse(
 
 		let messageStr: string = `Successfully added ${fullCourseName}! ${coreqStr}`;
 		// Send the message
-		handleSuccess(messageStr);
+		handleMessage(messageStr, Message.Success);
 	}
 	catch (err) {
-		handleErr(err.message);
+		handleMessage(err.message, Message.Error);
 	}
 }
 
@@ -155,26 +155,13 @@ async function validateInput(event: any): Promise<void> {
 
 
 
-/*
-Displays an error message
-    - message (String) the message to display
-    - @return (void)
-*/
-function handleErr(message: string): void {
-	handleMessage(message, true, false);
+/* Types of a message */
+enum Message {
+	Basic = "#ddd",
+	Success = "#9d9",
+	Warning = "#fd1",
+	Error = "#f66"
 }
-
-
-/*
-Displays a success message
-    - message (String) the message to display
-    - @return (void)
-*/
-function handleSuccess(message: string): void {
-	handleMessage(message, false, true);
-}
-
-
 
 
 /*
@@ -182,11 +169,11 @@ Displays an informational (ie. non-error) message
     - message (String) the message to display
     - @return (void)
 */
-function handleMessage(message: string, error=false, success=false): void {
+function handleMessage(message: string, type: Message = Message.Basic): void {
 	console.log(message);
-	let messageDiv: any = document.getElementById(MESSAGE_DIV_ID);
+	let messageDiv: HTMLElement = document.getElementById(MESSAGE_DIV_ID) as HTMLElement;
 	// Is this an info message, an error message, or a success message?
-	messageDiv.style.backgroundColor = (!error && !success) ? '#ddd' : (error ? '#f66' : '#9d9');
+	messageDiv.style.backgroundColor = type;
 	messageDiv.innerHTML = message;
 	messageDiv.style.visibility = "visible";
 }
@@ -225,14 +212,36 @@ async function handleTestBody() {
 	let response: Section[][];
 
 	try {
+		handleMessage("Fetching course sections...");
 		response = await getCoursesFromUrl();
+		handleMessage("Fetched all sections");
+
+		const start: number = Math.floor(Date.now());
+		let combinations: number = howManyCombinations(response);
+		let combinationStr: string = combinations.toLocaleString();
+
+		const COMBO_WARNING: number = 100_000;	// If we have more than this amount of combinations, warn the user
+		const COMBO_ERROR: number = 10_000_000;	// Ditto, but if it's over this number, throw an error
+
+		if (combinations >= COMBO_ERROR) {
+			handleMessage(`Over ${COMBO_ERROR.toLocaleString()} possible combinations.
+				Please remove some courses and try again.`, Message.Error);
+			// TODO make sure they can't submit the filters
+		}
+		else if (combinations >= COMBO_WARNING) {
+			handleMessage(`${combinationStr} possible combinations`, Message.Warning);
+		}
+		else {
+			handleMessage(`${combinationStr} possible combinations`);
+		}
+
 		console.log(response);
-		console.log(howManyCombinations(response));
-		console.log(createCombinations(response));
+
+		// let results = createCombinations(response);
+		// console.log(`${(Math.floor(Date.now()) - start) / 1000} secs`);
+		// handleMessage(`${results.length.toLocaleString()} results`, false, true);
 	}
 	catch (err) {
-		handleErr(err.message);
+		handleMessage(err.message, Message.Error);
 	}
-
-	
 }

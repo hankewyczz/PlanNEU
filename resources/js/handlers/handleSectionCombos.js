@@ -19,7 +19,6 @@ function getCourseInfoFromUrl() {
             throw new Error();
         }
         let courses = courseStr.split(',').slice(0, 10);
-        handleMessage("Fetched all courses", false, true);
         return [semester, courses];
     }
     catch (err) {
@@ -37,7 +36,7 @@ function getCoursesFromUrl() {
         [semester, courses] = getCourseInfoFromUrl();
         for (let i = 0; i < courses.length; i++) {
             // Handle the input and getting the course
-            let course = yield handleUserInput(courses[i], semester);
+            let course = handleUserInput(courses[i], semester);
             yield handleGetCourse(course);
             output.push(course.sections());
         }

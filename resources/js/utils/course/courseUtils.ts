@@ -118,28 +118,27 @@ Fetches the data for a single course
 	- @throws if the response was unexpected or improperly formatted
 */
 async function getCourseFromApi(course: Course): Promise<any> {
-	return fetch(getQueryUrl(course))
-		.then(response => response.json())
-		.then(function(response) {
-			// Check if the response is a dictionary (it should be)
-			if (typeof response === "object" && !Array.isArray(response)) {
-				// Check if we have any hits for our search
-				if ('results' in response && response['results'].length > 0) {
-					// If we do, then we add this course to the USER_COURSES
-					saveCourse(course, response);
-				}
-				else {
-					// Nothing came up for our search
-					throw new Error("No matching course found");
-				}
-			}
-			// The API gave us something unexpected
-			else {
-				throw new Error("Invalid response from API");
-			}
-		})
+	const response = await fetch(getQueryUrl(course)).then(response => response.json());
+		// .catch(err => { throw new Error(err.message);});
 		// Error doesn't propogate, so we force it
-		.catch(error => { throw new Error(error.message); });
+
+	
+	// Check if the response is a dictionary (it should be)
+	if (typeof response === "object" && !Array.isArray(response)) {
+		// Check if we have any hits for our search
+		if ('results' in response && response['results'].length > 0) {
+			// If we do, then we add this course to the USER_COURSES
+			saveCourse(course, response);
+		}
+		else {
+			// Nothing came up for our search
+			throw new Error("No matching course found");
+		}
+	}
+	// The API gave us something unexpected
+	else {
+		throw new Error("Invalid response from API");
+	}	
 }
 
 

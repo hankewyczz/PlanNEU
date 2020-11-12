@@ -102,26 +102,24 @@ Fetches the data for a single course
 */
 function getCourseFromApi(course) {
     return __awaiter(this, void 0, void 0, function* () {
-        return fetch(getQueryUrl(course))
-            .then(response => response.json())
-            .then(function (response) {
-            // Check if the response is a dictionary (it should be)
-            if (typeof response === "object" && !Array.isArray(response)) {
-                // Check if we have any hits for our search
-                if ('results' in response && response['results'].length > 0) {
-                    // If we do, then we add this course to the USER_COURSES
-                    saveCourse(course, response);
-                }
-                else {
-                    // Nothing came up for our search
-                    throw new Error("No matching course found");
-                }
+        const response = yield fetch(getQueryUrl(course)).then(response => response.json());
+        // .catch(err => { throw new Error(err.message);});
+        // Error doesn't propogate, so we force it
+        // Check if the response is a dictionary (it should be)
+        if (typeof response === "object" && !Array.isArray(response)) {
+            // Check if we have any hits for our search
+            if ('results' in response && response['results'].length > 0) {
+                // If we do, then we add this course to the USER_COURSES
+                saveCourse(course, response);
             }
             else {
-                throw new Error("Invalid response from API");
+                // Nothing came up for our search
+                throw new Error("No matching course found");
             }
-        })
-            .catch(error => { throw new Error(error.message); });
+        }
+        else {
+            throw new Error("Invalid response from API");
+        }
     });
 }
 /*
