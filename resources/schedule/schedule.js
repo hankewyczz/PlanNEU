@@ -9,16 +9,16 @@
 		this.topInfoElement = this.element.getElementsByClassName('cd-schedule__top-info')[0];
 		this.singleEvents = this.element.getElementsByClassName('cd-schedule__event');
 		
-		this.modal = this.element.getElementsByClassName('cd-schedule-modal')[0];
-		this.modalHeader = this.element.getElementsByClassName('cd-schedule-modal__header')[0];
-		this.modalHeaderBg = this.element.getElementsByClassName('cd-schedule-modal__header-bg')[0];
-		this.modalClose = this.modal.getElementsByClassName('cd-schedule-modal__close')[0];
-		this.modalDate = this.modal.getElementsByClassName('cd-schedule-modal__date')[0];
-		this.modalEventName = this.modal.getElementsByClassName('cd-schedule-modal__name')[0];
+		this.model = this.element.getElementsByClassName('cd-schedule-model')[0];
+		this.modelHeader = this.element.getElementsByClassName('cd-schedule-model__header')[0];
+		this.modelHeaderBg = this.element.getElementsByClassName('cd-schedule-model__header-bg')[0];
+		this.modelClose = this.model.getElementsByClassName('cd-schedule-model__close')[0];
+		this.modelDate = this.model.getElementsByClassName('cd-schedule-model__date')[0];
+		this.modelEventName = this.model.getElementsByClassName('cd-schedule-model__name')[0];
 		this.coverLayer = this.element.getElementsByClassName('cd-schedule__cover-layer')[0];
 
-		this.modalMaxWidth = 800;
-		this.modalMaxHeight = 480;
+		this.modelMaxWidth = 800;
+		this.modelMaxHeight = 480;
 
 		this.animating = false;
 		this.supportAnimation = Util.cssSupports('transition');
@@ -35,19 +35,19 @@
 		// according to the mq value, init the style of the template
 		var mq = this.mq(),
 			loaded = Util.hasClass(this.element, 'js-schedule-loaded'),
-			modalOpen = Util.hasClass(this.modal, 'cd-schedule-modal--open');
+			modelOpen = Util.hasClass(this.model, 'cd-schedule-model--open');
 		if( mq == 'desktop' && !loaded ) {
 			Util.addClass(this.element, 'js-schedule-loaded');
 			this.placeEvents();
-			modalOpen && this.checkEventModal(modalOpen);
+			modelOpen && this.checkEventModal(modelOpen);
 		} else if( mq == 'mobile' && loaded) {
 			//in this case you are on a mobile version (first load or resize from desktop)
 			Util.removeClass(this.element, 'cd-schedule--loading js-schedule-loaded');
 			this.resetEventsStyle();
-			modalOpen && this.checkEventModal();
-		} else if( mq == 'desktop' && modalOpen ) {
-			//on a mobile version with modal open - need to resize/move modal window
-			this.checkEventModal(modalOpen);
+			modelOpen && this.checkEventModal();
+		} else if( mq == 'desktop' && modelOpen ) {
+			//on a mobile version with model open - need to resize/move model window
+			this.checkEventModal(modelOpen);
 			Util.removeClass(this.element, 'cd-schedule--loading');
 		} else {
 			Util.removeClass(this.element, 'cd-schedule--loading');
@@ -82,14 +82,14 @@
 	ScheduleTemplate.prototype.initEvents = function() {
 		var self = this;
 		for(var i = 0; i < this.singleEvents.length; i++) {
-			// open modal when user selects an event
+			// open model when user selects an event
 			this.singleEvents[i].addEventListener('click', function(event){
 				event.preventDefault();
 				if(!self.animating) self.openModal(this.getElementsByTagName('a')[0]);
 			});
 		}
-		//close modal window
-		this.modalClose.addEventListener('click', function(event){
+		//close model window
+		this.modelClose.addEventListener('click', function(event){
 			event.preventDefault();
 			if( !self.animating ) self.closeModal();
 		});
@@ -105,12 +105,12 @@
 		this.animating = true;
 
 		//update event name and time
-		this.modalEventName.textContent = target.getElementsByTagName('em')[0].textContent;
-		this.modalDate.textContent = target.getAttribute('data-start')+' - '+target.getAttribute('data-end');
-		this.modal.setAttribute('data-event', target.getAttribute('data-event'));
+		this.modelEventName.textContent = target.getElementsByTagName('em')[0].textContent;
+		this.modelDate.textContent = target.getAttribute('data-start')+' - '+target.getAttribute('data-end');
+		this.model.setAttribute('data-event', target.getAttribute('data-event'));
 
 
-		Util.addClass(this.modal, 'cd-schedule-modal--open');
+		Util.addClass(this.model, 'cd-schedule-model--open');
 		
 		setTimeout(function(){
 			//fixes a flash when an event is selected - desktop version only
@@ -118,9 +118,9 @@
 		}, 10);
 
 		if( mq == 'mobile' ) {
-			self.modal.addEventListener('transitionend', function cb(){
+			self.model.addEventListener('transitionend', function cb(){
 				self.animating = false;
-				self.modal.removeEventListener('transitionend', cb);
+				self.model.removeEventListener('transitionend', cb);
 			});
 		} else {
 			var eventPosition = target.getBoundingClientRect(),
@@ -132,28 +132,28 @@
 			var windowWidth = window.innerWidth,
 				windowHeight = window.innerHeight;
 
-			var modalWidth = ( windowWidth*.8 > self.modalMaxWidth ) ? self.modalMaxWidth : windowWidth*.8,
-				modalHeight = ( windowHeight*.8 > self.modalMaxHeight ) ? self.modalMaxHeight : windowHeight*.8;
+			var modelWidth = ( windowWidth*.8 > self.modelMaxWidth ) ? self.modelMaxWidth : windowWidth*.8,
+				modelHeight = ( windowHeight*.8 > self.modelMaxHeight ) ? self.modelMaxHeight : windowHeight*.8;
 
-			var modalTranslateX = parseInt((windowWidth - modalWidth)/2 - eventLeft),
-				modalTranslateY = parseInt((windowHeight - modalHeight)/2 - eventTop);
+			var modelTranslateX = parseInt((windowWidth - modelWidth)/2 - eventLeft),
+				modelTranslateY = parseInt((windowHeight - modelHeight)/2 - eventTop);
 			
-			var HeaderBgScaleY = modalHeight/eventHeight,
-				BodyBgScaleX = modalWidth;
+			var HeaderBgScaleY = modelHeight/eventHeight,
+				BodyBgScaleX = modelWidth;
 
-			//change modal height/width and translate it
-			self.modal.setAttribute('style', 'top:'+eventTop+'px;left:'+eventLeft+'px;height:'+modalHeight+'px;width:'+modalWidth+'px;transform: translateY('+modalTranslateY+'px) translateX('+modalTranslateX+'px)');
-			//set modalHeader width
-			self.modalHeader.setAttribute('style', 'width:' + modalWidth + 'px');
-			//set modalBody left margin
-			//change modal modalHeaderBg height/width and scale it
-			self.modalHeaderBg.setAttribute('style', 'height: ' + eventHeight + 'px; width: ' + modalWidth + 'px; transform: scaleY(' + HeaderBgScaleY + ')');
+			//change model height/width and translate it
+			self.model.setAttribute('style', 'top:'+eventTop+'px;left:'+eventLeft+'px;height:'+modelHeight+'px;width:'+modelWidth+'px;transform: translateY('+modelTranslateY+'px) translateX('+modelTranslateX+'px)');
+			//set modelHeader width
+			self.modelHeader.setAttribute('style', 'width:' + modelWidth + 'px');
+			//set modelBody left margin
+			//change model modelHeaderBg height/width and scale it
+			self.modelHeaderBg.setAttribute('style', 'height: ' + eventHeight + 'px; width: ' + modelWidth + 'px; transform: scaleY(' + HeaderBgScaleY + ')');
 			
-			self.modalHeaderBg.addEventListener('transitionend', function cb(){
-				//wait for the  end of the modalHeaderBg transformation and show the modal content
+			self.modelHeaderBg.addEventListener('transitionend', function cb(){
+				//wait for the  end of the modelHeaderBg transformation and show the model content
 				self.animating = false;
-				Util.addClass(self.modal, 'cd-schedule-modal--animation-completed');
-				self.modalHeaderBg.removeEventListener('transitionend', cb);
+				Util.addClass(self.model, 'cd-schedule-model--animation-completed');
+				self.modelHeaderBg.removeEventListener('transitionend', cb);
 			});
 		}
 
@@ -171,12 +171,12 @@
 		this.animating = true;
 
 		if( mq == 'mobile' ) {
-			Util.removeClass(this.modal, 'cd-schedule-modal--open');
-			self.modal.addEventListener('transitionend', function cb(){
-				Util.removeClass(self.modal, 'cd-schedule-modal--content-loaded');
+			Util.removeClass(this.model, 'cd-schedule-model--open');
+			self.model.addEventListener('transitionend', function cb(){
+				Util.removeClass(self.model, 'cd-schedule-model--content-loaded');
 				Util.removeClass(item, 'cd-schedule__event--selected');
 				self.animating = false;
-				self.modal.removeEventListener('transitionend', cb);
+				self.model.removeEventListener('transitionend', cb);
 			});
 		} else {
 			var eventPosition = target.getBoundingClientRect(),
@@ -185,36 +185,36 @@
 				eventHeight = target.offsetHeight,
 				eventWidth = target.offsetWidth;
 
-			var modalStyle = window.getComputedStyle(self.modal),
-				modalTop = Number(modalStyle.getPropertyValue('top').replace('px', '')),
-				modalLeft = Number(modalStyle.getPropertyValue('left').replace('px', ''));
+			var modelStyle = window.getComputedStyle(self.model),
+				modelTop = Number(modelStyle.getPropertyValue('top').replace('px', '')),
+				modelLeft = Number(modelStyle.getPropertyValue('left').replace('px', ''));
 
-			var modalTranslateX = eventLeft - modalLeft,
-				modalTranslateY = eventTop - modalTop;
+			var modelTranslateX = eventLeft - modelLeft,
+				modelTranslateY = eventTop - modelTop;
 
-			Util.removeClass(this.modal, 'cd-schedule-modal--open cd-schedule-modal--animation-completed');
+			Util.removeClass(this.model, 'cd-schedule-model--open cd-schedule-model--animation-completed');
 
-			//change modal width/height and translate it
-			self.modal.style.width = eventWidth+'px';self.modal.style.height = eventHeight+'px';self.modal.style.transform = 'translateX('+modalTranslateX+'px) translateY('+modalTranslateY+'px)';
+			//change model width/height and translate it
+			self.model.style.width = eventWidth+'px';self.model.style.height = eventHeight+'px';self.model.style.transform = 'translateX('+modelTranslateX+'px) translateY('+modelTranslateY+'px)';
 
-			// self.modalHeaderBg.setAttribute('style', 'transform: scaleY(1)');
-			self.modalHeaderBg.style.transform = 'scaleY(1)';
+			// self.modelHeaderBg.setAttribute('style', 'transform: scaleY(1)');
+			self.modelHeaderBg.style.transform = 'scaleY(1)';
 
-			self.modalHeaderBg.addEventListener('transitionend', function cb(){
-				//wait for the  end of the modalHeaderBg transformation and reset modal style
-				Util.addClass(self.modal, 'cd-schedule-modal--no-transition');
+			self.modelHeaderBg.addEventListener('transitionend', function cb(){
+				//wait for the  end of the modelHeaderBg transformation and reset model style
+				Util.addClass(self.model, 'cd-schedule-model--no-transition');
 				setTimeout(function(){
-					self.modal.removeAttribute('style');
-					self.modalHeader.removeAttribute('style');
-					self.modalHeaderBg.removeAttribute('style');
+					self.model.removeAttribute('style');
+					self.modelHeader.removeAttribute('style');
+					self.modelHeaderBg.removeAttribute('style');
 				}, 10);
 				setTimeout(function(){
-					Util.removeClass(self.modal, 'cd-schedule-modal--no-transition');
+					Util.removeClass(self.model, 'cd-schedule-model--no-transition');
 				}, 20);
 				self.animating = false;
-				Util.removeClass(self.modal, 'cd-schedule-modal--content-loaded');
+				Util.removeClass(self.model, 'cd-schedule-model--content-loaded');
 				Util.removeClass(item, 'cd-schedule__event--selected');
-				self.modalHeaderBg.removeEventListener('transitionend', cb);
+				self.modelHeaderBg.removeEventListener('transitionend', cb);
 			});
 		}
 
@@ -222,22 +222,22 @@
 		this.animationFallback();
 	};
 
-	ScheduleTemplate.prototype.checkEventModal = function(modalOpen) {
-		// this function is used on resize to reset events/modal style
+	ScheduleTemplate.prototype.checkEventModal = function(modelOpen) {
+		// this function is used on resize to reset events/model style
 		this.animating = true;
 		var self = this;
 		var mq = this.mq();
 		if( mq == 'mobile' ) {
-			//reset modal style on mobile
-			self.modal.removeAttribute('style');
-			self.modalBody.removeAttribute('style');
-			self.modalHeader.removeAttribute('style');
-			self.modalHeaderBg.removeAttribute('style');
-			self.modalBodyBg.removeAttribute('style');
-			Util.removeClass(self.modal, 'cd-schedule-modal--no-transition');
+			//reset model style on mobile
+			self.model.removeAttribute('style');
+			self.modelBody.removeAttribute('style');
+			self.modelHeader.removeAttribute('style');
+			self.modelHeaderBg.removeAttribute('style');
+			self.modelBodyBg.removeAttribute('style');
+			Util.removeClass(self.model, 'cd-schedule-model--no-transition');
 			self.animating = false;	
-		} else if( mq == 'desktop' && modalOpen) {
-			Util.addClass(self.modal, 'cd-schedule-modal--no-transition cd-schedule-modal--animation-completed');
+		} else if( mq == 'desktop' && modelOpen) {
+			Util.addClass(self.model, 'cd-schedule-model--no-transition cd-schedule-model--animation-completed');
 			var item = self.element.getElementsByClassName('cd-schedule__event--selected')[0],
 				target = item.getElementsByTagName('a')[0];
 
@@ -250,27 +250,27 @@
 			var windowWidth = window.innerWidth,
 				windowHeight = window.innerHeight;
 
-			var modalWidth = ( windowWidth*.8 > self.modalMaxWidth ) ? self.modalMaxWidth : windowWidth*.8,
-				modalHeight = ( windowHeight*.8 > self.modalMaxHeight ) ? self.modalMaxHeight : windowHeight*.8;
+			var modelWidth = ( windowWidth*.8 > self.modelMaxWidth ) ? self.modelMaxWidth : windowWidth*.8,
+				modelHeight = ( windowHeight*.8 > self.modelMaxHeight ) ? self.modelMaxHeight : windowHeight*.8;
 
-			var HeaderBgScaleY = modalHeight/eventHeight,
-				BodyBgScaleX = (modalWidth - eventWidth);
+			var HeaderBgScaleY = modelHeight/eventHeight,
+				BodyBgScaleX = (modelWidth - eventWidth);
 
 
 			setTimeout(function(){
-				self.modal.setAttribute('style', 'top:'+(windowHeight/2 - modalHeight/2)+'px;left:'+(windowWidth/2 - modalWidth/2)+'px;height:'+modalHeight+'px;width:'+modalWidth+'px;transform: translateY(0) translateX(0)');
-				//change modal modalBodyBg height/width
-				self.modalBodyBg.style.height = modalHeight+'px';self.modalBodyBg.style.transform = 'scaleY(1) scaleX('+BodyBgScaleX+')';self.modalBodyBg.style.width = '1px';
-				//set modalHeader width
-				self.modalHeader.setAttribute('style', 'width:'+eventWidth+'px');
-				//set modalBody left margin
-				self.modalBody.setAttribute('style', 'margin-left:'+eventWidth+'px');
-				//change modal modalHeaderBg height/width and scale it
-				self.modalHeaderBg.setAttribute('style', 'height: '+eventHeight+'px;width:'+eventWidth+'px; transform:scaleY('+HeaderBgScaleY+');');
+				self.model.setAttribute('style', 'top:'+(windowHeight/2 - modelHeight/2)+'px;left:'+(windowWidth/2 - modelWidth/2)+'px;height:'+modelHeight+'px;width:'+modelWidth+'px;transform: translateY(0) translateX(0)');
+				//change model modelBodyBg height/width
+				self.modelBodyBg.style.height = modelHeight+'px';self.modelBodyBg.style.transform = 'scaleY(1) scaleX('+BodyBgScaleX+')';self.modelBodyBg.style.width = '1px';
+				//set modelHeader width
+				self.modelHeader.setAttribute('style', 'width:'+eventWidth+'px');
+				//set modelBody left margin
+				self.modelBody.setAttribute('style', 'margin-left:'+eventWidth+'px');
+				//change model modelHeaderBg height/width and scale it
+				self.modelHeaderBg.setAttribute('style', 'height: '+eventHeight+'px;width:'+eventWidth+'px; transform:scaleY('+HeaderBgScaleY+');');
 			}, 10);
 
 			setTimeout(function(){
-				Util.removeClass(self.modal, 'cd-schedule-modal--no-transition');
+				Util.removeClass(self.model, 'cd-schedule-model--no-transition');
 				self.animating = false;	
 			}, 20);
 
@@ -280,8 +280,8 @@
 	ScheduleTemplate.prototype.animationFallback = function() {
 		if( !this.supportAnimation ) { // fallback for browsers not supporting transitions
 			var event = new CustomEvent('transitionend');
-			self.modal.dispatchEvent(event);
-			self.modalHeaderBg.dispatchEvent(event);
+			self.model.dispatchEvent(event);
+			self.modelHeaderBg.dispatchEvent(event);
 		}
 	};
 
@@ -310,7 +310,7 @@
 		}
 
 		window.addEventListener('resize', function(event) { 
-			// on resize - update events position and modal position (if open)
+			// on resize - update events position and model position (if open)
 			if( !resizing ) {
 				resizing = true;
 				(!window.requestAnimationFrame) ? setTimeout(checkResize, 250) : window.requestAnimationFrame(checkResize);
@@ -318,7 +318,7 @@
 		});
 
 		window.addEventListener('keyup', function(event){
-			// close event modal when pressing escape key
+			// close event model when pressing escape key
 			if( event.keyCode && event.keyCode == 27 || event.key && event.key.toLowerCase() == 'escape' ) {
 				for(var i = 0; i < scheduleTemplateArray.length; i++) {
 					scheduleTemplateArray[i].closeModal();

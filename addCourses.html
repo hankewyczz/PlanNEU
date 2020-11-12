@@ -36,6 +36,14 @@
 
                 <button class="btn btn-success submit-input-button" onclick="handleSingleCourse()">&#x2192;</button>
             </div>
+            <form action="results/results.html" method="get" onsubmit="setValues()" id="form-to-results">
+                <!--  For some reason, JS doesn't parse the first paramater, so we add a dummy -->
+                <input name="hidden" hidden />
+                <input name="semester" id="submit-input-semester" hidden />
+                <input name="courses" id="submit-input-courses" hidden />
+                <button class="btn btn-success">See Possible Combinations</button>
+            </form>
+
             <hr>
             <h3 style="text-align: center; cursor: pointer" onclick="toggleInstructions()">Instructions <span id="arrow">&#9660;</span></h3>
             <div id="instructions">

@@ -13,9 +13,50 @@ class Section {
         this.crn = crn;
         this.courseName = courseName;
         this.content = content;
+        this.times = new Times(this.content["meetings"][0]["times"]);
     }
     alreadySaved(sectionCrn) {
         return this.crn in USER_SECTIONS;
+    }
+    getTimes() {
+        return this.times;
+    }
+}
+/*
+Section times
+*/
+class Times {
+    // Constructor
+    constructor(times) {
+        this.earliestStart = MAX_TIME;
+        this.latestEnd = MIN_TIME;
+        this.content = {};
+        this.days = Object.keys(times);
+        for (let i = 0; i < this.days.length; i++) {
+            let output = [];
+            for (let j = 0; j < times[this.days[i]].length; j++) {
+                let time = new Time(times[this.days[i]][j]);
+                output.push(time);
+                // Update min and max times
+                if (time.start < this.earliestStart) {
+                    this.earliestStart = time.start;
+                }
+                if (time.end > this.latestEnd) {
+                    this.latestEnd = time.end;
+                }
+            }
+            // Add to the content object
+            this.content[this.days[i]] = output;
+        }
+    }
+}
+/*
+A single time range
+*/
+class Time {
+    constructor(times) {
+        this.start = times["start"];
+        this.end = times["end"];
     }
 }
 /*

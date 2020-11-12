@@ -6,7 +6,8 @@ describe("Section Utils", function() {
 	it("Creating a Section", function() {
 		let crn = "123";
 		let courseName = "abc";
-		let content = { "test": "123" };
+		let content = { "meetings": [{ "type": "Class", "times": { "2": [{ "end": 41400, "start": 35400 }], 
+		"5": [{ "end": 41400, "start": 35400 }] }, "where": "TBA", "endDate": 18738, "startDate": 18646 }] }; 
 
 		let sec = new Section(crn, courseName, content);
 		expect(sec.crn).toBe(crn);
@@ -17,7 +18,8 @@ describe("Section Utils", function() {
 	it("Saving a section", function() {
 		let crn = "123";
 		let courseName = "abc";
-		let content = { "test": "123" };
+		let content = { "meetings": [{ "type": "Class", "times": { "2": [{ "end": 41400, "start": 35400 }], 
+		"5": [{ "end": 41400, "start": 35400 }] }, "where": "TBA", "endDate": 18738, "startDate": 18646 }] };
 
 		let sec = new Section(crn, courseName, content);
 
@@ -31,7 +33,9 @@ describe("Section Utils", function() {
 	it("Removing a section", function() {
 		let crn = "123";
 		let courseName = "abc";
-		let content = { "test": "123" };
+		let content = { "meetings": [{ "type": "Class", "times": { "2": [{ "end": 41400, "start": 35400 }], 
+		"5": [{ "end": 41400, "start": 35400 }] }, "where": "TBA", "endDate": 18738, "startDate": 18646 }] };
+
 
 		let sec = new Section(crn, courseName, content);
 
@@ -46,7 +50,8 @@ describe("Section Utils", function() {
 	it("Get a saved section", function() {
 		let crn = "123";
 		let courseName = "abc";
-		let content = { "test": "123" };
+		let content = { "meetings": [{ "type": "Class", "times": { "2": [{ "end": 41400, "start": 35400 }], 
+		"5": [{ "end": 41400, "start": 35400 }] }, "where": "TBA", "endDate": 18738, "startDate": 18646 }] };
 
 		let sec = new Section(crn, courseName, content);
 

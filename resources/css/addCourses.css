@@ -90,9 +90,11 @@
 }
 
 
-
-
 .remove-course {
 	color: red;
 	cursor: pointer;
+}
+
+#form-to-results {
+	text-align: center;
 }

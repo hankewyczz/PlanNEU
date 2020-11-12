@@ -1,10 +1,9 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -71,8 +70,10 @@ This is the user-level handling for a single course, from input to end
 */
 function handleSingleCourse(input = document.getElementById(USER_INPUT_ID).value, semester = document.getElementById(SEMESTER_SELECTOR_ID).value) {
     return __awaiter(this, void 0, void 0, function* () {
-        document.getElementById(USER_INPUT_ID).value = ""; // Reset the input value
         try {
+            // Let the user know we're getting the course
+            handleMessage("Fetching course...");
+            document.getElementById(USER_INPUT_ID).value = ""; // Reset the input value
             let coursesAdded = document.getElementById(COURSES_DIV_ID).children.length
                 - INITIAL_ELEMENTS_IN_COURSES;
             if (coursesAdded >= MAX_COURSES_ALLOWED) {
@@ -87,7 +88,7 @@ function handleSingleCourse(input = document.getElementById(USER_INPUT_ID).value
             addToCourseDiv(course, fullCourseName);
             let messageStr = `Successfully added ${fullCourseName}! ${coreqStr}`;
             // Send the message
-            handleMessage(messageStr);
+            handleSuccess(messageStr);
         }
         catch (err) {
             handleErr(err.message);
@@ -142,17 +143,26 @@ Displays an error message
     - @return (void)
 */
 function handleErr(message) {
-    handleMessage(message, true);
+    handleMessage(message, true, false);
+}
+/*
+Displays a success message
+    - message (String) the message to display
+    - @return (void)
+*/
+function handleSuccess(message) {
+    handleMessage(message, false, true);
 }
 /*
 Displays an informational (ie. non-error) message
     - message (String) the message to display
     - @return (void)
 */
-function handleMessage(message, error = false) {
+function handleMessage(message, error = false, success = false) {
+    console.log(message);
     let messageDiv = document.getElementById(MESSAGE_DIV_ID);
-    // The color is different depending on whether it's an error or not
-    messageDiv.style.backgroundColor = error ? '#f66' : '#9d9';
+    // Is this an info message, an error message, or a success message?
+    messageDiv.style.backgroundColor = (!error && !success) ? '#ddd' : (error ? '#f66' : '#9d9');
     messageDiv.innerHTML = message;
     messageDiv.style.visibility = "visible";
 }
@@ -172,10 +182,25 @@ function toggleInstructions() {
         arrow.innerHTML = "&#9654";
     }
 }
+// Sets the form values for the GET request
+function setValues() {
+    let semester = document.getElementById(SEMESTER_SELECTOR_ID).value;
+    let courses = Object.keys(USER_COURSES);
+    document.getElementById("submit-input-semester").value = semester;
+    document.getElementById("submit-input-courses").value = courses.join();
+}
 // TODO temporary (remove when done)
 function handleTestBody() {
     return __awaiter(this, void 0, void 0, function* () {
-        let response = yield getCoursesFromUrl();
-        console.log(createCombinations(response));
+        let response;
+        try {
+            response = yield getCoursesFromUrl();
+            console.log(response);
+            console.log(howManyCombinations(response));
+            console.log(createCombinations(response));
+        }
+        catch (err) {
+            handleErr(err.message);
+        }
     });
 }

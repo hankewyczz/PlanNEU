@@ -15,16 +15,70 @@ class Section {
 	crn: string;
 	courseName: string;
 	content: { [key: string]: any };
+	times: Times;
 	// Constructor
 	constructor(crn: string, courseName: string, content: {[key: string]: any}) {
 		this.crn = crn;
 		this.courseName = courseName;
 		this.content = content;
+		this.times = new Times(this.content["meetings"][0]["times"]);
 	}
 	alreadySaved(sectionCrn: string): boolean {
 		return this.crn in USER_SECTIONS;
 	}
+	getTimes(): Times {
+		return this.times;
+	}
 }
+
+
+/*
+Section times
+*/
+class Times {
+	earliestStart: number = MAX_TIME;
+	latestEnd: number = MIN_TIME;
+	days: string[];
+	content: { [key: string]: Time[] } = {};
+	// Constructor
+	constructor(times: { [key: string]: { [key: string]: number }[] }) {
+		this.days = Object.keys(times);
+
+		for (let i = 0; i < this.days.length; i++) {
+
+			let output: Time[] = [];
+
+			for (let j = 0; j < times[this.days[i]].length; j++) {
+				let time: Time = new Time(times[this.days[i]][j]);
+				output.push(time);
+
+				// Update min and max times
+				if (time.start < this.earliestStart) {
+					this.earliestStart = time.start;
+				}
+				if (time.end > this.latestEnd) {
+					this.latestEnd = time.end;
+				}
+			}
+			
+			// Add to the content object
+			this.content[this.days[i]] = output;
+		}
+	}
+}
+
+/*
+A single time range
+*/
+class Time {
+	start: number;
+	end: number;
+	constructor(times: { [key: string]: number }) {
+		this.start = times["start"];
+		this.end = times["end"];
+	}
+}
+
 
 
 /*

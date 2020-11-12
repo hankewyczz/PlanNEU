@@ -70,8 +70,12 @@ async function handleSingleCourse(
 	input: string = (document.getElementById(USER_INPUT_ID) as HTMLInputElement).value,
 	semester: string = (document.getElementById(SEMESTER_SELECTOR_ID) as HTMLInputElement).value): Promise<void> {
 
-	(document.getElementById(USER_INPUT_ID) as HTMLInputElement).value = ""; // Reset the input value
+	
 	try {
+		// Let the user know we're getting the course
+		handleMessage("Fetching course...");
+
+		(document.getElementById(USER_INPUT_ID) as HTMLInputElement).value = ""; // Reset the input value
 		let coursesAdded: number = (document.getElementById(COURSES_DIV_ID) as HTMLElement).children.length 
 		- INITIAL_ELEMENTS_IN_COURSES;
 
@@ -92,7 +96,7 @@ async function handleSingleCourse(
 
 		let messageStr: string = `Successfully added ${fullCourseName}! ${coreqStr}`;
 		// Send the message
-		handleMessage(messageStr);
+		handleSuccess(messageStr);
 	}
 	catch (err) {
 		handleErr(err.message);
@@ -157,18 +161,32 @@ Displays an error message
     - @return (void)
 */
 function handleErr(message: string): void {
-	handleMessage(message, true);
+	handleMessage(message, true, false);
 }
+
+
+/*
+Displays a success message
+    - message (String) the message to display
+    - @return (void)
+*/
+function handleSuccess(message: string): void {
+	handleMessage(message, false, true);
+}
+
+
+
 
 /*
 Displays an informational (ie. non-error) message
     - message (String) the message to display
     - @return (void)
 */
-function handleMessage(message: string, error = false): void {
+function handleMessage(message: string, error=false, success=false): void {
+	console.log(message);
 	let messageDiv: any = document.getElementById(MESSAGE_DIV_ID);
-	// The color is different depending on whether it's an error or not
-	messageDiv.style.backgroundColor = error ? '#f66' : '#9d9';
+	// Is this an info message, an error message, or a success message?
+	messageDiv.style.backgroundColor = (!error && !success) ? '#ddd' : (error ? '#f66' : '#9d9');
 	messageDiv.innerHTML = message;
 	messageDiv.style.visibility = "visible";
 }
@@ -191,10 +209,30 @@ function toggleInstructions(): void {
 }
 
 
+// Sets the form values for the GET request
+function setValues() {
+	let semester = (document.getElementById(SEMESTER_SELECTOR_ID) as HTMLInputElement).value;
+	let courses = Object.keys(USER_COURSES);
+
+	(document.getElementById("submit-input-semester") as HTMLInputElement).value = semester;
+	(document.getElementById("submit-input-courses") as HTMLInputElement).value = courses.join();
+}
+
 
 // TODO temporary (remove when done)
 
 async function handleTestBody() {
-	let response: Section[][] = await getCoursesFromUrl();
-	console.log(createCombinations(response));
+	let response: Section[][];
+
+	try {
+		response = await getCoursesFromUrl();
+		console.log(response);
+		console.log(howManyCombinations(response));
+		console.log(createCombinations(response));
+	}
+	catch (err) {
+		handleErr(err.message);
+	}
+
+	
 }

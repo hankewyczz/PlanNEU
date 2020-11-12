@@ -1240,61 +1240,61 @@ a{
         opacity:0
     }
 }
-.cd-schedule__name,.cd-schedule__event a::before,.cd-schedule-modal__name,.cd-schedule-modal__date{
+.cd-schedule__name,.cd-schedule__event a::before,.cd-schedule-model__name,.cd-schedule-model__date{
     display:block;
     color: #fff;
     -webkit-font-smoothing:antialiased;
     -moz-osx-font-smoothing:grayscale
 }
-.cd-schedule__name,.cd-schedule-modal__name{
+.cd-schedule__name,.cd-schedule-model__name{
     font-size:1.7em;
     font-size:var(--text-lg)
 }
 @media (min-width: 64rem){
-    .cd-schedule__name,.cd-schedule-modal__name{
+    .cd-schedule__name,.cd-schedule-model__name{
         font-size:1em;
         font-size:calc(var(--text-sm)*1.1)
     }
 }
 @media (min-width: 64rem){
-    .cd-schedule-modal__date,.cd-schedule__event a::before{
+    .cd-schedule-model__date,.cd-schedule__event a::before{
         font-size:0.72916em;
         font-size:calc(var(--text-xs)*1);
     }
 }
-.cd-schedule__event [data-event="event-1"],.cd-schedule-modal[data-event="event-1"] .cd-schedule-modal__header-bg{
+.cd-schedule__event [data-event="event-1"],.cd-schedule-model[data-event="event-1"] .cd-schedule-model__header-bg{
     background-color: #f94144;
 }
-.cd-schedule__event [data-event="event-2"],.cd-schedule-modal[data-event="event-2"] .cd-schedule-modal__header-bg{
+.cd-schedule__event [data-event="event-2"],.cd-schedule-model[data-event="event-2"] .cd-schedule-model__header-bg{
     background-color: #f8961e;
 }
-.cd-schedule__event [data-event="event-3"],.cd-schedule-modal[data-event="event-3"] .cd-schedule-modal__header-bg{
+.cd-schedule__event [data-event="event-3"],.cd-schedule-model[data-event="event-3"] .cd-schedule-model__header-bg{
     background-color: #43aa8b;
 }
-.cd-schedule__event [data-event="event-4"],.cd-schedule-modal[data-event="event-4"] .cd-schedule-modal__header-bg{
+.cd-schedule__event [data-event="event-4"],.cd-schedule-model[data-event="event-4"] .cd-schedule-model__header-bg{
     background-color: #90be6d;
 }
-.cd-schedule__event [data-event="event-5"],.cd-schedule-modal[data-event="event-5"] .cd-schedule-modal__header-bg{
+.cd-schedule__event [data-event="event-5"],.cd-schedule-model[data-event="event-5"] .cd-schedule-model__header-bg{
     background-color: #f9c74f;
 }
-.cd-schedule__event [data-event="event-6"],.cd-schedule-modal[data-event="event-6"] .cd-schedule-modal__header-bg{
+.cd-schedule__event [data-event="event-6"],.cd-schedule-model[data-event="event-6"] .cd-schedule-model__header-bg{
     background-color: #577590;
 }
-.cd-schedule__event [data-event="event-7"],.cd-schedule-modal[data-event="event-7"] .cd-schedule-modal__header-bg{
+.cd-schedule__event [data-event="event-7"],.cd-schedule-model[data-event="event-7"] .cd-schedule-model__header-bg{
     background-color: #f3722c;
 }
-.cd-schedule__event [data-event="event-8"],.cd-schedule-modal[data-event="event-8"] .cd-schedule-modal__header-bg{
+.cd-schedule__event [data-event="event-8"],.cd-schedule-model[data-event="event-8"] .cd-schedule-model__header-bg{
     background-color: #98c1d9;
 }
-.cd-schedule__event [data-event="event-9"],.cd-schedule-modal[data-event="event-9"] .cd-schedule-modal__header-bg{
+.cd-schedule__event [data-event="event-9"],.cd-schedule-model[data-event="event-9"] .cd-schedule-model__header-bg{
     background-color: #74c69d;
 }
-.cd-schedule__event [data-event="event-10"],.cd-schedule-modal[data-event="event-10"] .cd-schedule-modal__header-bg{
+.cd-schedule__event [data-event="event-10"],.cd-schedule-model[data-event="event-10"] .cd-schedule-model__header-bg{
     background-color: #a2d2ff;
 }
 
 
-.cd-schedule-modal{
+.cd-schedule-model{
     position:fixed;
     z-index:3;
     top:0;
@@ -1313,7 +1313,7 @@ a{
     transition-timing-function:cubic-bezier(0.5, 0, 0.1, 1)
 }
 @media (min-width: 64rem){
-    .cd-schedule-modal{
+    .cd-schedule-model{
         right:auto;
         width:auto;
         height:auto;
@@ -1327,7 +1327,7 @@ a{
         transition-timing-function:cubic-bezier(0.5, 0, 0.1, 1)
     }
 }
-.cd-schedule-modal__header{
+.cd-schedule-model__header{
     position:relative;
     height:70px;
     display:-ms-flexbox;
@@ -1337,7 +1337,7 @@ a{
     width:100%
 }
 @media (min-width: 64rem){
-    .cd-schedule-modal__header{
+    .cd-schedule-model__header{
         position:absolute;
         display:block;
         top:0;
@@ -1345,31 +1345,31 @@ a{
         height:100%
     }
 }
-.cd-schedule-modal__content{
+.cd-schedule-model__content{
     position:relative;
     z-index:3;
     padding:0.75em 1.25em;
     padding:var(--space-sm) var(--component-padding)
 }
 @media (min-width: 64rem){
-    .cd-schedule-modal__content{
+    .cd-schedule-model__content{
         display:block;
         padding:0.75em;
         padding:var(--space-sm)
     }
 }
-.cd-schedule-modal__body{
+.cd-schedule-model__body{
     position:relative;
     width:100%;
     height:calc(100% - 70px)
 }
 @media (min-width: 64rem){
-    .cd-schedule-modal__body{
+    .cd-schedule-model__body{
         height:100%;
         width:auto
     }
 }
-.cd-schedule-modal__event-info{
+.cd-schedule-model__event-info{
     position:relative;
     z-index:2;
     line-height:1.4;
@@ -1379,24 +1379,24 @@ a{
     font-size:1em;
     font-size:calc(var(--text-sm)*1.2)
 }
-.cd-schedule-modal__event-info>div{
+.cd-schedule-model__event-info>div{
     overflow:auto;
     height:100%;
     padding:1.25em 1.25em;
     padding:var(--space-md) var(--component-padding)
 }
 @media (min-width: 64rem){
-    .cd-schedule-modal__event-info{
+    .cd-schedule-model__event-info{
         opacity:0;
         font-size:0.83333em;
         font-size:var(--text-sm)
     }
-    .cd-schedule-modal__event-info>div{
+    .cd-schedule-model__event-info>div{
         padding:1.625em 2.4em 1.625em 1.625em;
         padding:calc(var(--space-md)*1.3) calc(var(--space-lg)*1.2) calc(var(--space-md)*1.3) calc(var(--space-md)*1.3)
     }
 }
-.cd-schedule-modal__header-bg,.cd-schedule-modal__body-bg{
+.cd-schedule-model__header-bg,.cd-schedule-model__body-bg{
     position:absolute;
     top:0;
     left:0;
@@ -1404,7 +1404,7 @@ a{
     width:100%
 }
 @media (min-width: 64rem){
-    .cd-schedule-modal__header-bg,.cd-schedule-modal__body-bg{
+    .cd-schedule-model__header-bg,.cd-schedule-model__body-bg{
         -webkit-transform:translateZ(0);
         transform:translateZ(0);
         will-change:transform;
@@ -1412,21 +1412,21 @@ a{
         backface-visibility:hidden
     }
 }
-.cd-schedule-modal__header-bg{
+.cd-schedule-model__header-bg{
     z-index:2;
     -webkit-transform-origin:top center;
     -ms-transform-origin:top center;
     transform-origin:top center
 }
 @media (min-width: 64rem){
-    .cd-schedule-modal__header-bg{
+    .cd-schedule-model__header-bg{
         transition:-webkit-transform .4s;
         transition:transform .4s;
         transition:transform .4s, -webkit-transform .4s;
         transition-timing-function:cubic-bezier(0.5, 0, 0.1, 1)
     }
 }
-.cd-schedule-modal__body-bg{
+.cd-schedule-model__body-bg{
     z-index:1;
     background-color: #fff;
     -webkit-transform-origin:top left;
@@ -1434,25 +1434,25 @@ a{
     transform-origin:top left
 }
 @media (min-width: 64rem){
-    .cd-schedule-modal__body-bg{
+    .cd-schedule-model__body-bg{
         opacity:0;
         -webkit-transform:none;
         -ms-transform:none;
         transform:none
     }
 }
-.cd-schedule-modal--no-transition{
+.cd-schedule-model--no-transition{
     transition:none
 }
-.cd-schedule-modal--no-transition .cd-schedule-modal__header-bg,.cd-schedule-modal--no-transition .cd-schedule-modal__body-bg{
+.cd-schedule-model--no-transition .cd-schedule-model__header-bg,.cd-schedule-model--no-transition .cd-schedule-model__body-bg{
     transition:none !important
 }
 @media (min-width: 64rem){
-    .cd-schedule-modal__date{
+    .cd-schedule-model__date{
         display:block
     }
 }
-.cd-schedule-modal__close{
+.cd-schedule-model__close{
     position:absolute;
     z-index:3;
     top:0;
@@ -1461,7 +1461,7 @@ a{
     width:70px;
     background-color: #000;
 }
-.cd-schedule-modal__close::before,.cd-schedule-modal__close::after{
+.cd-schedule-model__close::before,.cd-schedule-model__close::after{
     content:'';
     position:absolute;
     top:50%;
@@ -1472,44 +1472,43 @@ a{
     -webkit-backface-visibility:hidden;
     backface-visibility:hidden
 }
-.cd-schedule-modal__close::before{
+.cd-schedule-model__close::before{
     -webkit-transform:translateX(-50%) translateY(-50%) rotate(45deg);
     -ms-transform:translateX(-50%) translateY(-50%) rotate(45deg);
     transform:translateX(-50%) translateY(-50%) rotate(45deg)
 }
-.cd-schedule-modal__close::after{
+.cd-schedule-model__close::after{
     -webkit-transform:translateX(-50%) translateY(-50%) rotate(-45deg);
     -ms-transform:translateX(-50%) translateY(-50%) rotate(-45deg);
     transform:translateX(-50%) translateY(-50%) rotate(-45deg)
 }
 @media (min-width: 64rem){
-    .cd-schedule-modal__close{
+    .cd-schedule-model__close{
         width:40px;
         height:40px;
-        background:transparent;
-        opacity:0
+        background: #000;
+        opacity:1;
     }
-    .cd-schedule-modal__close::after,.cd-schedule-modal__close::before{
-        background:hsl(0, 0%, 13%);
-        background:var(--cd-color-text);
+    .cd-schedule-model__close::after,.cd-schedule-model__close::before{
+        background: #fff;
         height:16px
     }
 }
-.cd-schedule-modal--open{
+.cd-schedule-model--open{
     -webkit-transform:translateX(0);
     -ms-transform:translateX(0);
     transform:translateX(0);
     visibility:visible
 }
-.cd-schedule-modal--open .cd-schedule-modal__event-info>div{
+.cd-schedule-model--open .cd-schedule-model__event-info>div{
     -webkit-overflow-scrolling:touch
 }
 @media (min-width: 64rem){
-    .cd-schedule-modal--animation-completed .cd-schedule-modal__close,.cd-schedule-modal--content-loaded.cd-schedule-modal--animation-completed .cd-schedule-modal__event-info{
+    .cd-schedule-model--animation-completed .cd-schedule-model__close,.cd-schedule-model--content-loaded.cd-schedule-model--animation-completed .cd-schedule-model__event-info{
         opacity:1;
         transition:opacity .2s
     }
-    .cd-schedule-modal--open .cd-schedule-modal__body-bg{
+    .cd-schedule-model--open .cd-schedule-model__body-bg{
         opacity:1;
         transition:-webkit-transform .4s;
         transition:transform .4s;
@@ -1529,7 +1528,7 @@ a{
     visibility:hidden;
     transition:opacity .4s, visibility .4s
 }
-.cd-schedule-modal--open+.cd-schedule__cover-layer{
+.cd-schedule-model--open+.cd-schedule__cover-layer{
     opacity:1;
     visibility:visible
 }

@@ -14,12 +14,12 @@ function anySectionsOverlap(sections: Section[]): boolean {
 
 /* Checks if two Sections overlap (time-based) */
 function sectionsOverlap(s1: Section, s2: Section): boolean {
-	let s1Times = s1.content["meetings"][0]["times"];
-	let s2Times = s2.content["meetings"][0]["times"];
+	let s1Times: Times = s1.getTimes();
+	let s2Times: Times = s2.getTimes();
 
 	// The days at which this section meets
-	let s1Days: string[] = Object.keys(s1Times);	
-	let s2Days: string[] = Object.keys(s2Times);
+	let s1Days: string[] = s1Times.days;	
+	let s2Days: string[] = s2Times.days;
 
 	for (let i = 0; i < s1Days.length; i++) {
 		for (let j = 0; j < s2Days.length; j++) {
@@ -28,7 +28,7 @@ function sectionsOverlap(s1: Section, s2: Section): boolean {
 			let day2: string = s2Days[j];
 			// Check if this is the same day
 			if (day1 == day2) {
-				if (anyTimesOverlap(s1Times[day1], s2Times[day2])) {
+				if (anyTimesOverlap(s1Times.content[day1], s2Times.content[day2])) {
 					return true;
 				}
 			}
@@ -42,7 +42,7 @@ function sectionsOverlap(s1: Section, s2: Section): boolean {
 /*
 Checks if any number of time ranges overlap
 */
-function anyTimesOverlap(s1Times: any[], s2Times: any[]): boolean {
+function anyTimesOverlap(s1Times: Time[], s2Times: Time[]): boolean {
 	for (let i = 0; i < s1Times.length; i++) {
 		for (let j = 0; j < s2Times.length; j++) {
 			if (timesOverlap(s1Times[i], s2Times[j])) {
@@ -58,21 +58,14 @@ function anyTimesOverlap(s1Times: any[], s2Times: any[]): boolean {
 /*
 Checks if two time ranges overlap
 */
-function timesOverlap(s1Times: { [key: string]: string }, s2Times: { [key: string]: string }): boolean {
-	let start1 = new Number(s1Times["start"]);
-	let end1 = new Number(s1Times["end"]);
-	let start2 = new Number(s2Times["start"]);
-	let end2 = new Number(s2Times["end"]);
-
-
+function timesOverlap(t1: Time, t2: Time): boolean {
 	// Check for any type of possible overlap (if any of these are true, there is overlap)
-	return ((start1 == end1 || start2 == end2)		// Edges overlap
-		|| (start1 >= start2 && start1 <= end2) 	// start1 is between start2 and end2
-		|| (end1 >= start2 && end1 <= end2)			// end1 is between start2 and end2
-		|| (start2 >= start1 && start2 <= end1) 	// start2 is between start1 and end1
-		|| (end2 >= start1 && end2 <= end1));		// end2 is between start1 and end1
+	return ((t1.start == t1.end || t2.start == t2.end)		// Edges overlap
+		|| (t1.start >= t2.start && t1.start <= t2.end) 	// t1.start is between t2.start and t2.end
+		|| (t1.end >= t2.start && t1.end <= t2.end)			// t1.end is between t2.start and t2.end
+		|| (t2.start >= t1.start && t2.start <= t1.end) 	// t2.start is between t1.start and t1.end
+		|| (t2.end >= t1.start && t2.end <= t1.end));		// t2.end is between t1.start and t1.end
 }
-
 
 
 
@@ -159,4 +152,15 @@ function odometerIncrement<K>(indices: number[], arrayOfArrays: K[][]): boolean 
 		}
 	}
 	return false;
+}
+
+
+
+/* Given an array of arrays of Sections, check how many possible combinations there are */
+function howManyCombinations(arr: Section[][]): number {
+	let total: number = 1;
+	for (let i = 0; i < arr.length; i++) {
+		total *= arr[i].length;
+	}
+	return total;
 }
