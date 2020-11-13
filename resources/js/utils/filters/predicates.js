@@ -39,3 +39,34 @@ function isSeatsLeft(sections) {
     }
     return true;
 }
+/* Checks if we have enough days off */
+function enoughDaysOff(sections, numDays = 0, days = []) {
+    // If it's the defaults, we just return true
+    if (numDays === 0 && days.length === 0) {
+        return true;
+    }
+    /* Checks if the day is free */
+    let dayFree = { "1": true, "2": true, "3": true, "4": true, "5": true };
+    for (let i = 0; i < sections.length; i++) {
+        let secDays = sections[i].getTimes().days;
+        // Update each day
+        for (let j = 0; j < secDays.length; j++) {
+            // If we have anything on this day, it is no longer free
+            dayFree[secDays[j]] = false;
+        }
+    }
+    // Check what days are free
+    for (let i = 0; i < days.length; i++) {
+        if (!(dayFree[days[i]])) {
+            return false;
+        }
+    }
+    // Now, we check if this meets our requirements
+    let daysFreeVals = Object.values(dayFree);
+    let count = 0;
+    for (let i = 0; i < daysFreeVals.length; i++) {
+        count += daysFreeVals[i] ? 1 : 0;
+    }
+    // Check if we have enough days off
+    return count >= numDays;
+}

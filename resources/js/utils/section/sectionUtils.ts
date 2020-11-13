@@ -38,7 +38,7 @@ function sectionsOverlap(s1: Section, s2: Section): boolean {
 	return false;
 }
 
-
+	
 /*
 Checks if any number of time ranges overlap
 */
