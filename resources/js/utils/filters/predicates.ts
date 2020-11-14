@@ -7,8 +7,14 @@ const MAX_TIME: number = 86400;
 /* Checks if we meet the minimum required honors courses */
 function meetsMinHonorsReq(sections: Section[], minHonors: number = 0): boolean {
 	// If the min number of honors courses is 0, it's always true
-	if (minHonors === 0) {
+	if (minHonors === 0 || sections.length === 0) {
+
 		return true;
+	}
+
+	// No possible way for this to be true
+	if (minHonors > sections.length) {
+		return false;
 	}
 
 	// If this is an honors section - return 1, else 0
@@ -32,7 +38,7 @@ function isValidTime(sections: Section[], start: number = MIN_TIME, end: number 
 		let times: Times = sections[i].getTimes();
 
 		// If we're out of bounds, this isn't a valid time
-		if (times.earliestStart < MIN_TIME || times.latestEnd > MAX_TIME) {
+		if (times.earliestStart < start || times.latestEnd > end) {
 			return false;
 		}
 	}
@@ -56,6 +62,13 @@ function enoughDaysOff(sections: Section[], numDays: number = 0, days: string[] 
 	// If it's the defaults, we just return true
 	if (numDays === 0 && days.length === 0) {
 		return true;
+	}
+
+
+	/* No possible way for this to be true */
+	// The user selected too many specific
+	if (numDays < days.length) {
+		return false;
 	}
 
 	/* Checks if the day is free */
