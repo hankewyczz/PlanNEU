@@ -104,14 +104,3 @@ describe("Fetching data from SearchNEU", function() {
 		expect(cs3500.alreadySaved()).toBe(true); 
 	})
 })
-
-// Tests getCourseName
-describe("Fetching data, parsing the name", function() {
-	it("Gets the course name", async function() {
-
-		var course = new Course("CS", "3500", SEMESTER);
-		var response = await getCourseFromApi(course);
-		expect(course.alreadySaved()).toBe(true); // Spring 2021
-		expect(getCourseName(course)).toBe("CS3500: Object-Oriented Design");
-	})
-});

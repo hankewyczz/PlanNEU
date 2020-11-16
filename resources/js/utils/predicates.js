@@ -59,7 +59,6 @@ function enoughDaysOff(sections, numDays = 0, days = []) {
         return true;
     }
     /* No possible way for this to be true */
-    // The user selected too many specific
     if (numDays < days.length) {
         return false;
     }
@@ -73,7 +72,6 @@ function enoughDaysOff(sections, numDays = 0, days = []) {
             dayFree[secDays[j]] = false;
         }
     }
-    // Check what days are free
     for (let i = 0; i < days.length; i++) {
         if (!(dayFree[days[i]])) { // If we need this day to be free, and it isn't, throw an error
             return false;

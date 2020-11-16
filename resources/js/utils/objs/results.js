@@ -13,9 +13,11 @@ class Result {
             this.sectionLinks.push(this.courseLink(sections[i]));
             // Deal with the schedule
             let times = sections[i].getTimes();
+            // For each day
             for (let j = 0; j < times.days.length; j++) {
                 let day = times.days[j];
                 let timeArr = times.content[day];
+                // For each meeting
                 for (let k = 0; k < timeArr.length; k++) {
                     let meetTime = timeArr[k];
                     this.days[day][meetTime.start] = this.timeStr(meetTime, sections[i]);

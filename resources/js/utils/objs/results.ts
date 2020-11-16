@@ -20,10 +20,12 @@ class Result {
 			// Deal with the schedule
 			let times: Times = sections[i].getTimes();
 
+			// For each day
 			for (let j = 0; j < times.days.length; j++) {
 				let day: string = times.days[j];
 				let timeArr: Time[] = times.content[day];
 
+				// For each meeting
 				for (let k = 0; k < timeArr.length; k++) {
 					let meetTime: Time = timeArr[k];
 					this.days[day][meetTime.start] = this.timeStr(meetTime, sections[i]);
@@ -34,7 +36,6 @@ class Result {
 
 	timeStr(time: Time, section: Section): string {
 		return `${secsToHM(time.start)}-${secsToHM(time.end)} &mdash; ${section.courseName}`;
-
 	}
 
 	courseLink(section: Section): string {

@@ -113,16 +113,12 @@ function getCourseFromApi(course) {
             if ('results' in response && response['results'].length > 0) {
                 // If we do, then we add this course to the USER_COURSES
                 saveCourse(course, response);
+                return;
             }
-            else {
-                // Nothing came up for our search
-                throw new Error("No matching course found");
-            }
+            // Nothing came up for our search
+            throw new Error("No matching course found");
         }
-        // The API gave us something unexpected
-        else {
-            throw new Error("Invalid response from API");
-        }
+        throw new Error("Invalid response from API");
     });
 }
 /*

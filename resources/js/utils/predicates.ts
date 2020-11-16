@@ -14,11 +14,11 @@ function anyHonors(sections: Section[]): boolean {
 	return false;
 }
 
+
 /* Checks if we meet the minimum required honors courses */
 function meetsMinHonorsReq(sections: Section[], minHonors: number = 0): boolean {
 	// If the min number of honors courses is 0, it's always true
 	if (minHonors === 0 || sections.length === 0) {
-
 		return true;
 	}
 
@@ -74,9 +74,7 @@ function enoughDaysOff(sections: Section[], numDays: number = 0, days: string[] 
 		return true;
 	}
 
-
 	/* No possible way for this to be true */
-	// The user selected too many specific
 	if (numDays < days.length) {
 		return false;
 	}
@@ -93,7 +91,6 @@ function enoughDaysOff(sections: Section[], numDays: number = 0, days: string[] 
 		}
 	}
 
-	// Check what days are free
 	for (let i = 0; i < days.length; i++) {
 		if (!(dayFree[days[i]])) {	// If we need this day to be free, and it isn't, throw an error
 			return false;
@@ -110,5 +107,4 @@ function enoughDaysOff(sections: Section[], numDays: number = 0, days: string[] 
 
 	// Check if we have enough days off
 	return count >= numDays;
-
 }

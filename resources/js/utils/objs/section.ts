@@ -1,15 +1,4 @@
-// Keeps track of all the classes the user has added
-var USER_SECTIONS: { [key: string]: Section } = {};
-
-
-//////////////////////////////////////////////////
-////////    Dealing with USER_SECTIONS     ////////
-//////////////////////////////////////////////////
-
-
-/*
-A single Section.
-*/
+//A single Section.
 class Section {
 	// Class variables
 	crn: string;
@@ -20,14 +9,17 @@ class Section {
 	times: Times;
 	// Constructor
 	constructor(crn: string, courseName: string, fullCourseName: string, content: {[key: string]: any}) {
+		// Initialize
 		this.crn = crn;
 		this.courseName = courseName;
 		this.fullCourseName = fullCourseName;
 		this.content = content;
 
+		// Initialize as null, so we know if it's been set or not
 		let meetingTimes = null;
 
-		let meetings = this.content["meetings"];
+		// All class meetings (lecture/exams/etc)
+		let meetings = content["meetings"];
 
 		for (let i = 0; i < meetings.length; i++) {
 			if (meetings[i]["type"] == "Class") {
@@ -35,14 +27,13 @@ class Section {
 			}
 		}
 		if (meetingTimes == null) {
-			throw new Error("No times found");
+			throw new Error("No meeting times found");
 		}
 
 		this.times = meetingTimes;
 	}
-	alreadySaved(sectionCrn: string): boolean {
-		return this.crn in USER_SECTIONS;
-	}
+
+	// Gets all meeting times
 	getTimes(): Times {
 		return this.times;
 	}
@@ -94,41 +85,4 @@ class Time {
 		this.start = times["start"];
 		this.end = times["end"];
 	}
-}
-
-
-
-/*
-Removes a section which has already been gotten
-	- sectionCrn (String): The CRN of the section
-	- @return (void)
-*/
-function removeSavedSection(sectionCrn: string): void {
-	delete USER_SECTIONS[sectionCrn];
-}
-
-
-/*
-Gets the section data from a section which has already been added
-	- sectionCrn (String): The CRN of the section
-	- @return (Section): The section
-	- @throws If the section has not been added yet
-*/
-function getSavedSection(sectionCrn: string): Section {
-	try {
-		return USER_SECTIONS[sectionCrn];
-	}
-	catch (err) {
-		throw new Error("Class has not yet been added");
-	}
-}
-
-
-/*
-Adds a new Section
-	- section (Section): The section which we're adding to the dictionary
-	- @return (void)
-*/
-function saveSection(section: Section): void {
-	USER_SECTIONS[section.crn] = section;
 }

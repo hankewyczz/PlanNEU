@@ -31,9 +31,7 @@ class Course {
         let arrSec = this.content["sections"];
         let results = [];
         for (let i = 0; i < arrSec.length; i++) {
-            let sec = new Section(arrSec[i]["crn"], this.name, this.fullName, arrSec[i]);
-            saveSection(sec);
-            results.push(sec);
+            results.push(new Section(arrSec[i]["crn"], this.name, this.fullName, arrSec[i]));
         }
         return results;
     }

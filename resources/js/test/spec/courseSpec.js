@@ -10,10 +10,10 @@ describe("Check CRD for stored courses", function() {
 
 	it("Create, Read, Delete", function() {
 		cs3500 = new Course("CS", "3500");
-		saveCourse(cs3500, {results: [1]});
+		saveCourse(cs3500, {results: [{"class": {"name": "Name"}}]});
 
 		expect(cs3500.alreadySaved()).toBe(true);
-		expect(getSavedCourse("CS3500").content).toBe(1);
+		expect(getSavedCourse("CS3500").content.class.name).toBe("Name");
 
 		removeSavedCourse("CS3500");
 		

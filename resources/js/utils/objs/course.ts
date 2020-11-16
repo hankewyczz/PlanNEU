@@ -32,6 +32,7 @@ class Course {
 	// Add and parse content
 	addContent(content: any): void {
 		// Save the content
+		
 		this.content = content["results"][0];
 		this.fullName = `${this.name}: ${this.content["class"]["name"]}`;
 	}
@@ -47,9 +48,7 @@ class Course {
 		let results: Section[] = [];
 
 		for (let i = 0; i < arrSec.length; i++) {
-			let sec = new Section(arrSec[i]["crn"], this.name, this.fullName, arrSec[i]);
-			saveSection(sec);
-			results.push(sec);
+			results.push(new Section(arrSec[i]["crn"], this.name, this.fullName, arrSec[i]));
 		}
 		return results;
 	}
