@@ -54,7 +54,6 @@ async function handleGetCourse(course: Course): Promise<string> {
 	if (!course.alreadySaved()) {
 		throw new Error("Course could not be added");
 	}
-
 	return getCourseName(course);
 }
 
@@ -99,6 +98,7 @@ async function handleSingleCourse(
 		handleMessage(messageStr, Message.Success);
 	}
 	catch (err) {
+		console.log(err);
 		handleMessage(err.message, Message.Error);
 	}
 }
@@ -203,45 +203,4 @@ function setValues() {
 
 	(document.getElementById("submit-input-semester") as HTMLInputElement).value = semester;
 	(document.getElementById("submit-input-courses") as HTMLInputElement).value = courses.join();
-}
-
-
-// TODO temporary (remove when done)
-
-async function handleTestBody() {
-	let response: Section[][];
-
-	try {
-		handleMessage("Fetching course sections...");
-		response = await getCoursesFromUrl();
-		handleMessage("Fetched all sections");
-
-		const start: number = Math.floor(Date.now());
-		let combinations: number = howManyCombinations(response);
-		let combinationStr: string = combinations.toLocaleString();
-
-		const COMBO_WARNING: number = 100_000;	// If we have more than this amount of combinations, warn the user
-		const COMBO_ERROR: number = 10_000_000;	// Ditto, but if it's over this number, throw an error
-
-		if (combinations >= COMBO_ERROR) {
-			handleMessage(`Over ${COMBO_ERROR.toLocaleString()} possible combinations.
-				Please remove some courses and try again.`, Message.Error);
-			// TODO make sure they can't submit the filters
-		}
-		else if (combinations >= COMBO_WARNING) {
-			handleMessage(`${combinationStr} possible combinations`, Message.Warning);
-		}
-		else {
-			handleMessage(`${combinationStr} possible combinations`);
-		}
-
-		console.log(response);
-
-		// let results = createCombinations(response);
-		// console.log(`${(Math.floor(Date.now()) - start) / 1000} secs`);
-		// handleMessage(`${results.length.toLocaleString()} results`, false, true);
-	}
-	catch (err) {
-		handleMessage(err.message, Message.Error);
-	}
 }

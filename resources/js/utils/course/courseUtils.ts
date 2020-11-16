@@ -155,7 +155,7 @@ function getCoreqs(course: Course): string {
 	}
 
 	// Gets the coreqs of this course
-	let coreqs = (getSavedCourse(course.name) as any)["class"]["coreqs"];
+	let coreqs = getSavedCourse(course.name).content["class"]["coreqs"];
 
 
 	/*

@@ -27,13 +27,13 @@ class Course {
 		this.content = {};
 	}
 	addContent(content: object): void {
-		this.content = content;
+		this.content = (content as any)["results"][0];
 	}
 	alreadySaved(): boolean {
 		return alreadySaved(this.name);
 	}
 	sections(): any[] {
-		let arrSec: any[] = this.content["results"][0]["sections"];
+		let arrSec: any[] = this.content["sections"];
 		let results: Section[] = [];
 
 		for (let i = 0; i < arrSec.length; i++) {
@@ -62,10 +62,9 @@ Gets the course data from a course which has already been added
 	- @return (Dictionary): the results struct of this class (does not include filters)
 	- @throws If the class has not been added yet
 */
-function getSavedCourse(courseName: string): object {
+function getSavedCourse(courseName: string): Course {
 	try {
-		let courseContent: any = USER_COURSES[courseName].content;
-		return courseContent["results"][0];
+		return USER_COURSES[courseName];
 	}
 	catch (err) {
 		throw new Error("Class has not yet been added");
@@ -105,7 +104,7 @@ function getCourseName(course: Course): string {
 	}
 
 	try {
-		let courseName: string = (getSavedCourse(course.name) as any)["class"]["name"];
+		let courseName: string = course.content["class"]["name"];
 		return `${course.name}: ${courseName}`;
 	}
 	catch (err) {

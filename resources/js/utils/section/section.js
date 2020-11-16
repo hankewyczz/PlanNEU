@@ -13,7 +13,18 @@ class Section {
         this.crn = crn;
         this.courseName = courseName;
         this.content = content;
-        this.times = new Times(this.content["meetings"][0]["times"]);
+        let meetingTimes = null;
+        let meetings = this.content["meetings"];
+        let keys = Object.keys(meetings);
+        for (let i = 0; i < keys.length; i++) {
+            if (meetings[keys[i]]["type"] == "Class") {
+                meetingTimes = new Times(meetings[keys[i]]["times"]);
+            }
+        }
+        if (meetingTimes == null) {
+            throw new Error("No times found");
+        }
+        this.times = meetingTimes;
     }
     alreadySaved(sectionCrn) {
         return this.crn in USER_SECTIONS;

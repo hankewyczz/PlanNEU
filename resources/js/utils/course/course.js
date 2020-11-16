@@ -17,13 +17,13 @@ class Course {
         this.content = {};
     }
     addContent(content) {
-        this.content = content;
+        this.content = content["results"][0];
     }
     alreadySaved() {
         return alreadySaved(this.name);
     }
     sections() {
-        let arrSec = this.content["results"][0]["sections"];
+        let arrSec = this.content["sections"];
         let results = [];
         for (let i = 0; i < arrSec.length; i++) {
             let sec = new Section(arrSec[i]["crn"], this.name, arrSec[i]);
@@ -49,8 +49,7 @@ Gets the course data from a course which has already been added
 */
 function getSavedCourse(courseName) {
     try {
-        let courseContent = USER_COURSES[courseName].content;
-        return courseContent["results"][0];
+        return USER_COURSES[courseName];
     }
     catch (err) {
         throw new Error("Class has not yet been added");
@@ -85,7 +84,7 @@ function getCourseName(course) {
         throw new Error("Class has not yet been added");
     }
     try {
-        let courseName = getSavedCourse(course.name)["class"]["name"];
+        let courseName = course.content["class"]["name"];
         return `${course.name}: ${courseName}`;
     }
     catch (err) {

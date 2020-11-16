@@ -62,7 +62,7 @@ function timesOverlap(t1, t2) {
 Creates all possible combinations from an array of arrays
 https://stackoverflow.com/questions/8936610/how-can-i-create-every-combination-possible-for-the-contents-of-two-arrays
 */
-function createCombinations(arrayOfArrays) {
+function createCombinations(arrayOfArrays, filter) {
     // Empty case
     if (arrayOfArrays.length == 0) {
         return [];
@@ -77,18 +77,16 @@ function createCombinations(arrayOfArrays) {
     let indices = new Array(arrayOfArrays.length);
     indices.fill(0); // Fill with zeros
     let output = [];
-    // Create and push the first combination
-    output.push(formCombination(indices, arrayOfArrays));
-    while (odometerIncrement(indices, arrayOfArrays)) {
+    do {
         // Create and push a combination
         let result = formCombination(indices, arrayOfArrays);
         // Check if the sections overlap
-        if (anySectionsOverlap(result)) {
-            // If they overlap, we break out of the for loop
+        if (anySectionsOverlap(result) || !filter.func(result)) {
+            // If they overlap or don't meet the criteria, we break out of the for loop
             continue;
         }
         output.push(result);
-    }
+    } while (odometerIncrement(indices, arrayOfArrays));
     return output;
 }
 // Take an array of indices, and generate the resulting combination 

@@ -1,7 +1,16 @@
 "use strict";
 // Min and max course times
 const MIN_TIME = 0;
-const MAX_TIME = 86400;
+const MAX_TIME = 86340;
+/* Checks if these sections have any honors courses */
+function anyHonors(sections) {
+    for (let i = 0; i < sections.length; i++) {
+        if (sections[i].content["honors"]) {
+            return true;
+        }
+    }
+    return false;
+}
 /* Checks if we meet the minimum required honors courses */
 function meetsMinHonorsReq(sections, minHonors = 0) {
     // If the min number of honors courses is 0, it's always true

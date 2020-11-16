@@ -134,7 +134,7 @@ function getCoreqs(course) {
         throw new Error("Course has not been added yet");
     }
     // Gets the coreqs of this course
-    let coreqs = getSavedCourse(course.name)["class"]["coreqs"];
+    let coreqs = getSavedCourse(course.name).content["class"]["coreqs"];
     /*
     Creates a link which will add this class when clicked
         - @return (String): A hyperlinked class, which, when clicked, will add this class

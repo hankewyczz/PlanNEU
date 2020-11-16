@@ -91,6 +91,7 @@ function handleSingleCourse(input = document.getElementById(USER_INPUT_ID).value
             handleMessage(messageStr, Message.Success);
         }
         catch (err) {
+            console.log(err);
             handleMessage(err.message, Message.Error);
         }
     });
@@ -180,38 +181,4 @@ function setValues() {
     let courses = Object.keys(USER_COURSES);
     document.getElementById("submit-input-semester").value = semester;
     document.getElementById("submit-input-courses").value = courses.join();
-}
-// TODO temporary (remove when done)
-function handleTestBody() {
-    return __awaiter(this, void 0, void 0, function* () {
-        let response;
-        try {
-            handleMessage("Fetching course sections...");
-            response = yield getCoursesFromUrl();
-            handleMessage("Fetched all sections");
-            const start = Math.floor(Date.now());
-            let combinations = howManyCombinations(response);
-            let combinationStr = combinations.toLocaleString();
-            const COMBO_WARNING = 100000; // If we have more than this amount of combinations, warn the user
-            const COMBO_ERROR = 10000000; // Ditto, but if it's over this number, throw an error
-            if (combinations >= COMBO_ERROR) {
-                handleMessage(`Over ${COMBO_ERROR.toLocaleString()} possible combinations.
-				Please remove some courses and try again.`, Message.Error);
-                // TODO make sure they can't submit the filters
-            }
-            else if (combinations >= COMBO_WARNING) {
-                handleMessage(`${combinationStr} possible combinations`, Message.Warning);
-            }
-            else {
-                handleMessage(`${combinationStr} possible combinations`);
-            }
-            console.log(response);
-            // let results = createCombinations(response);
-            // console.log(`${(Math.floor(Date.now()) - start) / 1000} secs`);
-            // handleMessage(`${results.length.toLocaleString()} results`, false, true);
-        }
-        catch (err) {
-            handleMessage(err.message, Message.Error);
-        }
-    });
 }
