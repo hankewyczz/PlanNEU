@@ -27,8 +27,7 @@ class Result {
         return `${secsToHM(time.start)}-${secsToHM(time.end)} &mdash; ${section.courseName}`;
     }
     courseLink(section) {
-        let fullName = getCourseName(getSavedCourse(section.courseName));
-        let out = `<a href="${section.content["url"]}">${section.crn}</a>: ${fullName}`;
+        let out = `<a href="${section.content["url"]}">${section.crn}</a>: ${section.fullCourseName}`;
         out += (section.content["online"]) ? " (Online)<br>" : "<br>";
         return out;
     }

@@ -75,7 +75,7 @@ function enoughDaysOff(sections, numDays = 0, days = []) {
     }
     // Check what days are free
     for (let i = 0; i < days.length; i++) {
-        if (!(dayFree[days[i]])) {
+        if (!(dayFree[days[i]])) { // If we need this day to be free, and it isn't, throw an error
             return false;
         }
     }

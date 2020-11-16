@@ -9,16 +9,16 @@ A single Section.
 */
 class Section {
     // Constructor
-    constructor(crn, courseName, content) {
+    constructor(crn, courseName, fullCourseName, content) {
         this.crn = crn;
         this.courseName = courseName;
+        this.fullCourseName = fullCourseName;
         this.content = content;
         let meetingTimes = null;
         let meetings = this.content["meetings"];
-        let keys = Object.keys(meetings);
-        for (let i = 0; i < keys.length; i++) {
-            if (meetings[keys[i]]["type"] == "Class") {
-                meetingTimes = new Times(meetings[keys[i]]["times"]);
+        for (let i = 0; i < meetings.length; i++) {
+            if (meetings[i]["type"] == "Class") {
+                meetingTimes = new Times(meetings[i]["times"]);
             }
         }
         if (meetingTimes == null) {

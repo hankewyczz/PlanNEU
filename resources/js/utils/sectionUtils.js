@@ -104,6 +104,7 @@ function odometerIncrement(indices, arrayOfArrays) {
             // If we can, we increment and return true
             return true;
         }
+        // We can't increment without going over the max
         else {
             // We move one digit to the left (if we can)
             if (i - 1 < 0) {

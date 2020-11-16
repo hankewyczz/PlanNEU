@@ -54,7 +54,9 @@ async function handleGetCourse(course: Course): Promise<string> {
 	if (!course.alreadySaved()) {
 		throw new Error("Course could not be added");
 	}
-	return getCourseName(course);
+	
+	// Returns the full name
+	return course.fullName;
 }
 
 

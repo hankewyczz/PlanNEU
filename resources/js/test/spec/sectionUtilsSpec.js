@@ -8,7 +8,7 @@ describe("timesOverlap: single day", function() {
 
 		let time2 = {
 					"end": 41400,
-					"start": 35400
+					"start": 35400	
 				};
 
 		expect(timesOverlap(time1, time2)).toBe(true);
@@ -327,6 +327,7 @@ describe("Test if Sections overlap", function() {
 	it("CS2511", function() {
 		let secContent = {
 			"meetings": [{
+				"type": "Class",
 				"times": {
 					"2": [
 						{
@@ -341,6 +342,7 @@ describe("Test if Sections overlap", function() {
 
 		let sec2Content = {
 			"meetings": [{
+				"type": "Class",
 				"times": {
 					"2": [
 						{

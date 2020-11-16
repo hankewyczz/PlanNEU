@@ -3,10 +3,11 @@
 ////////    API Constants     ////////
 //////////////////////////////////////
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -102,7 +103,8 @@ Fetches the data for a single course
 */
 function getCourseFromApi(course) {
     return __awaiter(this, void 0, void 0, function* () {
-        const response = yield fetch(getQueryUrl(course)).then(response => response.json());
+        const response = yield fetch(getQueryUrl(course)).then(response => response.json())
+            .catch((e) => { throw new Error("Could not access the courses API"); });
         // .catch(err => { throw new Error(err.message);});
         // Error doesn't propogate, so we force it
         // Check if the response is a dictionary (it should be)
@@ -117,6 +119,7 @@ function getCourseFromApi(course) {
                 throw new Error("No matching course found");
             }
         }
+        // The API gave us something unexpected
         else {
             throw new Error("Invalid response from API");
         }
@@ -134,7 +137,7 @@ function getCoreqs(course) {
         throw new Error("Course has not been added yet");
     }
     // Gets the coreqs of this course
-    let coreqs = getSavedCourse(course.name).content["class"]["coreqs"];
+    let coreqs = course.content["class"]["coreqs"];
     /*
     Creates a link which will add this class when clicked
         - @return (String): A hyperlinked class, which, when clicked, will add this class
@@ -175,6 +178,7 @@ function getCoreqs(course) {
             outputStr = outputStr.slice(0, -lastWord);
             outputStr += ") ";
         }
+        // If we only have one, we don't need to add the word
         else if (outputArr.length == 1) {
             outputStr = `${outputArr[0]} `; // Single case
         }
@@ -202,6 +206,7 @@ function getCoreqs(course) {
             }
             return null; // The class is missing - the user can't add it, so we don't show them
         }
+        // Dealing with a typed group
         else if ("type" in value) {
             return coreqCase(value["values"], value["type"]);
         }

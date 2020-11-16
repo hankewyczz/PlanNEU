@@ -13,7 +13,7 @@ describe("Check CRD for stored courses", function() {
 		saveCourse(cs3500, {results: [1]});
 
 		expect(cs3500.alreadySaved()).toBe(true);
-		expect(getSavedCourse("CS3500")).toBe(1);
+		expect(getSavedCourse("CS3500").content).toBe(1);
 
 		removeSavedCourse("CS3500");
 		
