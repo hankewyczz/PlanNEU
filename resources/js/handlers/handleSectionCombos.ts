@@ -1,6 +1,10 @@
 // For each course, we store an array of the course Sections
 var sectionArrOfArr: Section[][];
 
+// Combination constants
+const COMBO_WARNING: number = 100_000;	// If we have more than this amount of combinations, warn the user
+const COMBO_ERROR: number = 10_000_000;	// Ditto, but if it's over this number, throw an error
+
 
 /*
 Grabs the courses and semester info from the URL */
@@ -54,12 +58,7 @@ async function prepareSections(): Promise<void> {
 		sectionArrOfArr = await getCoursesFromUrl();
 		handleMessage("Fetched all section data");
 
-
 		let combinations: number = howManyCombinations(sectionArrOfArr);
-		let combinationStr: string = combinations.toLocaleString();
-
-		const COMBO_WARNING: number = 100_000;	// If we have more than this amount of combinations, warn the user
-		const COMBO_ERROR: number = 10_000_000;	// Ditto, but if it's over this number, throw an error
 
 		if (combinations >= COMBO_ERROR) {
 			handleMessage(`Over ${COMBO_ERROR.toLocaleString()} possible schedule combinations.
@@ -69,7 +68,7 @@ async function prepareSections(): Promise<void> {
 			handleMessage(`Over ${COMBO_WARNING.toLocaleString()} possible schedule combinations`, Message.Warning);
 		}
 		else {
-			handleMessage(`${combinationStr} possible schedule combinations`);
+			handleMessage(`${combinations.toLocaleString()} possible schedule combinations`);
 		}
 
 		// Enable the submit button
@@ -85,6 +84,7 @@ async function prepareSections(): Promise<void> {
 
 /* Handles the parsing and validation of the user information */
 function handleFilterInputs(): Filter {
+	// The filter we'll be using
 	let filter: Filter = new Filter();
 
 	// Do we only want to show the open schedules?
@@ -94,18 +94,17 @@ function handleFilterInputs(): Filter {
 	}
 
 	// Get the start/end time values
-	let startStr: string = (document.getElementById("start-time") as HTMLInputElement).value;
-	let endStr: string = (document.getElementById("end-time") as HTMLInputElement).value;
+	let start: string[] = (document.getElementById("start-time") as HTMLInputElement).value.split(':');
+	let end: string[] = (document.getElementById("end-time") as HTMLInputElement).value.split(':');
 
-	let start = startStr.split(':');
-	let end = endStr.split(':');
-
+	// Calculate the time in seconds
 	let startTime: number = (+start[0]) * 60 * 60 + (+start[1]) * 60;
 	let endTime: number = (+end[0]) * 60 * 60 + (+end[1]) * 60;
 
 	if (startTime > endTime) {
 		throw new Error("Start time must be before the end time");
 	}
+
 	filter.add((s) => isValidTime(s, startTime, endTime));
 
 	// Deal with days off
@@ -165,7 +164,6 @@ function handleGenerateScheduleAndFilter() {
 
 		let combinations: Section[][] = createCombinations(sectionArrOfArr, filter);
 
-		console.log(combinations);
 		for (let i = 0; i < combinations.length; i++) {
 			console.log(new Result(combinations[i]).toString());
 

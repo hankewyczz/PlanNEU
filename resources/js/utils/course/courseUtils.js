@@ -3,11 +3,10 @@
 ////////    API Constants     ////////
 //////////////////////////////////////
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -103,14 +102,15 @@ Fetches the data for a single course
 */
 function getCourseFromApi(course) {
     return __awaiter(this, void 0, void 0, function* () {
-        const response = yield fetch(getQueryUrl(course)).then(response => response.json())
+        const response = yield fetch(getQueryUrl(course))
+            .then(response => response.json())
             .catch((e) => { throw new Error("Could not access the courses API"); });
         // .catch(err => { throw new Error(err.message);});
         // Error doesn't propogate, so we force it
         // Check if the response is a dictionary (it should be)
-        if (typeof response === "object" && !Array.isArray(response)) {
+        if (typeof response === "object" && 'results' in response) {
             // Check if we have any hits for our search
-            if ('results' in response && response['results'].length > 0) {
+            if (response['results'].length > 0) {
                 // If we do, then we add this course to the USER_COURSES
                 saveCourse(course, response);
                 return;
@@ -154,8 +154,8 @@ function getCoreqs(course) {
         // We store the results in an array first to check how many coreqs we have
         let outputArr = [];
         // Loop over all the values
-        for (let i = 0; i < values.length; i++) {
-            let strVal = valueToStr(values[i]);
+        for (let value of values) {
+            let strVal = valueToStr(value);
             // Only add if it's non-null
             if (strVal != null) {
                 outputArr.push(strVal);
@@ -165,16 +165,15 @@ function getCoreqs(course) {
         if (outputArr.length > 1) {
             outputStr += "(";
             // Loop thru all the coreqs
-            for (let i = 0; i < outputArr.length; i++) {
+            for (let output of outputArr) {
                 // eg: "CS3500 and "
-                outputStr += `${outputArr[i]} ${type} `;
+                outputStr += `${output} ${type} `;
             }
             // Trim the trailing text
             let lastWord = type.length + 2; // Length of the type, plus 2 spaces
             outputStr = outputStr.slice(0, -lastWord);
             outputStr += ") ";
         }
-        // If we only have one, we don't need to add the word
         else if (outputArr.length == 1) {
             outputStr = `${outputArr[0]} `; // Single case
         }
@@ -202,7 +201,6 @@ function getCoreqs(course) {
             }
             return null; // The class is missing - the user can't add it, so we don't show them
         }
-        // Dealing with a typed group
         else if ("type" in value) {
             return coreqCase(value["values"], value["type"]);
         }

@@ -1,15 +1,17 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
 // For each course, we store an array of the course Sections
 var sectionArrOfArr;
+// Combination constants
+const COMBO_WARNING = 100000; // If we have more than this amount of combinations, warn the user
+const COMBO_ERROR = 10000000; // Ditto, but if it's over this number, throw an error
 /*
 Grabs the courses and semester info from the URL */
 function getCourseInfoFromUrl() {
@@ -54,9 +56,6 @@ function prepareSections() {
             sectionArrOfArr = yield getCoursesFromUrl();
             handleMessage("Fetched all section data");
             let combinations = howManyCombinations(sectionArrOfArr);
-            let combinationStr = combinations.toLocaleString();
-            const COMBO_WARNING = 100000; // If we have more than this amount of combinations, warn the user
-            const COMBO_ERROR = 10000000; // Ditto, but if it's over this number, throw an error
             if (combinations >= COMBO_ERROR) {
                 handleMessage(`Over ${COMBO_ERROR.toLocaleString()} possible schedule combinations.
 				Please remove some courses and try again.`, Message.Error);
@@ -65,7 +64,7 @@ function prepareSections() {
                 handleMessage(`Over ${COMBO_WARNING.toLocaleString()} possible schedule combinations`, Message.Warning);
             }
             else {
-                handleMessage(`${combinationStr} possible schedule combinations`);
+                handleMessage(`${combinations.toLocaleString()} possible schedule combinations`);
             }
             // Enable the submit button
             document.getElementById("submit-filters").disabled = false;
@@ -78,6 +77,7 @@ function prepareSections() {
 }
 /* Handles the parsing and validation of the user information */
 function handleFilterInputs() {
+    // The filter we'll be using
     let filter = new Filter();
     // Do we only want to show the open schedules?
     let onlyOpenStr = document.querySelector('input[name="open-seats"]:checked').value;
@@ -85,10 +85,9 @@ function handleFilterInputs() {
         filter.add(isSeatsLeft);
     }
     // Get the start/end time values
-    let startStr = document.getElementById("start-time").value;
-    let endStr = document.getElementById("end-time").value;
-    let start = startStr.split(':');
-    let end = endStr.split(':');
+    let start = document.getElementById("start-time").value.split(':');
+    let end = document.getElementById("end-time").value.split(':');
+    // Calculate the time in seconds
     let startTime = (+start[0]) * 60 * 60 + (+start[1]) * 60;
     let endTime = (+end[0]) * 60 * 60 + (+end[1]) * 60;
     if (startTime > endTime) {
@@ -137,7 +136,6 @@ function handleGenerateScheduleAndFilter() {
         handleMessage("Generating all combinations...");
         let filter = handleFilterInputs();
         let combinations = createCombinations(sectionArrOfArr, filter);
-        console.log(combinations);
         for (let i = 0; i < combinations.length; i++) {
             console.log(new Result(combinations[i]).toString());
         }

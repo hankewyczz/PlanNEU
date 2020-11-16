@@ -88,14 +88,14 @@ async function handleSingleCourse(
 		let course: Course = await handleUserInput(input, semester);
 
 		// Get the course, the course name, and the coreqs
-		let fullCourseName: string = await handleGetCourse(course);
+		await handleGetCourse(course);
 		let coreqStr: string = getCoreqs(course);
 
 		// Add it to the UI 
-		addToCourseDiv(course, fullCourseName);
+		addToCourseDiv(course, course.fullName);
 
 
-		let messageStr: string = `Successfully added ${fullCourseName}! ${coreqStr}`;
+		let messageStr: string = `Successfully added ${course.fullName}! ${coreqStr}`;
 		// Send the message
 		handleMessage(messageStr, Message.Success);
 	}

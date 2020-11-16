@@ -17,15 +17,8 @@ function sectionsOverlap(s1: Section, s2: Section): boolean {
 	let s1Times: Times = s1.getTimes();
 	let s2Times: Times = s2.getTimes();
 
-	// The days at which this section meets
-	let s1Days: string[] = s1Times.days;	
-	let s2Days: string[] = s2Times.days;
-
-	for (let i = 0; i < s1Days.length; i++) {
-		for (let j = 0; j < s2Days.length; j++) {
-			// Same day
-			let day1: string = s1Days[i];
-			let day2: string = s2Days[j];
+	for (let day1 of s1Times.days) {
+		for (let day2 of s2Times.days) {
 			// Check if this is the same day
 			if (day1 == day2) {
 				if (anyTimesOverlap(s1Times.content[day1], s2Times.content[day2])) {
@@ -60,8 +53,7 @@ Checks if two time ranges overlap
 */
 function timesOverlap(t1: Time, t2: Time): boolean {
 	// Check for any type of possible overlap (if any of these are true, there is overlap)
-	return ((t1.start == t1.end || t2.start == t2.end)		// Edges overlap
-		|| (t1.start >= t2.start && t1.start <= t2.end) 	// t1.start is between t2.start and t2.end
+	return ((t1.start >= t2.start && t1.start <= t2.end) 	// t1.start is between t2.start and t2.end
 		|| (t1.end >= t2.start && t1.end <= t2.end)			// t1.end is between t2.start and t2.end
 		|| (t2.start >= t1.start && t2.start <= t1.end) 	// t2.start is between t1.start and t1.end
 		|| (t2.end >= t1.start && t2.end <= t1.end));		// t2.end is between t1.start and t1.end

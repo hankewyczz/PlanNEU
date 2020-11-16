@@ -1,10 +1,9 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -84,11 +83,11 @@ function handleSingleCourse(input = document.getElementById(USER_INPUT_ID).value
             // Handle the input and getting the course
             let course = yield handleUserInput(input, semester);
             // Get the course, the course name, and the coreqs
-            let fullCourseName = yield handleGetCourse(course);
+            yield handleGetCourse(course);
             let coreqStr = getCoreqs(course);
             // Add it to the UI 
-            addToCourseDiv(course, fullCourseName);
-            let messageStr = `Successfully added ${fullCourseName}! ${coreqStr}`;
+            addToCourseDiv(course, course.fullName);
+            let messageStr = `Successfully added ${course.fullName}! ${coreqStr}`;
             // Send the message
             handleMessage(messageStr, Message.Success);
         }

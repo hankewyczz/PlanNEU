@@ -118,16 +118,17 @@ Fetches the data for a single course
 	- @throws if the response was unexpected or improperly formatted
 */
 async function getCourseFromApi(course: Course): Promise<void> {
-	const response = await fetch(getQueryUrl(course)).then(response => response.json())
-		.catch((e) => { throw new Error("Could not access the courses API") });
+	const response = await fetch(getQueryUrl(course))
+	.then(response => response.json())
+	.catch((e) => { throw new Error("Could not access the courses API") });
 	// .catch(err => { throw new Error(err.message);});
 	// Error doesn't propogate, so we force it
 
 
 	// Check if the response is a dictionary (it should be)
-	if (typeof response === "object" && !Array.isArray(response)) {
+	if (typeof response === "object" && 'results' in response) {
 		// Check if we have any hits for our search
-		if ('results' in response && response['results'].length > 0) {
+		if (response['results'].length > 0) {
 			// If we do, then we add this course to the USER_COURSES
 			saveCourse(course, response);
 			return;
@@ -178,8 +179,8 @@ function getCoreqs(course: Course): string {
 		let outputArr: string[] = [];
 
 		// Loop over all the values
-		for (let i: number = 0; i < values.length; i++) {
-			let strVal = valueToStr(values[i]);
+		for (let value of values) {
+			let strVal = valueToStr(value);
 			// Only add if it's non-null
 			if (strVal != null) {
 				outputArr.push(strVal);
@@ -190,9 +191,9 @@ function getCoreqs(course: Course): string {
 		if (outputArr.length > 1) {
 			outputStr += "(";
 			// Loop thru all the coreqs
-			for (let i: number = 0; i < outputArr.length; i++) {
+			for (let output of outputArr) {
 				// eg: "CS3500 and "
-				outputStr += `${outputArr[i]} ${type} `;
+				outputStr += `${output} ${type} `;
 			}
 			// Trim the trailing text
 			let lastWord = type.length + 2;	// Length of the type, plus 2 spaces

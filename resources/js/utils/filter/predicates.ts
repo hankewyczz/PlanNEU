@@ -44,8 +44,8 @@ function isValidTime(sections: Section[], start: number = MIN_TIME, end: number 
 		return true;
 	}
 
-	for (let i = 0; i < sections.length; i++) {
-		let times: Times = sections[i].getTimes();
+	for (let section of sections) {
+		let times: Times = section.getTimes();
 
 		// If we're out of bounds, this isn't a valid time
 		if (times.earliestStart < start || times.latestEnd > end) {

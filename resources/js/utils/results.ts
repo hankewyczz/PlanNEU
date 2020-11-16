@@ -13,22 +13,18 @@ class Result {
 		this.days = {"1": {}, "2": {}, "3": {}, "4": {}, "5": {}};
 
 
-		for (let i = 0; i < sections.length; i++) {
+		for (let sec of sections) {
 			// Create the initial string
-			this.sectionLinks.push(this.courseLink(sections[i]));
+			this.sectionLinks.push(this.courseLink(sec));
 
 			// Deal with the schedule
-			let times: Times = sections[i].getTimes();
+			let times: Times = sec.getTimes();
 
 			// For each day
-			for (let j = 0; j < times.days.length; j++) {
-				let day: string = times.days[j];
-				let timeArr: Time[] = times.content[day];
-
+			for (let day of times.days) {
 				// For each meeting
-				for (let k = 0; k < timeArr.length; k++) {
-					let meetTime: Time = timeArr[k];
-					this.days[day][meetTime.start] = this.timeStr(meetTime, sections[i]);
+				for (let meetTime of times.content[day]) {
+					this.days[day][meetTime.start] = this.timeStr(meetTime, sec);
 				}
 			}
 		}
