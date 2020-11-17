@@ -31,11 +31,11 @@ class Result {
 	}
 
 	timeStr(time: Time, section: Section): string {
-		return `${secsToHM(time.start)}-${secsToHM(time.end)} &mdash; ${section.courseName}`;
+		return `${secsToHM(time.start)} - ${secsToHM(time.end)} | ${section.fullCourseName}`;
 	}
 
 	courseLink(section: Section): string {
-		let out: string = `<a href="${section.content["url"]}">${section.crn}</a>: ${section.fullCourseName}`;
+		let out: string = `<a href="${section.content["url"]}">${section.crn}</a>: ${section.content.subject} ${section.content.classId}`;
 
 		out += (section.content["online"]) ? " (Online)<br>" : "<br>";
 		return out;
@@ -83,6 +83,8 @@ class Result {
 
 /* Converts seconds to HH:MM string */
 function secsToHM(seconds: number) {
-	var date = new Date(seconds * 1000);
-	return date.toISOString().substr(11, 5);
+	let date = new Date(seconds * 1000);
+	// We want 12 hour time
+	let hours = parseInt(date.toISOString().substr(11, 2)) % 12;
+	return `${hours.toString().padStart(2, "0")}:${date.toISOString().substr(14, 2)}`;
 }

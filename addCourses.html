@@ -16,73 +16,77 @@
 <body>
     <div id="message-div"></div>
 
-    <h1 class="title">Course Selection</h1>
+    <div class="main-div">
+        <h1 class="title">Course Selection</h1>
+        <hr>
 
 
-    <div class="row">
-        <div id="main-course-col">
-            <!-- Semester selector -->
-            <select id="semester-selector" name="semester-selector" class="custom-select">
-		        <option value="202130">Spring 2021</option>
-		        <option value="202110">Fall 2020</option>
-		        <option value="202040">Summer I 2020</option>
-		        <option value="202060">Summer II 2020</option>
-		        <option value="202050">Summer Full 2020</option>
-		  	</select>
+        <div class="row">
+            <div id="main-course-col">
+                
+                <!-- The main input -->
+                <div id="course-left-col-main">
+                    <input type="text" placeholder="Enter subject and class ID" class="form-control" onkeyup="validateInput(event)" id="user-course-input" />
 
-            <!-- The main input -->
-            <div id="course-left-col-main">
-                <input type="text" placeholder="Enter subject and class ID" class="form-control" onkeyup="validateInput(event)" id="user-course-input" />
+                    <button class="btn btn-primary submit-input-button" onclick="handleSingleCourse()">&#x2192;</button>
+                </div>
+                <form action="results.html" method="get" onsubmit="setValues()" id="form-to-results">
+                    <!--  For some reason, JS doesn't parse the first paramater, so we add a dummy -->
+                    <input name="hidden" hidden />
+                    <input name="semester" id="submit-input-semester" hidden />
+                    <input name="courses" id="submit-input-courses" hidden />
 
-                <button class="btn btn-success submit-input-button" onclick="handleSingleCourse()">&#x2192;</button>
+
+                    <!-- Semester selector -->
+                    <select id="semester-selector" name="semester-selector" class="custom-select">
+                        <option value="202130">Spring 2021</option>
+                        <option value="202110">Fall 2020</option>
+                        <option value="202040">Summer I 2020</option>
+                        <option value="202060">Summer II 2020</option>
+                        <option value="202050">Summer Full 2020</option>
+                    </select>
+                    <button class="btn btn-primary" style="margin-bottom: 2%">See Possible Schedules</button>
+                </form>
+
+                <hr>
+                <h3 style="text-align: center; cursor: pointer" onclick="toggleInstructions()">Instructions <span id="arrow">&#9660;</span></h3>
+                <div id="instructions">
+                    <ul>
+                        
+                        <li>To add a class, just type the subject and course ID</li>
+                        <ul>
+                            <li>For example, to add "CS 4550: Web Development", I would type "CS4550".</li>
+                        </ul>
+                        <li>Next, hit the "Enter" key or press the arrow button</li>
+                        <ul>
+                            <li>If we find a course matching your input, we'll add it!</li>
+                            <li>If the course has any corequisites, you'll see an option to add them</li>
+                        </ul>
+                        <li>Finally, select a semester and  hit "Submit"!</li>
+                    </ul>
+                </div>
             </div>
-            <form action="results.html" method="get" onsubmit="setValues()" id="form-to-results">
-                <!--  For some reason, JS doesn't parse the first paramater, so we add a dummy -->
-                <input name="hidden" hidden />
-                <input name="semester" id="submit-input-semester" hidden />
-                <input name="courses" id="submit-input-courses" hidden />
-                <button class="btn btn-success">See Possible Combinations</button>
-            </form>
-
-            <hr>
-            <h3 style="text-align: center; cursor: pointer" onclick="toggleInstructions()">Instructions <span id="arrow">&#9660;</span></h3>
-            <div id="instructions">
-                <ul>
-                    <li>First, select a semester from the dropdown selector</li>
-                    <li>To add a class, simply type its subject and course ID</li>
-                    <ul>
-                        <li>For example, if I wanted to add the course "CS 4550: Web Development", I would type "CS4550".</li>
-                    </ul>
-                    <li>Next, hit the "Enter" key or press the button</li>
-                    <ul>
-                        <li>If we can find the course, you'll get a 'Success!' message, and the course will show up in the "Courses Selected" section below</li>
-                        <li>If the course has any corequisites, you'll see an option to add them</li>
-                    </ul>
-                    <li>Once you've added all the courses, simple press "Submit"!</li>
-                </ul>
+            <div id="side-course-col">
+                <h3>Courses Selected</h3>
+                <hr>
             </div>
         </div>
-        <div id="side-course-col">
-            <h3>Courses Selected</h3>
-            <hr>
-        </div>
-    </div>
-    <hr>
 
-    <!-- Footer -->
-    <div class="footer">
-        <h2><img src="https://raw.githubusercontent.com/sandboxnu/searchneu/5f3d2c089ad1dfb9fe00f6f11ea991ab6a3b5112/frontend/components/images/boston.svg" width="80%"/></h2>
+        <!-- Footer -->
+        <div class="footer">
+            <h2><img src="https://raw.githubusercontent.com/sandboxnu/searchneu/5f3d2c089ad1dfb9fe00f6f11ea991ab6a3b5112/frontend/components/images/boston.svg" width="80%"/></h2>
+        </div>
     </div>
 </body>
 
 
 <!-- Utilities -->
-<script src="resources/js/utils/courseUtils.js"></script>
-<script src="resources/js/utils/sectionUtils.js"></script>
+<script src="resources/js/utils/course/courseUtils.js"></script>
+<script src="resources/js/utils/course/sectionUtils.js"></script>
 
 <!-- Object Utils -->
-<script src="resources/js/utils/objs/course.js"></script>
-<script src="resources/js/utils/objs/section.js"></script>
+<script src="resources/js/utils/course/course.js"></script>
+<script src="resources/js/utils/course/section.js"></script>
 
 <!-- Handlers -->
 <script src="resources/js/handlers/handleUserInput.js"></script>

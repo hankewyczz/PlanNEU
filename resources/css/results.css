@@ -2,29 +2,11 @@
   box-sizing: border-box;
 }
 
-.title {
-	font-weight: 300;
-	text-align: center;
-	margin-bottom: 3%;
-}
-
-#arrow {
-	font-size: 15px;
-}
-
-/* Column container */
-.row {
-  margin: 0;
-  display: flex;
-  flex-wrap: wrap;
-}
 
 /* Main column */
 #filter-selection-col {
   flex: 20%;
-  margin-left: 2%;
   padding: 20px 20px;
-  border-radius: 10px;
   background-color:#EDEDED;
 }
 
