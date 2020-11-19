@@ -8,15 +8,18 @@ class Section {
 	content: { [key: string]: any };
 	times: Times;
 	// Constructor
-	constructor(crn: string, courseName: string, fullCourseName: string, content: {[key: string]: any}) {
+	constructor(course: Course, content: {[key: string]: any}) {
 		// Initialize
-		this.crn = crn;
-		this.courseName = courseName;
-		this.fullCourseName = fullCourseName;
 		this.content = content;
 
+		// Details
+		this.crn = this.content.crn;
+		this.courseName = course.name;
+		this.fullCourseName = course.fullName;
+		
+
 		// Get only the class meetings
-		let meetings = content["meetings"].filter((obj: any) => obj.type === "Class");
+		let meetings = content.meetings.filter((obj: any) => obj.type === "Class");
 
 		if (meetings.length > 0) {
 			this.times = new Times(meetings[0]["times"]);

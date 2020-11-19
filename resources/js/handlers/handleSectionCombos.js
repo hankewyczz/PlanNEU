@@ -59,6 +59,7 @@ function prepareSections() {
             if (combinations >= COMBO_ERROR) {
                 handleMessage(`Over ${COMBO_ERROR.toLocaleString()} possible schedule combinations.
 				Please remove some courses and try again.`, Message.Error);
+                return; // We don't want to enable the submit button
             }
             else if (combinations >= COMBO_WARNING) {
                 handleMessage(`Over ${COMBO_WARNING.toLocaleString()} possible schedule combinations`, Message.Warning);

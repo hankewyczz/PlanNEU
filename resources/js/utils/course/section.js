@@ -2,14 +2,15 @@
 //A single Section.
 class Section {
     // Constructor
-    constructor(crn, courseName, fullCourseName, content) {
+    constructor(course, content) {
         // Initialize
-        this.crn = crn;
-        this.courseName = courseName;
-        this.fullCourseName = fullCourseName;
         this.content = content;
+        // Details
+        this.crn = this.content.crn;
+        this.courseName = course.name;
+        this.fullCourseName = course.fullName;
         // Get only the class meetings
-        let meetings = content["meetings"].filter((obj) => obj.type === "Class");
+        let meetings = content.meetings.filter((obj) => obj.type === "Class");
         if (meetings.length > 0) {
             this.times = new Times(meetings[0]["times"]);
         }
