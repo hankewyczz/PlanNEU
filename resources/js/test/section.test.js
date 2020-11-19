@@ -12,7 +12,7 @@ describe("Section Utils", function() {
 		
 		let sec = new Section(course, content);
 		expect(sec.crn).toBe("123");
-		expect(sec.courseName).toBe("CS3500");
+		expect(sec.name).toBe("CS3500");
 		expect(sec.content).toBe(content);
 	});
 })

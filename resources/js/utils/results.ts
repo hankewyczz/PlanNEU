@@ -18,7 +18,7 @@ class Result {
 			this.sectionLinks.push(this.courseLink(sec));
 
 			// Deal with the schedule
-			let times: Times = sec.getTimes();
+			let times: Times = sec.times;
 
 			// For each day
 			for (let day of times.days) {
@@ -31,7 +31,7 @@ class Result {
 	}
 
 	timeStr(time: Time, section: Section): string {
-		return `${secsToHM(time.start)} - ${secsToHM(time.end)} | ${section.fullCourseName}`;
+		return `${secsToHM(time.start)} - ${secsToHM(time.end)} | ${section.fullName}`;
 	}
 
 	courseLink(section: Section): string {

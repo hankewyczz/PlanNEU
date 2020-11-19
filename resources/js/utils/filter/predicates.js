@@ -35,7 +35,7 @@ function isValidTime(sections, start = MIN_TIME, end = MAX_TIME) {
         return true;
     }
     for (let section of sections) {
-        let times = section.getTimes();
+        let times = section.times;
         // If we're out of bounds, this isn't a valid time
         if (times.earliestStart < start || times.latestEnd > end) {
             return false;
@@ -65,7 +65,7 @@ function enoughDaysOff(sections, numDays = 0, days = []) {
     /* Checks if the day is free */
     let dayFree = { "1": true, "2": true, "3": true, "4": true, "5": true };
     for (let i = 0; i < sections.length; i++) {
-        let secDays = sections[i].getTimes().days;
+        let secDays = sections[i].times.days;
         // Update each day
         for (let j = 0; j < secDays.length; j++) {
             // If we have anything on this day, it is no longer free
@@ -73,7 +73,7 @@ function enoughDaysOff(sections, numDays = 0, days = []) {
         }
     }
     for (let i = 0; i < days.length; i++) {
-        if (!(dayFree[days[i]])) {
+        if (!(dayFree[days[i]])) { // If we need this day to be free, and it isn't, throw an error
             return false;
         }
     }

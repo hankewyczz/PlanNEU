@@ -12,8 +12,8 @@ function anySectionsOverlap(sections) {
 }
 /* Checks if two Sections overlap (time-based) */
 function sectionsOverlap(s1, s2) {
-    let s1Times = s1.getTimes();
-    let s2Times = s2.getTimes();
+    let s1Times = s1.times;
+    let s2Times = s2.times;
     for (let day1 of s1Times.days) {
         for (let day2 of s2Times.days) {
             // Check if this is the same day
@@ -97,6 +97,7 @@ function odometerIncrement(indices, arrayOfArrays) {
             // If we can, we increment and return true
             return true;
         }
+        // We can't increment without going over the max
         else {
             // We move one digit to the left (if we can)
             if (i - 1 < 0) {

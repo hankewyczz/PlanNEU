@@ -12,7 +12,7 @@ class Result {
             // Create the initial string
             this.sectionLinks.push(this.courseLink(sec));
             // Deal with the schedule
-            let times = sec.getTimes();
+            let times = sec.times;
             // For each day
             for (let day of times.days) {
                 // For each meeting
@@ -23,7 +23,7 @@ class Result {
         }
     }
     timeStr(time, section) {
-        return `${secsToHM(time.start)} - ${secsToHM(time.end)} | ${section.fullCourseName}`;
+        return `${secsToHM(time.start)} - ${secsToHM(time.end)} | ${section.fullName}`;
     }
     courseLink(section) {
         let out = `<a href="${section.content["url"]}">${section.crn}</a>: ${section.content.subject} ${section.content.classId}`;
