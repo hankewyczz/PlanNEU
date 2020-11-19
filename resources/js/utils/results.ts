@@ -18,12 +18,12 @@ class Result {
 			this.sectionLinks.push(this.courseLink(sec));
 
 			// Deal with the schedule
-			let times: Times = sec.times;
+			const times: Times = sec.times;
 
 			// For each day
-			for (let day of times.days) {
+			for (const day of times.days) {
 				// For each meeting
-				for (let meetTime of times.content[day]) {
+				for (const meetTime of times.content[day]) {
 					this.days[day][meetTime.start] = this.timeStr(meetTime, sec);
 				}
 			}
@@ -53,7 +53,7 @@ class Result {
 		let dayToStr: { [key: string]: string} = { "1": "Monday", "2": "Tuesday", 
 		"3": "Wednesday", "4": "Thursday", "5": "Friday" };
 
-		let days: string[] = Object.keys(this.days);
+		const days: string[] = Object.keys(this.days);
 
 		for (let i = 0; i < days.length; i++) {
 			// Check if we have anything this day
@@ -85,6 +85,6 @@ class Result {
 function secsToHM(seconds: number) {
 	let date = new Date(seconds * 1000);
 	// We want 12 hour time
-	let hours = parseInt(date.toISOString().substr(11, 2)) % 12;
+	const hours = parseInt(date.toISOString().substr(11, 2)) % 12;
 	return `${hours.toString().padStart(2, "0")}:${date.toISOString().substr(14, 2)}`;
 }

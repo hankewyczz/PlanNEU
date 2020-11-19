@@ -24,7 +24,7 @@ class Section {
 		
 
 		// Get only the class meetings
-		let meetings = content.meetings.filter((obj: any) => obj.type === "Class");
+		const meetings = content.meetings.filter((obj: any) => obj.type === "Class");
 
 		if (meetings.length > 0) {
 			this.times = new Times(meetings[0]["times"]);
@@ -51,13 +51,13 @@ class Times {
 		this.days = Object.keys(times);
 
 		// Iterate over all the days
-		for (let day of this.days) {
+		for (const day of this.days) {
 
 			let output: Time[] = [];
 
 			// Iterate over all the meetings in this day
-			for (let meeting of times[day]) {
-				let time: Time = new Time(meeting);
+			for (const meeting of times[day]) {
+				const time: Time = new Time(meeting);
 
 				output.push(time);
 
@@ -115,11 +115,11 @@ function anySectionsOverlap(sections: Section[]): boolean {
 
 /* Checks if two Sections overlap (time-based) */
 function sectionsOverlap(s1: Section, s2: Section): boolean {
-	let s1Times: Times = s1.times;
-	let s2Times: Times = s2.times;
+	const s1Times: Times = s1.times;
+	const s2Times: Times = s2.times;
 
-	for (let day1 of s1Times.days) {
-		for (let day2 of s2Times.days) {
+	for (const day1 of s1Times.days) {
+		for (const day2 of s2Times.days) {
 			// Check if this is the same day
 			if (day1 == day2) {
 				if (anyTimesOverlap(s1Times.content[day1], s2Times.content[day2])) {
@@ -137,8 +137,8 @@ function sectionsOverlap(s1: Section, s2: Section): boolean {
 
 // Checks if any number of time ranges overlap
 function anyTimesOverlap(s1Times: Time[], s2Times: Time[]): boolean {
-	for (let time1 of s1Times) {
-		for (let time2 of s2Times) {
+	for (const time1 of s1Times) {
+		for (const time2 of s2Times) {
 			if (timesOverlap(time1, time2)) {
 				return true;
 			}

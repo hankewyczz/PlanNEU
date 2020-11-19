@@ -67,7 +67,7 @@ class Course {
 	sections(): any[] {
 		let results: Section[] = [];
 
-		for (let section of this.content["sections"]) {
+		for (const section of this.content["sections"]) {
 			results.push(new Section(this, section));
 		}
 		return results;
@@ -161,7 +161,7 @@ function alreadySaved(courseName: string): boolean {
 */
 function parseCourseInput(inputStr: string, semester: string): Course {
 	// Remove all whitespace (\s) globally (g), for both single and groups of whitespace (+)
-	let input: string = inputStr.replace(/\s+/g, '');
+	const input: string = inputStr.replace(/\s+/g, '');
 
 	// Sanity check - the class must be at least 5 long (subject + 4 digit number)
 	if (input.length < 5) {
@@ -169,8 +169,8 @@ function parseCourseInput(inputStr: string, semester: string): Course {
 	}
 
 	// Get the subject and course number (Course number is always 4 digits)
-	let subject: string = input.slice(0, -4).toUpperCase();
-	let courseId: string = input.slice(-4);
+	const subject: string = input.slice(0, -4).toUpperCase();
+	const courseId: string = input.slice(-4);
 
 	// Check if the subject is valid
 	// From start (^) to end ($) check if any characters are NOT A-Z
@@ -192,7 +192,7 @@ function parseCourseInput(inputStr: string, semester: string): Course {
 function isValidNum(inputNum: string): boolean {
 	/* We check to make sure the 4-character string is a number. We do this one by one, because Number accepts some
 	unexpected strings as valid numbers (eg.'0x11' == 17 or 'null' == 7, which of course, can't be course numbers!) */
-	for (let char of inputNum) {
+	for (const char of inputNum) {
 		// Check if each one is a valid num
 		if (Number.isNaN(Number(char))) {
 			return false;
@@ -236,8 +236,8 @@ function getQueryUrl(course: Course): string {
 	queryURL += addQuery("apiVersion", API_VERSION);	// Set the API version
 
 	// Create the filters
-	let subjectFilter = `"subject":["${course.subject}"]`;
-	let classIdFilter = `"classIdRange":{"min":${course.courseId},"max":${course.courseId}}`;
+	const subjectFilter = `"subject":["${course.subject}"]`;
+	const classIdFilter = `"classIdRange":{"min":${course.courseId},"max":${course.courseId}}`;
 	let filters = `{${subjectFilter},${classIdFilter}}`;
 
 	// We encode the filters to be URL safe
@@ -288,7 +288,7 @@ function getCoreqs(course: Course): string {
 	}
 
 	// Gets the coreqs of this course
-	let coreqs = course.content["class"]["coreqs"];
+	const coreqs = course.content["class"]["coreqs"];
 
 
 	/*
@@ -296,7 +296,7 @@ function getCoreqs(course: Course): string {
 		- @return (String): A hyperlinked class, which, when clicked, will add this class
 	*/
 	function addCourseLink(name: string): string {
-		let onclick = `onclick="handleSingleCourse('${name}', '${course.semester}')"`;
+		const onclick = `onclick="handleSingleCourse('${name}', '${course.semester}')"`;
 		return `<a href="#" ${onclick}>${name}</a>`;
 	}
 
@@ -308,15 +308,15 @@ function getCoreqs(course: Course): string {
 	*/
 	function coreqCase(values: any[], type: string): string | null {		
 		// Map each value to a string first
-		let mappedVals: (string | null)[] = values.map((v) => valueToStr(v));
+		const mappedVals: (string | null)[] = values.map((v) => valueToStr(v));
 		// Filter out all of the null values
-		let outputArr: string[] = mappedVals.filter((v): v is string => v !== null);
+		const outputArr: string[] = mappedVals.filter((v): v is string => v !== null);
 
 
 		// If we have more than one coreq...
 		if (outputArr.length > 1) {
 			// Join the array for the type: eg. "ONE and TWO and THREE"
-			let valuesStr = outputArr.join(` ${type} `);
+			const valuesStr = outputArr.join(` ${type} `);
 			// Wrap in parentheses
 			return `(${valuesStr}) `;
 		}
@@ -338,7 +338,7 @@ function getCoreqs(course: Course): string {
 	function valueToStr(value: any): string | null {
 		// Check if the value is a single course
 		if ("subject" in value) {
-			let name = value["subject"] + value["classId"];
+			const name = value["subject"] + value["classId"];
 
 			// If the user has already added this coreq, there's no need for us to inform them of it
 			// Also, if the coreq is missing, the user can't add it, so we don't show them it
@@ -357,6 +357,6 @@ function getCoreqs(course: Course): string {
 	}
 
 
-	let coStr = valueToStr(coreqs);
+	const coStr = valueToStr(coreqs);
 	return coStr === null ? "" : `Corequisite courses (click to add): ${coStr.trim()}`;
 }

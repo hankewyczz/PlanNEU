@@ -20,7 +20,7 @@ class Filter {
 
 	// Evaluates an array of functions
 	func(s: Section[]): boolean {
-		for (let predicate of this.filters) {
+		for (const predicate of this.filters) {
 			if (!predicate(s)) {
 				return false;
 			}
@@ -45,7 +45,7 @@ class Filter {
 
 /* Checks if these sections have any honors courses */
 function anyHonors(sections: Section[]): boolean {
-	for (let section of sections) {
+	for (const section of sections) {
 		if (section.content["honors"]) {
 			return true;
 		}
@@ -68,9 +68,9 @@ function meetsMinHonorsReq(sections: Section[], minHonors: number = 0): boolean 
 	}
 
 	// If this is an honors section - return 1, else 0
-	let countArr: number[] = sections.map((a) => a.content["honors"] ? 1 : 0);
+	const countArr: number[] = sections.map((a) => a.content["honors"] ? 1 : 0);
 	// Sum up the array to get the number of honors courses
-	let count: number = countArr.reduce((a, b) => a + b, 0);
+	const count: number = countArr.reduce((a, b) => a + b, 0);
 
 	return count >= minHonors;
 }
@@ -84,8 +84,8 @@ function isValidTime(sections: Section[], start: number = MIN_TIME, end: number 
 		return true;
 	}
 
-	for (let section of sections) {
-		let times: Times = section.times;
+	for (const section of sections) {
+		const times: Times = section.times;
 
 		// If we're out of bounds, this isn't a valid time
 		if (times.earliestStart < start || times.latestEnd > end) {
@@ -98,7 +98,7 @@ function isValidTime(sections: Section[], start: number = MIN_TIME, end: number 
 
 /* Checks if these sections all have seats left */
 function isSeatsLeft(sections: Section[]): boolean {
-	for (let section of sections) {
+	for (const section of sections) {
 		if (section.content["seatsRemaining"] <= 0) {
 			return false;
 		}
@@ -122,15 +122,15 @@ function enoughDaysOff(sections: Section[], numDays: number = 0, days: string[] 
 	/* Checks if the day is free */
 	let dayFree: { [key: string]: boolean } = { "1": true, "2": true, "3": true, "4": true, "5": true };
 
-	for (let section of sections) {
+	for (const section of sections) {
 		// Update each day
-		for (let day of section.times.days) {
+		for (const day of section.times.days) {
 			// If we have anything on this day, it is no longer free
 			dayFree[day] = false;
 		}
 	}
 
-	for (let day of days) {
+	for (const day of days) {
 		if (!(dayFree[day])) {	// If we need this day to be free, and it isn't, throw an error
 			return false;
 		}
@@ -139,7 +139,7 @@ function enoughDaysOff(sections: Section[], numDays: number = 0, days: string[] 
 	// Now, we check if this meets our requirements
 	let count: number = 0;
 
-	for (let day of Object.values(dayFree)) {
+	for (const day of Object.values(dayFree)) {
 		count += day ? 1 : 0;
 	}
 

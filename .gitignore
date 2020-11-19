@@ -11,3 +11,5 @@ package-lock.json
 *.iml
 /resources/schedule
 /resources/js/test/lib
+/resources/js/utils/*.js
+/resources/js/handlers/*.js
