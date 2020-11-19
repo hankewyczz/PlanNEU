@@ -2,10 +2,33 @@
 // Min and max course times
 const MIN_TIME = 0;
 const MAX_TIME = 86340;
+// Filters Sections based on predicates
+class Filter {
+    // Construct with an empty filters array
+    constructor() {
+        this.filters = [];
+    }
+    // Adds a filter
+    add(func) {
+        this.filters.push(func);
+    }
+    // Evaluates an array of functions
+    func(s) {
+        for (let predicate of this.filters) {
+            if (!predicate(s)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+//////////////////////
+///// Predicates /////
+//////////////////////
 /* Checks if these sections have any honors courses */
 function anyHonors(sections) {
-    for (let i = 0; i < sections.length; i++) {
-        if (sections[i].content["honors"]) {
+    for (let section of sections) {
+        if (section.content["honors"]) {
             return true;
         }
     }
@@ -45,8 +68,8 @@ function isValidTime(sections, start = MIN_TIME, end = MAX_TIME) {
 }
 /* Checks if these sections all have seats left */
 function isSeatsLeft(sections) {
-    for (let i = 0; i < sections.length; i++) {
-        if (sections[i].content["seatsRemaining"] <= 0) {
+    for (let section of sections) {
+        if (section.content["seatsRemaining"] <= 0) {
             return false;
         }
     }
@@ -64,24 +87,22 @@ function enoughDaysOff(sections, numDays = 0, days = []) {
     }
     /* Checks if the day is free */
     let dayFree = { "1": true, "2": true, "3": true, "4": true, "5": true };
-    for (let i = 0; i < sections.length; i++) {
-        let secDays = sections[i].times.days;
+    for (let section of sections) {
         // Update each day
-        for (let j = 0; j < secDays.length; j++) {
+        for (let day of section.times.days) {
             // If we have anything on this day, it is no longer free
-            dayFree[secDays[j]] = false;
+            dayFree[day] = false;
         }
     }
-    for (let i = 0; i < days.length; i++) {
-        if (!(dayFree[days[i]])) { // If we need this day to be free, and it isn't, throw an error
+    for (let day of days) {
+        if (!(dayFree[day])) { // If we need this day to be free, and it isn't, throw an error
             return false;
         }
     }
     // Now, we check if this meets our requirements
-    let daysFreeVals = Object.values(dayFree);
     let count = 0;
-    for (let i = 0; i < daysFreeVals.length; i++) {
-        count += daysFreeVals[i] ? 1 : 0;
+    for (let day of Object.values(dayFree)) {
+        count += day ? 1 : 0;
     }
     // Check if we have enough days off
     return count >= numDays;
