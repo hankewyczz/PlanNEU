@@ -2,12 +2,12 @@
 npm_debug.log
 package-lock.json
 .DS_STORE
-node_modules
+*node_modules
 .module-cache
 *.log*
 *.sublime-project
 *.sublime-workspace
-.idea
+*.idea
 *.iml
 /resources/schedule
 /resources/js/test/lib

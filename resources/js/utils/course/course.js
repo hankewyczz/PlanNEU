@@ -181,7 +181,7 @@ function getCourseFromApi(course) {
             .then(response => response.json())
             .catch(() => { throw new Error("Could not access the courses API"); });
         // Check if the response is a dictionary (it should be)
-        if (typeof response === "object" && 'results' in response) {
+        if (typeof response !== "object" || !('results' in response)) {
             throw new Error("Invalid response from API");
         }
         // Check if anything came up for our search
@@ -258,5 +258,5 @@ function getCoreqs(course) {
         return null;
     }
     let coStr = valueToStr(coreqs);
-    return coStr === null ? "" : `Corequisite courses (click to add): ${coStr}`;
+    return coStr === null ? "" : `Corequisite courses (click to add): ${coStr.trim()}`;
 }

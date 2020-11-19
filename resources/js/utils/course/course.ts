@@ -261,7 +261,7 @@ async function getCourseFromApi(course: Course): Promise<void> {
 		
 
 	// Check if the response is a dictionary (it should be)
-	if (typeof response === "object" && 'results' in response) {
+	if (typeof response !== "object" || !('results' in response)) {
 		throw new Error("Invalid response from API");
 	}
 		
@@ -357,6 +357,6 @@ function getCoreqs(course: Course): string {
 	}
 
 
-	let coStr = valueToStr(coreqs); 
-	return coStr === null ? "" : `Corequisite courses (click to add): ${coStr}`;
+	let coStr = valueToStr(coreqs);
+	return coStr === null ? "" : `Corequisite courses (click to add): ${coStr.trim()}`;
 }
