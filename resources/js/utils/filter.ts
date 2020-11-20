@@ -4,7 +4,9 @@ const MAX_TIME: number = 86340;
 
 
 
-// Filters Sections based on predicates
+/**
+ * Filters Sections based on predicates.
+ */
 class Filter {
 	filters: ((s: Section[]) => boolean)[];
 
@@ -20,7 +22,7 @@ class Filter {
 
 	// Evaluates an array of functions
 	func(s: Section[]): boolean {
-		for (const predicate of this.filters) {
+		for (let predicate of this.filters) {
 			if (!predicate(s)) {
 				return false;
 			}
@@ -42,20 +44,27 @@ class Filter {
 //////////////////////
 
 
-
-/* Checks if these sections have any honors courses */
+/**
+ * Checks if these sections have any honors courses
+ * @param  {Section[]} sections The list of Sections
+ * @return {boolean}            A boolean indicating if this list of Sections contains any Sections which are Honors
+ */
 function anyHonors(sections: Section[]): boolean {
 	for (const section of sections) {
 		if (section.content["honors"]) {
 			return true;
 		}
 	}
-
 	return false;
 }
 
 
-/* Checks if we meet the minimum required honors courses */
+/**
+ * Checks if we meet the minimum required honors courses
+ * @param  {Section[]}	 sections The list of Sections
+ * @param  {number = 0}  minHonors The minimum number of honors Sections we want
+ * @return {boolean}            A boolean indicating if this list has at least this many Honors Sections
+ */
 function meetsMinHonorsReq(sections: Section[], minHonors: number = 0): boolean {
 	// If the min number of honors courses is 0, it's always true
 	if (minHonors === 0 || sections.length === 0) {
@@ -76,7 +85,13 @@ function meetsMinHonorsReq(sections: Section[], minHonors: number = 0): boolean 
 }
 
 
-/* Checks if these sections is within the valid time range */
+/**
+ * Checks if these sections is within the valid time range
+ * @param  {Section[]} 			  sections The list of Sections
+ * @param  {number = MIN_TIME}    start The start time of this range
+ * @param  {number = MAX_TIME}    end   The end time of this range
+ * @return {boolean}            Whether all of the Sections are in the valid time range or not
+ */
 function isValidTime(sections: Section[], start: number = MIN_TIME, end: number = MAX_TIME): boolean {
 	// Start is initialized to 00:00, and end is initialized to 24:00
 	// If we're outside of this range, it's always true
@@ -96,7 +111,11 @@ function isValidTime(sections: Section[], start: number = MIN_TIME, end: number 
 }
 
 
-/* Checks if these sections all have seats left */
+/**
+ * Checks if these sections all have seats left
+ * @param  {Section[]} sections The list of Sections
+ * @return {boolean}            Whether all of these Sections have seats left or not
+ */
 function isSeatsLeft(sections: Section[]): boolean {
 	for (const section of sections) {
 		if (section.content["seatsRemaining"] <= 0) {
@@ -107,42 +126,59 @@ function isSeatsLeft(sections: Section[]): boolean {
 }
 
 
-/* Checks if we have enough days off */
-function enoughDaysOff(sections: Section[], numDays: number = 0, days: string[] = []): boolean {
-	// If it's the defaults, we just return true
-	if (numDays === 0 && days.length === 0) {
-		return true;
-	}
-
+/**
+ * Checks if we have enough days off
+ * @param  {Section[]}   sections The list of Sections
+ * @param  {number   = 0}	numDays The number of days we want off
+ * @param  {string[] = []}  days    The specific days we want off
+ * @return {boolean}        		Whether or not we have enouch days off (and the specific days)
+ */
+function enoughDaysOff(sections: Section[], numDays: number = 0, daysOff: string[] = []): boolean {
 	/* No possible way for this to be true */
-	if (numDays < days.length) {
+	if (numDays < daysOff.length) {
 		return false;
 	}
 
-	/* Checks if the day is free */
-	let dayFree: { [key: string]: boolean } = { "1": true, "2": true, "3": true, "4": true, "5": true };
+	// If it's the defaults, we just return true
+	if (numDays === 0) {
+		return true;
+	}
 
-	for (const section of sections) {
-		// Update each day
-		for (const day of section.times.days) {
-			// If we have anything on this day, it is no longer free
-			dayFree[day] = false;
+
+	const days: string[] = ["1", "2", "3", "4", "5"];
+
+	let count = 0;
+
+	for (let day of days) {
+		if (isDayOff(sections, day)) {
+			count++;
+		}
+		else {
+			// Is this one of the specific days we want off?
+			if (daysOff.includes(day)) {	
+				return false;
+			}
 		}
 	}
-
-	for (const day of days) {
-		if (!(dayFree[day])) {	// If we need this day to be free, and it isn't, throw an error
-			return false;
-		}
-	}
-
-	// Now, we check if this meets our requirements
-	let count: number = 0;
-
-	for (const day of Object.values(dayFree)) {
-		count += day ? 1 : 0;
-	}
+	
 
 	// Check if we have enough days off
 	return count >= numDays;
+}
+
+
+
+function isDayOff(sections: Section[], day: string): boolean {
+	for (const section of sections) {
+		// Update each day
+		for (const secDay of section.times.days) {
+			// If we have anything on this day, it is no longer free
+			if (secDay == day) {
+				return false;
+			}
+		}
+	}
+
+	// If we get here, it's true
+	return true;
 }

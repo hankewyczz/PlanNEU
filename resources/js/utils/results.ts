@@ -1,21 +1,21 @@
-/*
-A schedule Result.
-*/
+/**
+ * The Result of a schedule combination.
+ */
 class Result {
 	// Class variables
 	sections: Section[];
-	sectionLinks: string[];
 	days: { [key: string]: { [key: number]: string } };
-	// Constructor
+
+	/**
+	 * Creates a Result instance.
+	 * @param {Section[]} sections The list of Sections in this combination.
+	 */
 	constructor(sections: Section[]) {
 		this.sections = sections;
-		this.sectionLinks = [];
 		this.days = {"1": {}, "2": {}, "3": {}, "4": {}, "5": {}};
 
 
 		for (let sec of sections) {
-			// Create the initial string
-			this.sectionLinks.push(this.courseLink(sec));
 
 			// Deal with the schedule
 			const times: Times = sec.times;
@@ -30,52 +30,68 @@ class Result {
 		}
 	}
 
+	/**
+	 * Converts a Time into a string.
+	 * @param  {Time}    time    The Time to convert
+	 * @param  {Section} section The Section from which this Time is.
+	 * @return {string}          The time string.
+	 */
 	timeStr(time: Time, section: Section): string {
 		return `${secsToHM(time.start)} - ${secsToHM(time.end)} | ${section.fullName}`;
 	}
 
-	courseLink(section: Section): string {
-		let out: string = `<a href="${section.content["url"]}">${section.crn}</a>: ${section.content.subject} ${section.content.classId}`;
 
-		out += (section.content["online"]) ? " (Online)<br>" : "<br>";
-		return out;
-	}
-
+	/**
+	 * Converts a Result into a string.
+	 * @return {string} The string representation of this Result
+	 */
 	toString(): string {
 		let out: string = "";
 
-		for (let i = 0; i < this.sectionLinks.length; i++) {
-			out += this.sectionLinks[i];
+		for (let sec of this.sections) {
+			out += sec.courseLink();
 		}
 
 		out += "<hr>";
+		out += this.daysToString();
+		return out;
+	}
 
-		let dayToStr: { [key: string]: string} = { "1": "Monday", "2": "Tuesday", 
-		"3": "Wednesday", "4": "Thursday", "5": "Friday" };
 
-		const days: string[] = Object.keys(this.days);
+	/**
+	 * Converts the meetings of a Result into a day by day schedule.
+	 * @return {string} The resulting weekly schedule.
+	 */
+	daysToString(): string {
+		let out = "";
 
-		for (let i = 0; i < days.length; i++) {
+		const strDays: { [key: string]: string } = {
+			"1": "Monday", "2": "Tuesday",
+			"3": "Wednesday", "4": "Thursday", "5": "Friday"
+		};
+
+
+		for (let day of Object.keys(this.days)) {
 			// Check if we have anything this day
-			if (Object.keys(this.days[days[i]]).length == 0) {
+			if (Object.keys(this.days[day]).length == 0) {
 				continue; // Empty day
 			}
 
-			out += `<b>${dayToStr[days[i]]}</b>`;
+			out += `<b>${strDays[day]}</b>`;
 			out += "<ul>";
 
-			let dayMeetings: { [key: string]: string } = this.days[days[i]];
+			let dayMeetings: { [key: string]: string } = this.days[day];
 			let meetings: string[] = Object.keys(dayMeetings);
 
 			meetings.sort();
 
-			for (let j = 0; j < meetings.length; j++) {
-				out += `<li>${dayMeetings[meetings[j]]}</li>`;
+			for (let meeting of meetings) {
+				out += `<li>${dayMeetings[meeting]}</li>`;
 			}
 
 			out += "</ul>"
 		}	
-
+		
 		return out;
 	}
 }

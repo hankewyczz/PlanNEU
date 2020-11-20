@@ -1,4 +1,4 @@
-describe("meetsMinHonorsReq", function() {
+describe("Honors", function() {
 	let cs2511Content = {
 		"results": [{
 			"class": {
@@ -42,6 +42,14 @@ describe("meetsMinHonorsReq", function() {
 	})
 
 
+	it("Empty sections case", function() {
+		expect(anyHonors([])).toBe(false);
+		expect(anyHonors([])).toBe(false);
+	})
+
+	it("anyHonors?", function() {
+		expect(anyHonors(cs2511Secs)).toBe(true);
+	})
 })
 
 

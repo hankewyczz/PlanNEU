@@ -1,6 +1,7 @@
-//////////////////////////////////////
-////////    API Constants     ////////
-//////////////////////////////////////
+///////////////////////
+//// API Constants ////
+///////////////////////
+
 
 // NOTE: Ask them to add the Access-Control-Allow-Origin response header
 // 		Otherwise, I can't GET right from this script, so we use a proxy
@@ -14,14 +15,14 @@ const API_VERSION: string = "2";
 
 
 
-
-
 //////////////////////////////////////////////////
 ////////    Dealing with USER_COURSES     ////////
 //////////////////////////////////////////////////
 
 
-// A single Course.
+/**
+ * A single Course.
+ */
 class Course {
 	// Basic info
 	subject: string;
@@ -35,7 +36,12 @@ class Course {
 	// Course content
 	content: { [key: string]: any };
 
-	// Constructor
+	/**
+	 * Constructs a Course instance.
+	 * @param {string} subject  [The subject of the Course]
+	 * @param {string} courseId [The ID of the Course]
+	 * @param {string} semester [The semester of this Course]
+	 */
 	constructor(subject: string, courseId: string, semester: string) {
 		// Basic course info
 		this.subject = subject;
@@ -50,7 +56,10 @@ class Course {
 		this.content = {};
 	}
 
-	// Add and parse content
+	/**
+	 * Adds and parses Course content.
+	 * @param {any} content [The content of this Course]
+	 */
 	addContent(content: any): void {
 		// Save the content
 		this.content = content["results"][0];
@@ -63,16 +72,16 @@ class Course {
 		return alreadySaved(this.name);
 	}
 
-	// Parse this course's sections
-	sections(): any[] {
-		let results: Section[] = [];
-
-		for (const section of this.content["sections"]) {
-			results.push(new Section(this, section));
-		}
-		return results;
+	/**
+	 * Parses and returns all of the Sections of the Course
+	 * @return {Section[]} [The Sections of this Course]
+	 */
+	sections(): Section[] {
+		// Map each section object into an actuall Section instance.
+		return this.content.sections.map((sec: {}) => new Section(this, sec));
 	}
 }
+
 
 
 
@@ -91,17 +100,21 @@ class Course {
 let USER_COURSES: { [key: string]: Course } = {};
 
 
-/* Removes a course which has already been saved 
-	- courseName (String): The name of the course (subject + courseId) */
+/**
+ * Removes a Course which has already been saved.
+ * @param {string} courseName [The name of the course (subject + courseId)]
+ */
 function removeSavedCourse(courseName: string): void {
 	delete USER_COURSES[courseName];
 }
 
 
-/* Gets the course data from a course which has already been saved
-	- courseName (String): The name of the course (subject + courseId)
-	- @return (Course): The course
-	- @throws If the class has not been added yet
+
+/**
+ * Gets the course data from a course which has already been saved
+ * @param  {string} courseName [The name of the course (subject + courseId)]
+ * @return {Course}            [The course]
+ * @throws {Error} 			   [If the class has not been added yet]
 */
 function getSavedCourse(courseName: string): Course {
 	if (!(courseName in USER_COURSES)) {
@@ -112,12 +125,12 @@ function getSavedCourse(courseName: string): Course {
 }
 
 
-/*
-Adds a new course and data to the dictionary
-	- course (Course): The course which we're adding to the dictionary
-	- body (Dictionary): the contents of the class
-	- @throws if the stored value is not a dictionary, and doesn't contain "results"
-*/
+/**
+ * Adds a new course and data to the dictionary
+ * @param {Course} course 	[The course which we're adding to the dictionary]
+ * @param {any}  body   	[the contents of the class]
+ * @throws {Error} 			[If the stored value is not a dictionary, and doesn't contain "results"]
+ */
 function saveCourse(course: Course, body: {[key: string]: any}): void {
 	// We should've already checked the body for validity, but we do it again
 	if (typeof body === "object" && !Array.isArray(body)) {
@@ -131,10 +144,11 @@ function saveCourse(course: Course, body: {[key: string]: any}): void {
 }
 
 
-/*
-Check if this course has already been added
-	- @return (boolean) Whether this course has been added already or not
-*/
+/**
+ * Check if this course has already been added
+ * @param  {string}  courseName [The name of the Course]
+ * @return {boolean}            [Whether this course has been added already or not]
+ */
 function alreadySaved(courseName: string): boolean {
 	return courseName in USER_COURSES;
 }
@@ -153,12 +167,14 @@ function alreadySaved(courseName: string): boolean {
 ////////////////////////////
 
 
-/* Parses user input representing a single class
-	- input (String): User input containing the subject and course number of a class (eg. "cs3500", "CS 3500", etc)
-	- semester (String): The semester of this course
-	- @return (Course): A new Course instance
-	- @throws if the input is invalid or cannot be parsed
-*/
+
+/**
+ * Parses user input representing a single class
+ * @param  {string} inputStr [User input containing the subject and course number of a class (eg. "cs3500")]
+ * @param  {string} semester [The semester of the Course]
+ * @return {Course}          [The Course instance]
+ * @throws {Error}			 [if the input is invalid or cannot be parsed]
+ */
 function parseCourseInput(inputStr: string, semester: string): Course {
 	// Remove all whitespace (\s) globally (g), for both single and groups of whitespace (+)
 	const input: string = inputStr.replace(/\s+/g, '');
@@ -185,10 +201,11 @@ function parseCourseInput(inputStr: string, semester: string): Course {
 }
 
 
-/* Checks if the given string is a valid number
-	- inputNum (String): the input number
-	- @return (boolean): Whether the input is a valid number or not
-	*/
+/**
+ * Checks if the given string is a valid number
+ * @param  {string}  inputNum [the input number]
+ * @return {boolean}          [Whether the input is a valid number or not]
+ */
 function isValidNum(inputNum: string): boolean {
 	/* We check to make sure the 4-character string is a number. We do this one by one, because Number accepts some
 	unexpected strings as valid numbers (eg.'0x11' == 17 or 'null' == 7, which of course, can't be course numbers!) */
@@ -215,13 +232,18 @@ function isValidNum(inputNum: string): boolean {
 ////////////////////////
 
 
-
-/* Sets up the query URL to get a single class
-	- course (Course): The course we're querying
-	- @return (String): The query URL
-*/
+/**
+ * Sets up the query URL to get a single class
+ * @param  {Course} course [The course we're querying]
+ * @return {string}        [The query URL]
+ */
 function getQueryUrl(course: Course): string {
-	// Creates a structured URL query value
+	/**
+	 * Creates a structured URL query value
+	 * @param  {string} name  [The name of the query]
+	 * @param  {string} value [The value of the query]
+	 * @return {string}       [The formatted query]
+	 */
 	function addQuery(name: string, value: string): string {
 		return `&${name}=${value}`;
 	}
@@ -248,11 +270,12 @@ function getQueryUrl(course: Course): string {
 }
 
 
-/* Fetches the data for a single course
-	- course (Course): The course we"re querying
-	- @return (Promise): the course body request as a Promise (resolves to response when done)
-	- @throws if the response was unexpected or improperly formatted
-*/
+/**
+ * Fetches the data for a single course
+ * @param  {Course}        course [The course we"re querying]
+ * @return {Promise<void>}        [the course body request as a Promise]
+ * @throws {Error}				  [if the response was unexpected or improperly formatted]
+ */
 async function getCourseFromApi(course: Course): Promise<void> {
 	const response = await fetch(getQueryUrl(course))
 		.then(response => response.json())
@@ -275,12 +298,13 @@ async function getCourseFromApi(course: Course): Promise<void> {
 }
 
 
-/*
-Gets the corequisites of a course (which has already been gotten)
-	- course (Course): The course we're querying
-	- @return (String or null): A list of hyperlinked coreqs
-	- @throws if the course has not been added yet
-*/
+
+/**
+ * Gets the corequisites of a course (which has already been gotten)
+ * @param  {Course} course [The course we're querying]
+ * @return {string}        [A list of hyperlinked coreqs]
+ * @throws {Error}		   [if the course has not been added yet]
+ */
 function getCoreqs(course: Course): string {
 	// To run this, the course needs to have been already added
 	if (!course.alreadySaved()) {
@@ -291,21 +315,23 @@ function getCoreqs(course: Course): string {
 	const coreqs = course.content["class"]["coreqs"];
 
 
-	/*
-	Creates a link which will add this class when clicked
-		- @return (String): A hyperlinked class, which, when clicked, will add this class
-	*/
+	/**
+	 * Creates a link which will add this class when clicked
+	 * @param  {string} name [The name of this Course]
+	 * @return {string}      [A hyperlinked class, which, when clicked, will add this class]
+	 */
 	function addCourseLink(name: string): string {
 		const onclick = `onclick="handleSingleCourse('${name}', '${course.semester}')"`;
 		return `<a href="#" ${onclick}>${name}</a>`;
 	}
 
 
-	/*
-	Generates our corequisite case recursively
-	Handles two types: "or" and "and"
-		- @return (String): A list of hyperlinked classes
-	*/
+	/**
+	 * Generates our corequisite case recursively
+	 * @param  {any[]}  values [The list of coreq values]
+	 * @param  {string} type   [The type of values (OR, AND)]
+	 * @return {string}        [A list of hyperlinked classes]
+	 */
 	function coreqCase(values: any[], type: string): string | null {		
 		// Map each value to a string first
 		const mappedVals: (string | null)[] = values.map((v) => valueToStr(v));
@@ -330,11 +356,12 @@ function getCoreqs(course: Course): string {
 	}
 
 
-	// Converts a coreq value to a string
-	// A 'value' can be one of:
-	// 	- A typed group (a group of classes, where either ALL classes must be taken, or ONE must be taken)
-	//  - A single class
-	// 	- @return (String or null): A list of hyperlinked classes
+	/**
+	 * Converts a coreq value to a string
+	 * @param  {any}    value 	A 'value' can be one of a typed group (a group with a type), 
+	 *                          or a single Course
+	 * @return {string}       	[A list of hyperlinked classes]
+	 */
 	function valueToStr(value: any): string | null {
 		// Check if the value is a single course
 		if ("subject" in value) {

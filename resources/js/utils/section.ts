@@ -1,4 +1,6 @@
-//A single Section.
+/**
+ * A single Section.
+ */
 class Section {
 	// Class variables
 	crn: string;
@@ -10,7 +12,11 @@ class Section {
 	content: { [key: string]: any };
 	times: Times;
 
-	// Constructor
+	/**
+	 * Creates a Section instance.
+	 * @param {Course} course  The parent Course (the Course of which type this Section is)
+	 * @param {any}}  content The content of this Section.
+	 */
 	constructor(course: Course, content: {[key: string]: any}) {
 		// Initialize
 		this.content = content;
@@ -33,12 +39,25 @@ class Section {
 			throw new Error("No meeting times found");
 		}
 	}
+
+	/**
+	 * Creates a link to a Section.
+	 * @return {string}          The course link.
+	 */
+	courseLink(): string {
+		let out: string = `<a href="${this.content["url"]}">${this.crn}</a>`
+		out += `: ${this.content.subject} ${this.content.classId}`;
+
+		// The online status of this Section
+		out += (this.content["online"]) ? " (Online)<br>" : "<br>";
+		return out;
+	}
 }
 
 
-/*
-Section times
-*/
+/**
+ * Represents all of the meeting times for a Section.
+ */
 class Times {
 	earliestStart: number = MAX_TIME;
 	latestEnd: number = MIN_TIME;
@@ -46,7 +65,10 @@ class Times {
 	days: string[];
 	content: { [key: string]: Time[] } = {};
 
-	// Constructor
+	/**
+	 * Creates an instance of a Times.
+	 * @param {number }[] }} times The object containing all of the times. 
+	 */
 	constructor(times: { [key: string]: { [key: string]: number }[] }) {
 		this.days = Object.keys(times);
 
@@ -73,13 +95,17 @@ class Times {
 }
 
 
-/*
-A single meeting time
-*/
+/**
+ * A single time (of a single meeting).
+ */
 class Time {
 	start: number;
 	end: number;
 
+	/**
+	 * Constructs a Time.
+	 * @param {number }} times The object containing the times.
+	 */
 	constructor(times: { [key: string]: number }) {
 		this.start = times["start"];
 		this.end = times["end"];
@@ -99,7 +125,11 @@ class Time {
 ////    Section Utilities    ////
 /////////////////////////////////
 
-/* Checks if any sections in an array overlap */
+/**
+ * Checks if any sections in an array overlap
+ * @param  {Section[]} sections The array of sections
+ * @return {boolean}            A boolean indicating if any Sections overlap
+ */	
 function anySectionsOverlap(sections: Section[]): boolean {
 	for (let i = 0; i < sections.length - 1; i++) {
 		for (let j = i + 1; j < sections.length; j++) {
@@ -135,7 +165,12 @@ function sectionsOverlap(s1: Section, s2: Section): boolean {
 
 
 
-// Checks if any number of time ranges overlap
+/**
+ * Checks if any number of time ranges overlap
+ * @param  {Time[]}  s1Times The first list of Time
+ * @param  {Time[]}  s2Times The second list of Time
+ * @return {boolean}         A boolean indicating if any time overlaps 
+ */
 function anyTimesOverlap(s1Times: Time[], s2Times: Time[]): boolean {
 	for (const time1 of s1Times) {
 		for (const time2 of s2Times) {
@@ -149,9 +184,12 @@ function anyTimesOverlap(s1Times: Time[], s2Times: Time[]): boolean {
 }
 
 
-/*
-Checks if two time ranges overlap
-*/
+/**
+ * Checks if two time ranges overlap
+ * @param  {Time}    t1 The first Time
+ * @param  {Time}    t2 The second Time
+ * @return {boolean}    A boolean indicating if the two Time instances overlap
+ */
 function timesOverlap(t1: Time, t2: Time): boolean {
 	// Check for any type of possible overlap (if any of these are true, there is overlap)
 	return ((t1.start >= t2.start && t1.start <= t2.end) 	// t1.start is between t2.start and t2.end
@@ -163,75 +201,57 @@ function timesOverlap(t1: Time, t2: Time): boolean {
 
 
 
-/* Creates all possible combinations from an array of arrays 
-https://stackoverflow.com/questions/8936610/how-can-i-create-every-combination-possible-for-the-contents-of-two-arrays
-*/
+/**
+ * Creates all possible combinations from an array of arrays
+ * From stackoverflow.com/questions/8936610/how-can-i-create-every-combination-possible-for-the-contents-of-two-arrays
+ * @param  {Section[][]} arrayOfArrays The array of Section arrays
+ * @param  {Filter}      filter        The filter to apply
+ * @return {Section[][]}                 The resulting Section[] combination possibilities
+ */
 function createCombinations(arrayOfArrays: Section[][], filter: Filter): Section[][] {
 	// Check if the main array is empty, and check if there are any empty inner arrays
 	if (arrayOfArrays.length == 0 || arrayOfArrays.filter((s) => s.length === 0).length > 0) {
 		return [];
 	}
 
-	// We create an empty array of the proper length
-	let indices: number[] = new Array(arrayOfArrays.length).fill(0);
+	
+	let results: Section[][] = [];
 
+	/**
+	 * Recursive inner function to create combinations.
+	 * @param {number    = 0}  arrayIndex The index of the inner array we're on
+	 * @param {Section[] = []} output     THe output array
+	 */
+	function combination(arrayIndex: number = 0, output: Section[] = []) {
 
-	let output: Section[][] = [];
+		// Iterate over every Section, in this inner array
+		for (let sec of arrayOfArrays[arrayIndex]) {
 
+			// Clone the output, so we're not referring to the same array
+			let cloneOut = output.slice();
+			// Push this section to the output
+			cloneOut.push(sec);
 
-	do {
-		// Create and push a combination
-		let result: Section[] = formCombination(indices, arrayOfArrays);
-
-		// Check if the sections overlap, or if they don't pass the filter
-		if (!anySectionsOverlap(result) && filter.func(result)) {
-			output.push(result);;
-		}
-	}
-	while (odometerIncrement(indices, arrayOfArrays));
-
-	return output;
-}
-
-
-
-// Take an array of indices, and generate the resulting combination 
-function formCombination<K>(indices: number[], arrayOfArrays: K[][]): K[] {
-	// Uses the indices array to create the resulting combination
-	return arrayOfArrays.map((arr, index) => arr[indices[index]]);
-}
-
-
-
-
-// Incements the array of indices 
-function odometerIncrement<K>(indices: number[], arrayOfArrays: K[][]): boolean {
-	// We start with the rightmost index in indices
-	for (let i = indices.length - 1; i >= 0; i--) {
-		// Here, we check if we can increment without going over the max value
-		if (indices[i] + 1 <= arrayOfArrays[i].length - 1) {
-			indices[i]++;
-			// If we can, we increment and return true
-			return true;
-		}
-		// We can't increment without going over the max
-		else {
-			// We move one digit to the left (if we can)
-			if (i - 1 < 0) {
-				// Nothing more to increment -- we're done
-				return false;
-			}
-			else {
-				// Cycle this one to 0, and go again with the next one
-				indices[i] = 0;
-				continue;
+			if (arrayIndex == arrayOfArrays.length - 1) {
+				// We're at the end of a combination -- add it to the results array
+				// Only add if the sections don't overlap, and they pass the filter
+				if (!anySectionsOverlap(cloneOut) && filter.func(cloneOut)) {
+					results.push(cloneOut);
+				}
+				
+			} else {
+				// Otherwise, we increment the index and keep going
+				combination(arrayIndex + 1, cloneOut);
 			}
 		}
 	}
 
-	return false;
-}
+	// Create the combinations
+	combination();
 
+	// Return the combinations
+	return results;
+}
 
 
 /* Given an array of arrays of Sections, check how many possible combinations there are */
