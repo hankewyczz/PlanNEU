@@ -20,35 +20,35 @@ describe("Honors", function() {
 	let cs2511 = new Course("CS", "2511", "202130");
 	saveCourse(cs2511, cs2511Content);
 
-	let cs2511Secs = cs2511.sections();
+	let result = new Result(cs2511.sections());
 
 	it("Empty sections case", function() {
-		expect(meetsMinHonorsReq([])).toBe(true);
-		expect(meetsMinHonorsReq([], 2)).toBe(true);
+		expect(meetsMinHonorsReq(new Result([]))).toBe(true);
+		expect(meetsMinHonorsReq(new Result([]), 2)).toBe(false);
 	})
 
 	it("Zero honors case", function() {
-		expect(meetsMinHonorsReq(cs2511Secs)).toBe(true);
-		expect(meetsMinHonorsReq(cs2511Secs, 0)).toBe(true);
+		expect(meetsMinHonorsReq(result)).toBe(true);
+		expect(meetsMinHonorsReq(result, 0)).toBe(true);
 	})
 
 	it("One case", function() {
-		expect(meetsMinHonorsReq(cs2511Secs, 1)).toBe(true);
+		expect(meetsMinHonorsReq(result, 1)).toBe(true);
 	})
 
 	it("Too many honors", function() {
-		expect(meetsMinHonorsReq(cs2511Secs, 2)).toBe(false);
-		expect(meetsMinHonorsReq(cs2511Secs, 200)).toBe(false);
+		expect(meetsMinHonorsReq(result, 2)).toBe(false);
+		expect(meetsMinHonorsReq(result, 200)).toBe(false);
 	})
 
 
 	it("Empty sections case", function() {
-		expect(anyHonors([])).toBe(false);
-		expect(anyHonors([])).toBe(false);
+		expect(anyHonors(new Result([]))).toBe(false);
+		expect(anyHonors(new Result([]))).toBe(false);
 	})
 
 	it("anyHonors?", function() {
-		expect(anyHonors(cs2511Secs)).toBe(true);
+		expect(anyHonors(result)).toBe(true);
 	})
 })
 
@@ -75,23 +75,24 @@ describe("isValidTime", function() {
 	let cs2511 = new Course("CS", "2511", "202130");
 	saveCourse(cs2511, cs2511Content);
 
-	let cs2511Secs = cs2511.sections();
+	let result = new Result(cs2511.sections());
+
 
 	it("Empty case", function() {
-		expect(isValidTime(cs2511Secs)).toBe(true);
-		expect(isValidTime(cs2511Secs, MIN_TIME, MAX_TIME)).toBe(true);
+		expect(isValidTime(result)).toBe(true);
+		expect(isValidTime(result, MIN_TIME, MAX_TIME)).toBe(true);
 	})
 
 	it("All valid", function() {
-		expect(isValidTime(cs2511Secs, 1, MAX_TIME)).toBe(true);
-		expect(isValidTime(cs2511Secs, 28800, MAX_TIME)).toBe(true);
-		expect(isValidTime(cs2511Secs, 28800, 68100)).toBe(true);
+		expect(isValidTime(result, 1, MAX_TIME)).toBe(true);
+		expect(isValidTime(result, 28800, MAX_TIME)).toBe(true);
+		expect(isValidTime(result, 28800, 68100)).toBe(true);
 	})
 
 	it("Invalid", function() {
-		expect(isValidTime(cs2511Secs, 35401, MAX_TIME)).toBe(false);
-		expect(isValidTime(cs2511Secs, MIN_TIME, 68099)).toBe(false);
-		expect(isValidTime(cs2511Secs, 2, 1)).toBe(false);
+		expect(isValidTime(result, 35401, MAX_TIME)).toBe(false);
+		expect(isValidTime(result, MIN_TIME, 68099)).toBe(false);
+		expect(isValidTime(result, 2, 1)).toBe(false);
 	})
 
 })
@@ -119,10 +120,10 @@ describe("isSeatsLeft", function() {
 	let cs2511 = new Course("CS", "2511", "202130");
 	saveCourse(cs2511, cs2511Content);
 
-	let cs2511Secs = cs2511.sections();
+	let result = new Result(cs2511.sections());
 
 	it("Any seats left?", function() {
-		expect(isSeatsLeft(cs2511Secs)).toBe(false);
+		expect(isSeatsLeft(result)).toBe(false);
 	})
 })
 
@@ -151,32 +152,32 @@ describe("Enough days off?", function() {
 	let cs2511 = new Course("CS", "2511", "202130");
 	saveCourse(cs2511, cs2511Content);
 
-	let cs2511Secs = cs2511.sections();
+	let result = new Result(cs2511.sections());
 
 
 	it("Empty", function() {
-		expect(enoughDaysOff(cs2511Secs)).toBe(true);
-		expect(enoughDaysOff(cs2511Secs, 0, [])).toBe(true);
+		expect(enoughDaysOff(result)).toBe(true);
+		expect(enoughDaysOff(result, 0, [])).toBe(true);
 	})
 
 	it ("Invalid days off combination", function() {
-		expect(enoughDaysOff(cs2511Secs, 0, ["1"])).toBe(false);
+		expect(enoughDaysOff(result, 0, ["1"])).toBe(false);
 	})
 
 	it("No specific days", function() {
-		expect(enoughDaysOff(cs2511Secs, 4)).toBe(true);
-		expect(enoughDaysOff(cs2511Secs, 4, [])).toBe(true);
+		expect(enoughDaysOff(result, 4)).toBe(true);
+		expect(enoughDaysOff(result, 4, [])).toBe(true);
 	})
 
 	it("Specific days", function() {
-		expect(enoughDaysOff(cs2511Secs, 4, ["1", "3", "4"])).toBe(true);
-		expect(enoughDaysOff(cs2511Secs, 4, ["1", "3", "4", "5"])).toBe(true);
+		expect(enoughDaysOff(result, 4, ["1", "3", "4"])).toBe(true);
+		expect(enoughDaysOff(result, 4, ["1", "3", "4", "5"])).toBe(true);
 	})
 
 	it("Not enough days", function() {
-		expect(enoughDaysOff(cs2511Secs, 5)).toBe(false);
-		expect(enoughDaysOff(cs2511Secs, 1, ["2"])).toBe(false);
-		expect(enoughDaysOff(cs2511Secs, 3, ["2"])).toBe(false);
+		expect(enoughDaysOff(result, 5)).toBe(false);
+		expect(enoughDaysOff(result, 1, ["2"])).toBe(false);
+		expect(enoughDaysOff(result, 3, ["2"])).toBe(false);
 	})
 
 

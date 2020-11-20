@@ -92,13 +92,13 @@ class Section {
 
 /**
  * Checks if any sections in an array overlap
- * @param  {Section[]} sections The array of sections
+ * @param  {Result} sections The array of sections
  * @return {boolean}            A boolean indicating if any Sections overlap
  */	
-function anySectionsOverlap(sections: Section[]): boolean {
-	for (let i = 0; i < sections.length - 1; i++) {
-		for (let j = i + 1; j < sections.length; j++) {
-			if (sectionsOverlap(sections[i], sections[j])) {
+function anySectionsOverlap(result: Result): boolean {
+	for (let i = 0; i < result.sections.length - 1; i++) {
+		for (let j = i + 1; j < result.sections.length; j++) {
+			if (sectionsOverlap(result.sections[i], result.sections[j])) {
 				return true;
 			}
 		}
@@ -171,21 +171,21 @@ function timesOverlap(t1: Time, t2: Time): boolean {
  * From stackoverflow.com/questions/8936610/how-can-i-create-every-combination-possible-for-the-contents-of-two-arrays
  * @param  {Section[][]} arrayOfArrays The array of Section arrays
  * @param  {Filter}      filter        The filter to apply
- * @return {Section[][]}                 The resulting Section[] combination possibilities
+ * @return {Result[]}                 The resulting Section[] combination possibilities
  */
-function createCombinations(arrayOfArrays: Section[][], filter: Filter): Section[][] {
+function createCombinations(arrayOfArrays: Section[][], filter: Filter): Result[] {
 	// Check if the main array is empty, and check if there are any empty inner arrays
 	if (arrayOfArrays.length == 0 || arrayOfArrays.filter((s) => s.length === 0).length > 0) {
 		return [];
 	}
 
 	
-	let results: Section[][] = [];
+	let results: Result[] = [];
 
 	/**
 	 * Recursive inner function to create combinations.
 	 * @param {number    = 0}  arrayIndex The index of the inner array we're on
-	 * @param {Section[] = []} output     THe output array
+	 * @param {Result = []} output     THe output array
 	 */
 	function combination(arrayIndex: number = 0, output: Section[] = []) {
 
@@ -200,8 +200,10 @@ function createCombinations(arrayOfArrays: Section[][], filter: Filter): Section
 			if (arrayIndex == arrayOfArrays.length - 1) {
 				// We're at the end of a combination -- add it to the results array
 				// Only add if the sections don't overlap, and they pass the filter
-				if (!anySectionsOverlap(cloneOut) && filter.func(cloneOut)) {
-					results.push(cloneOut);
+				let result: Result = new Result(cloneOut);
+
+				if (!anySectionsOverlap(result) && filter.func(result)) {
+					results.push(result);
 				}
 				
 			} else {

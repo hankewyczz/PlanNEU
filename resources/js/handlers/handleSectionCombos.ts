@@ -163,10 +163,10 @@ function handleGenerateScheduleAndFilter() {
 		handleMessage("Generating all combinations...");
 		let filter: Filter = handleFilterInputs();
 
-		let combinations: Section[][] = createCombinations(sectionArrOfArr, filter);
+		let combinations: Result[] = createCombinations(sectionArrOfArr, filter);
 
-		for (let i = 0; i < combinations.length; i++) {
-			console.log(new Result(combinations[i]).toString());
+		for (let combo of combinations) {
+			console.log(combo.toString());
 
 		}
 		
