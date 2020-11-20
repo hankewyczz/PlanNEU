@@ -1,4 +1,27 @@
 /**
+ * The expected Section content.
+ */
+interface SectionContent {
+	classType: string;
+	crn: string;
+	honors: boolean;
+	meetings: IMeeting[];
+	online: boolean;
+	profs: string[];
+	seatsCapacity: number;
+	seatsRemaining: number;
+	url: string;
+	waitCapacity: number;
+	waitRemaining: number;
+	termId: string;
+	host: string;
+	subject: string;
+	classId: string;
+}
+
+
+
+/**
  * A single Section.
  */
 class Section {
@@ -15,9 +38,9 @@ class Section {
 	/**
 	 * Creates a Section instance.
 	 * @param {Course} course  The parent Course (the Course of which type this Section is)
-	 * @param {any}}  content The content of this Section.
+	 * @param {[key: string]: any}  content The content of this Section.
 	 */
-	constructor(course: Course, content: {[key: string]: any}) {
+	constructor(course: Course, content: SectionContent) {
 		// Initialize
 		this.content = content;
 
@@ -51,64 +74,6 @@ class Section {
 		// The online status of this Section
 		out += (this.content["online"]) ? " (Online)<br>" : "<br>";
 		return out;
-	}
-}
-
-
-/**
- * Represents all of the meeting times for a Section.
- */
-class Times {
-	earliestStart: number = MAX_TIME;
-	latestEnd: number = MIN_TIME;
-
-	days: string[];
-	content: { [key: string]: Time[] } = {};
-
-	/**
-	 * Creates an instance of a Times.
-	 * @param {number }[] }} times The object containing all of the times. 
-	 */
-	constructor(times: { [key: string]: { [key: string]: number }[] }) {
-		this.days = Object.keys(times);
-
-		// Iterate over all the days
-		for (const day of this.days) {
-
-			let output: Time[] = [];
-
-			// Iterate over all the meetings in this day
-			for (const meeting of times[day]) {
-				const time: Time = new Time(meeting);
-
-				output.push(time);
-
-				// Update min and max times
-				this.earliestStart = (time.start < this.earliestStart) ? time.start : this.earliestStart;
-				this.latestEnd = (time.end > this.latestEnd) ? time.end : this.latestEnd;
-			}
-			
-			// Add to the content object
-			this.content[day] = output;
-		}
-	}
-}
-
-
-/**
- * A single time (of a single meeting).
- */
-class Time {
-	start: number;
-	end: number;
-
-	/**
-	 * Constructs a Time.
-	 * @param {number }} times The object containing the times.
-	 */
-	constructor(times: { [key: string]: number }) {
-		this.start = times["start"];
-		this.end = times["end"];
 	}
 }
 

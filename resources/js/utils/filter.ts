@@ -130,8 +130,8 @@ function isSeatsLeft(sections: Section[]): boolean {
  * Checks if we have enough days off
  * @param  {Section[]}   sections The list of Sections
  * @param  {number   = 0}	numDays The number of days we want off
- * @param  {string[] = []}  days    The specific days we want off
- * @return {boolean}        		Whether or not we have enouch days off (and the specific days)
+ * @param  {string[] = []}  daysOff    The specific days we want off
+ * @return {boolean}        		Whether or not we have enough days off (and the specific days)
  */
 function enoughDaysOff(sections: Section[], numDays: number = 0, daysOff: string[] = []): boolean {
 	/* No possible way for this to be true */

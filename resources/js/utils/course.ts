@@ -34,7 +34,7 @@ class Course {
 	fullName: string;
 
 	// Course content
-	content: { [key: string]: any };
+	content: CourseContent | null;
 
 	/**
 	 * Constructs a Course instance.
@@ -53,7 +53,7 @@ class Course {
 		this.fullName = this.name 		// Initialize the full name to this for now
 
 		// Initialize content as empty
-		this.content = {};
+		this.content = null;
 	}
 
 	/**
@@ -61,8 +61,8 @@ class Course {
 	 * @param {any} content [The content of this Course]
 	 */
 	addContent(content: any): void {
-		// Save the content
-		this.content = content["results"][0];
+		// Save the content (and cast it)
+		this.content = (content["results"][0] as CourseContent);
 		// Generate and save the full name
 		this.fullName = `${this.name}: ${this.content["class"]["name"]}`;
 	}
@@ -77,8 +77,10 @@ class Course {
 	 * @return {Section[]} [The Sections of this Course]
 	 */
 	sections(): Section[] {
-		// Map each section object into an actuall Section instance.
-		return this.content.sections.map((sec: {}) => new Section(this, sec));
+		// We have to cast it 
+		let content: CourseContent = this.content as CourseContent;
+		// Map each section object into an actual Section instance.
+		return content.sections.map((sec: SectionContent) => new Section(this, sec));
 	}
 }
 
@@ -239,7 +241,7 @@ function isValidNum(inputNum: string): boolean {
  */
 function getQueryUrl(course: Course): string {
 	/**
-	 * Creates a structured URL query value
+	 * Creates a structured URL query value 
 	 * @param  {string} name  [The name of the query]
 	 * @param  {string} value [The value of the query]
 	 * @return {string}       [The formatted query]
@@ -312,7 +314,7 @@ function getCoreqs(course: Course): string {
 	}
 
 	// Gets the coreqs of this course
-	const coreqs = course.content["class"]["coreqs"];
+	const coreqs = (course.content as CourseContent)["class"]["coreqs"];
 
 
 	/**

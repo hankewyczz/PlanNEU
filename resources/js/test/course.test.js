@@ -19,7 +19,6 @@ describe("Course functionality", function() {
 		expect(c.semester).toBe(SEMESTER);
 		expect(c.name).toBe(subject + courseId);
 		expect(c.name).toBe(c.fullName);
-		expect(c.content).toEqual({});
 	});
 
 
