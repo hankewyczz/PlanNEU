@@ -6,33 +6,29 @@ const COMBO_WARNING: number = 100_000;	// If we have more than this amount of co
 const COMBO_ERROR: number = 10_000_000;	// Ditto, but if it's over this number, throw an error
 
 
-/*
-Grabs the courses and semester info from the URL */
+/**
+ * Grabs the courses and semester info from the URL
+ */
 function getCourseInfoFromUrl(): [string, string[]] {
-	try {
-		let url: URLSearchParams = new URLSearchParams(window.location.href);
-		let semester: string = (url.get('semester') as string);
-		let courseStr: string = (url.get('courses') as string);
+	let url: URLSearchParams = new URLSearchParams(window.location.href);
+	let semester = (url.get('semester') as string);
+	let courseStr = (url.get('courses') as string);
 
-		// If they're empty, we throw an error
-		if (semester === "" || courseStr === "") {
-			throw new Error();
-		}
-
-		let courses: string[] = courseStr.split(',').slice(0, 10);
-
-		return [semester, courses];
-	}
-	catch (err) {
+	// If they're empty, we throw an error
+	if (semester === "" || courseStr === "") {
 		throw new Error("URL parameters are empty - <a href='addCourses.html'>Go back to course selection</a>");
 	}
-	
+
+	let courses: string[] = courseStr.split(',').slice(0, 10);
+
+	return [semester, courses];
 }
 
 
-/*
-Saves the courses
-*/
+/**
+ * Saves the courses
+ * @return {Promise} The saved Course Sections
+ */
 async function getCoursesFromUrl(): Promise<Section[][]> {
 	let output: Section[][] = [];
 	let semester: string;
@@ -40,23 +36,26 @@ async function getCoursesFromUrl(): Promise<Section[][]> {
 
 	[semester, courses] = getCourseInfoFromUrl();
 
-	for (let i = 0; i < courses.length; i++) {
+	for (let course of courses) {
 		// Handle the input and getting the course
-		let course: Course = handleUserInput(courses[i], semester);
-		await handleGetCourse(course);
-		output.push(course.sections());
+		let courseObj: Course = handleUserInput(course, semester);
+		await handleGetCourse(courseObj);
+		output.push(courseObj.sections());
 	}
 
 	return output;
 }
 
 
-/* Handle fetching the course/sections from the URL and parsing */
+/**
+ * Handle fetching the course/sections from the URL and parsing
+ * @return {Promise<void>}
+ */
 async function prepareSections(): Promise<void> {
 	try {
 		handleMessage("Fetching course section data...");
 		sectionArrOfArr = await getCoursesFromUrl();
-		handleMessage("Fetched all section data");
+
 
 		let combinations: number = howManyCombinations(sectionArrOfArr);
 
@@ -83,7 +82,10 @@ async function prepareSections(): Promise<void> {
 
 
 
-/* Handles the parsing and validation of the user information */
+/**
+ * Handles the parsing and validation of the user information
+ * @return {Filter} Returns the generated Filter
+ */
 function handleFilterInputs(): Filter {
 	// The filter we'll be using
 	let filter: Filter = new Filter();
@@ -157,17 +159,18 @@ function handleFilterInputs(): Filter {
 
 
 
-// Generate the results
+/**
+ * Generate the results
+ */
 function handleGenerateScheduleAndFilter() {
 	try {
 		handleMessage("Generating all combinations...");
-		let filter: Filter = handleFilterInputs();
-
+		
+		let filter = handleFilterInputs();
 		let combinations: Result[] = createCombinations(sectionArrOfArr, filter);
 
 		for (let combo of combinations) {
 			console.log(combo.toString());
-
 		}
 		
 		handleMessage(`Generated ${combinations.length} results`, Message.Success);

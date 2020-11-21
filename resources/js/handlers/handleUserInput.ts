@@ -6,23 +6,18 @@ const COURSES_DIV_ID: string = "side-course-col";
 const SEMESTER_SELECTOR_ID: string = "semester-selector";
 const USER_INPUT_ID: string = "user-course-input";
 const MAX_COURSES_ALLOWED: number = 8;
-const INITIAL_ELEMENTS_IN_COURSES: number = 2;
+const COURSE_DIV_KIDS: number = 2;
 
 
-/*
-Handles the user input
-	- input (String): the user input for a single course
-	- @return (Course): the course matching the user input
-	- @throws if the input could not be parsed, or if the course has already been added
-*/
+/**
+ * Handles the user input 	
+ * @param  {string} input    the user input for a single course
+ * @param  {string} semester The semester of the course
+ * @return {Course}          the course matching the user input
+ */
 function handleUserInput(input: string, semester: string): Course {
 	// First, we try parsing the input
-	let course: Course;
-	try {
-		course = parseCourseInput(input, semester);
-	} catch (err) {
-		throw new Error("No matching course");
-	}
+	let course: Course  = parseCourseInput(input, semester);
 
 	if (course.alreadySaved()) {
 		throw new Error("Course already added");
@@ -33,12 +28,17 @@ function handleUserInput(input: string, semester: string): Course {
 
 
 /*
-Handles getting a single course
 	- course (Course): The course which we're querying from the API
 	- @return (String): The full name of the course
 	- @throws If the course could not be fetched, or if it could not be properly added
 */
-async function handleGetCourse(course: Course): Promise<string> {
+
+/**
+ * Handles getting a single course
+ * @param  {Course}          course The Course we're querying from the API
+ * @return {Promise<void>}
+ */
+async function handleGetCourse(course: Course): Promise<void> {
 	if (course.alreadySaved()) {
 		throw new Error("Course already added");
 	}
@@ -54,19 +54,16 @@ async function handleGetCourse(course: Course): Promise<string> {
 	if (!course.alreadySaved()) {
 		throw new Error("Course could not be added");
 	}
-	
-	// Returns the full name
-	return course.fullName;
 }
 
 
-/*
-This is the user-level handling for a single course, from input to end
-	- We can either take input, or stick to defaults
-	- The defaults get the user input and user semester (from the UI)
-	- We only override in the case of coreq courses
-	- @return (void)
-*/
+
+/**
+ * This is the user-level handling for a single course
+ * @param  {string = (document.getElementById(USER_INPUT_ID) as HTMLInputElement).value} 	input    User course input
+ * @param  {string = (document.getElementById(SEMESTER_SELECTOR_ID) as HTMLInputElement).value} semester The semester
+ * @return {Promise<void>}
+ */
 async function handleSingleCourse(
 	input: string = (document.getElementById(USER_INPUT_ID) as HTMLInputElement).value,
 	semester: string = (document.getElementById(SEMESTER_SELECTOR_ID) as HTMLInputElement).value): Promise<void> {
@@ -76,9 +73,11 @@ async function handleSingleCourse(
 		// Let the user know we're getting the course
 		handleMessage("Fetching course...");
 
-		(document.getElementById(USER_INPUT_ID) as HTMLInputElement).value = ""; // Reset the input value
-		let coursesAdded: number = (document.getElementById(COURSES_DIV_ID) as HTMLElement).children.length 
-		- INITIAL_ELEMENTS_IN_COURSES;
+		// Reset the input value
+		(document.getElementById(USER_INPUT_ID) as HTMLInputElement).value = ""; 
+
+		// Check how many courses have already been added (all children, minus the initial ones)
+		let coursesAdded = (document.getElementById(COURSES_DIV_ID) as HTMLElement).children.length - COURSE_DIV_KIDS;
 
 		if (coursesAdded >= MAX_COURSES_ALLOWED) {
 			throw new Error("Max number of courses reached");
@@ -86,18 +85,14 @@ async function handleSingleCourse(
 
 		// Handle the input and getting the course
 		let course: Course = await handleUserInput(input, semester);
-
 		// Get the course, the course name, and the coreqs
 		await handleGetCourse(course);
-		let coreqStr: string = getCoreqs(course);
 
 		// Add it to the UI 
 		addToCourseDiv(course, course.fullName);
 
-
-		let messageStr: string = `Successfully added ${course.fullName}! ${coreqStr}`;
-		// Send the message
-		handleMessage(messageStr, Message.Success);
+		// Send a success message
+		handleMessage(`Successfully added ${course.fullName}! ${getCoreqs(course)}`, Message.Success);
 	}
 	catch (err) {
 		console.log(err);
@@ -106,11 +101,11 @@ async function handleSingleCourse(
 }
 
 
-/*
-Adds the course to the user interface
-	- course (Course): the course to add
-	- fullCourseName (String): the full course name
-	- @return (void) */
+/**
+ * Adds the course to the user interface
+ * @param {Course} course         the course to add
+ * @param {string} fullCourseName the full course name
+ */
 function addToCourseDiv(course: Course, fullCourseName: string): void {
 	// Add it to the courses
 	let courseEntry = document.createElement("span");
@@ -127,12 +122,11 @@ function addToCourseDiv(course: Course, fullCourseName: string): void {
 
 
 
-/*
-Handle removing a course we added
-	- name (String): the course to remove
-	- obj (Object): the parent object of the span
-	- @return (void)
-*/
+/**
+ * Handle removing a course we added
+ * @param {string} name the course to remove
+ * @param {Node}   obj  the parent object of the span
+ */
 function handleRemove(name: string, obj: Node): void {
 	// Remove the course internally
 	removeSavedCourse(name);
@@ -142,12 +136,12 @@ function handleRemove(name: string, obj: Node): void {
 
 
 
-/*
-Validates user input, and fetches the corresponding class
-    - obj (Object): The input field which called this
-    - event (KeyEvent): the keyEvent
-    - @return (void)
-*/
+
+/**
+ * Validates user input keyEvents, and fetches the corresponding class
+ * @param  {any}           event The input field which called this
+ * @return {Promise<void>}     
+ */
 async function validateInput(event: any): Promise<void> {
 	if (event.keyCode === 13) {
 		event.preventDefault();
@@ -166,11 +160,11 @@ enum Message {
 }
 
 
-/*
-Displays an informational (ie. non-error) message
-    - message (String) the message to display
-    - @return (void)
-*/
+/**
+ * Displayes a message
+ * @param {string}     message The message to display
+ * @param {Message = Message.Basic} type The message type
+ */
 function handleMessage(message: string, type: Message = Message.Basic): void {
 	console.log(message);
 	let messageDiv: HTMLElement = document.getElementById(MESSAGE_DIV_ID) as HTMLElement;
@@ -181,10 +175,9 @@ function handleMessage(message: string, type: Message = Message.Basic): void {
 }
 
 
-/*
-Toggles the visibility of the instructions
-	- @return (void)
-*/
+/**
+ * Toggles the visibility of the instructions.
+ */
 function toggleInstructions(): void {
 	let instructions: HTMLElement = (document.getElementById("instructions") as HTMLElement);
 	let arrow: HTMLElement = (document.getElementById("arrow") as HTMLElement);
@@ -198,7 +191,9 @@ function toggleInstructions(): void {
 }
 
 
-// Sets the form values for the GET request
+/**
+ * Prepares and sets the values of the form for the GET request.
+ */
 function setValues() {
 	let semester = (document.getElementById(SEMESTER_SELECTOR_ID) as HTMLInputElement).value;
 	let courses = Object.keys(USER_COURSES);
