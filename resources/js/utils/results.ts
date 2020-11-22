@@ -10,7 +10,7 @@ class Result {
 	honorsCount: number = 0;
 	earliestStart: number = MAX_TIME;
 	latestEnd: number = MIN_TIME;
-	minSeatsLeft: number = 100_000;	// Initialize with a large number - here's hoping there's no 100,000 seat classes
+	minSeatsLeft: number = 100_000;	// Initialize with a large number - here's hoping there's no 100,000-seat classes
 	areDaysFree: { [key: string]: boolean } = { "1": true, "2": true, "3": true, "4": true, "5": true };
 	daysOff: number = 0;
 

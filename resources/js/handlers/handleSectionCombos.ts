@@ -10,18 +10,23 @@ const COMBO_ERROR: number = 10_000_000;	// Ditto, but if it's over this number, 
  * Grabs the courses and semester info from the URL
  */
 function getCourseInfoFromUrl(): [string, string[]] {
-	let url: URLSearchParams = new URLSearchParams(window.location.href);
-	let semester = (url.get('semester') as string);
-	let courseStr = (url.get('courses') as string);
+	try {
+		let url: URLSearchParams = new URLSearchParams(window.location.href);
+		let semester = (url.get('semester') as string);
+		let courseStr = (url.get('courses') as string);
 
-	// If they're empty, we throw an error
-	if (semester === "" || courseStr === "") {
+		// If they're empty, we throw an error
+		if (semester === "" || courseStr === "") {
+			throw new Error("URL parameters are empty - <a href='addCourses.html'>Go back to course selection</a>");
+		}
+
+		let courses: string[] = courseStr.split(',').slice(0, 10);
+
+		return [semester, courses];
+	}
+	catch (err) {
 		throw new Error("URL parameters are empty - <a href='addCourses.html'>Go back to course selection</a>");
 	}
-
-	let courses: string[] = courseStr.split(',').slice(0, 10);
-
-	return [semester, courses];
 }
 
 
