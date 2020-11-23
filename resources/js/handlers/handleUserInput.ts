@@ -195,9 +195,7 @@ function toggleInstructions(): void {
  * Prepares and sets the values of the form for the GET request.
  */
 function setValues() {
-	let semester = (document.getElementById(SEMESTER_SELECTOR_ID) as HTMLInputElement).value;
 	let courses = Object.keys(USER_COURSES);
 
-	(document.getElementById("submit-input-semester") as HTMLInputElement).value = semester;
 	(document.getElementById("submit-input-courses") as HTMLInputElement).value = courses.join();
 }

@@ -33,12 +33,11 @@
                 <form action="results.html" method="get" onsubmit="setValues()" id="form-to-results">
                     <!--  For some reason, JS doesn't parse the first paramater, so we add a dummy -->
                     <input name="hidden" hidden />
-                    <input name="semester" id="submit-input-semester" hidden />
                     <input name="courses" id="submit-input-courses" hidden />
 
 
                     <!-- Semester selector -->
-                    <select id="semester-selector" name="semester-selector" class="custom-select">
+                    <select id="semester-selector" name="semester" class="custom-select">
                         <option value="202130">Spring 2021</option>
                         <option value="202110">Fall 2020</option>
                         <option value="202040">Summer I 2020</option>
@@ -88,4 +87,4 @@
 
 <!-- Handlers -->
 <script src="resources/js/handlers/handleUserInput.js"></script>
-<script src="resources/js/handlers/handleSectionCombos.js"></script>
+<script src="resources/js/handlers/handleGenerateResults.js"></script>

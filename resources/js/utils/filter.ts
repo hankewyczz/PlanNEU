@@ -112,3 +112,21 @@ function enoughDaysOff(result: Result, numDays: number = 0, daysOff: string[] = 
 	// Check if we have enough days off
 	return result.daysOff >= numDays;
 }
+
+
+
+/**
+ * Checks if the required professors are in this Result.
+ * @param  {Result}   result The Result we're checking
+ * @param  {string[]} profs  The list of professors
+ * @return {boolean}         Whether or not we have the required professors
+ */
+function preferredProfs(result: Result, profs: string[]): boolean {
+	for (let professor of profs) {
+		if (!result.professors.includes(professor.toLowerCase())) {
+			// We required a professor, but the result doesn't have it
+			return false;
+		}
+	}
+	return true;
+}

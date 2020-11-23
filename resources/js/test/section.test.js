@@ -420,15 +420,15 @@ describe("Generating Combinations", function() {
 					"name": "Name"
 				},
 				"sections":
-					[{ "crn": 1234, "seatsRemaining": 3, "honors": false, "meetings": [{ "type": "Class", "times": { "2": [{ "end": 34800, "start": 28800 }] }, "where": "TBA", "endDate": 18738, "startDate": 18646 }] },
-					{ "honors": false, "seatsRemaining": 0, "meetings": [{ "type": "Class", "times": { "2": [{ "end": 41400, "start": 35400 }] }, "where": "TBA", "endDate": 18738, "startDate": 18646 }] },
-					{ "honors": false, "seatsRemaining": 3, "meetings": [{ "type": "Class", "times": { "2": [{ "end": 41400, "start": 35400 }] }, "where": "TBA", "endDate": 18738, "startDate": 18646 }] },
-					{ "honors": false, "seatsRemaining": 2, "meetings": [{ "type": "Class", "times": { "2": [{ "end": 48300, "start": 42300 }] }, "where": "TBA", "endDate": 18738, "startDate": 18646 }] },
-					{ "honors": true, "seatsRemaining": 20, "meetings": [{ "type": "Class", "times": { "2": [{ "end": 48300, "start": 42300 }] }, "where": "TBA", "endDate": 18738, "startDate": 18646 }] },
-					{ "honors": false, "seatsRemaining": 123, "meetings": [{ "type": "Class", "times": { "2": [{ "end": 54900, "start": 48900 }] }, "where": "TBA", "endDate": 18738, "startDate": 18646 }] },
-					{ "honors": false, "seatsRemaining": 23, "meetings": [{ "type": "Class", "times": { "2": [{ "end": 61500, "start": 55500 }] }, "where": "TBA", "endDate": 18738, "startDate": 18646 }] },
-					{ "honors": false, "seatsRemaining": 3, "meetings": [{ "type": "Class", "times": { "2": [{ "end": 68100, "start": 62100 }] }, "where": "TBA", "endDate": 18738, "startDate": 18646 }] },
-					{ "honors": false, "seatsRemaining": 0, "meetings": [{ "type": "Class", "times": {}, "where": "TBA", "endDate": 18738, "startDate": 18646 }] }]
+					[{ "profs": ["Joe Aoun"], "crn": 1234, "seatsRemaining": 3, "honors": false, "meetings": [{ "type": "Class", "times": { "2": [{ "end": 34800, "start": 28800 }] }, "where": "TBA", "endDate": 18738, "startDate": 18646 }] },
+					{ "profs": ["Joe Aoun"], "honors": false, "seatsRemaining": 0, "meetings": [{ "type": "Class", "times": { "2": [{ "end": 41400, "start": 35400 }] }, "where": "TBA", "endDate": 18738, "startDate": 18646 }] },
+					{ "profs": ["Joe Aoun"], "honors": false, "seatsRemaining": 3, "meetings": [{ "type": "Class", "times": { "2": [{ "end": 41400, "start": 35400 }] }, "where": "TBA", "endDate": 18738, "startDate": 18646 }] },
+					{ "profs": ["Joe Aoun"], "honors": false, "seatsRemaining": 2, "meetings": [{ "type": "Class", "times": { "2": [{ "end": 48300, "start": 42300 }] }, "where": "TBA", "endDate": 18738, "startDate": 18646 }] },
+					{ "profs": ["Joe Aoun"], "honors": true, "seatsRemaining": 20, "meetings": [{ "type": "Class", "times": { "2": [{ "end": 48300, "start": 42300 }] }, "where": "TBA", "endDate": 18738, "startDate": 18646 }] },
+					{ "profs": ["Joe Aoun"], "honors": false, "seatsRemaining": 123, "meetings": [{ "type": "Class", "times": { "2": [{ "end": 54900, "start": 48900 }] }, "where": "TBA", "endDate": 18738, "startDate": 18646 }] },
+					{ "profs": ["Joe Aoun"], "honors": false, "seatsRemaining": 23, "meetings": [{ "type": "Class", "times": { "2": [{ "end": 61500, "start": 55500 }] }, "where": "TBA", "endDate": 18738, "startDate": 18646 }] },
+					{ "profs": ["Joe Aoun"], "honors": false, "seatsRemaining": 3, "meetings": [{ "type": "Class", "times": { "2": [{ "end": 68100, "start": 62100 }] }, "where": "TBA", "endDate": 18738, "startDate": 18646 }] },
+					{ "profs": ["Joe Aoun"], "honors": false, "seatsRemaining": 0, "meetings": [{ "type": "Class", "times": {}, "where": "TBA", "endDate": 18738, "startDate": 18646 }] }]
 			}]
 		};
 		cs2511 = new Course("CS", "2511", "202130");

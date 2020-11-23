@@ -158,6 +158,16 @@ function handleFilterInputs(): Filter {
 		filter.add(s => !anyHonors(s));
 	}
 
+	// Preferred professors
+	let profs: string = (document.getElementById("pref-profs") as HTMLInputElement).value;
+	profs.trim();
+
+	if (profs != "") {
+		let profArr: string[] = profs.split(",").map((s: string) => s.trim().toLowerCase());
+		console.log(profArr);
+		filter.add(s => preferredProfs(s, profArr));
+	}
+
 
 	return filter;
 }

@@ -115,7 +115,16 @@
                         <span id="min-honorsHelpBlock" class="form-text text-muted">What is the <b>minimum</b> number of honors courses you want in your schedule?</span>
                     </div>
                 </div>
-                <br>
+                <hr />
+
+                <div class="form-group row">
+                   <label for="pref-profs" class="col-4 col-form-label">Preferred professors</label> 
+                   <div class="col-8">
+                      <textarea id="pref-profs" name="pref-profs" cols="40" rows="1" class="form-control" aria-describedby="pref-profsHelpBlock"></textarea> 
+                      <span id="pref-profsHelpBlock" class="form-text text-muted">Enter names in a comma-separated list (eg. Firstname Lastname, Joseph Aoun)</span>
+                   </div>
+                </div>
+                <hr />
 
                 <div class="form-group row">
                     <div class="offset-4 col-8">
@@ -141,8 +150,7 @@
 <script src="resources/js/utils/structs/times.js"></script>
 <script src="resources/js/utils/structs/courseStructs.js"></script>
 
-<script src="resources/js/utils/rmp-api.js"></script>
 
 <!-- Handlers -->
 <script src="resources/js/handlers/handleUserInput.js"></script>
-<script src="resources/js/handlers/handleSectionCombos.js"></script>
+<script src="resources/js/handlers/handleGenerateResults.js"></script>

@@ -13,6 +13,7 @@ class Result {
 	minSeatsLeft: number = 100_000;	// Initialize with a large number - here's hoping there's no 100,000-seat classes
 	areDaysFree: { [key: string]: boolean } = { "1": true, "2": true, "3": true, "4": true, "5": true };
 	daysOff: number = 0;
+	professors: string[] = [];
 
 
 
@@ -30,6 +31,9 @@ class Result {
 			this.earliestStart = Math.min(sec.times.earliestStart, this.earliestStart);
 			this.latestEnd = Math.max(sec.times.latestEnd, this.latestEnd);
 			this.minSeatsLeft = Math.min(sec.content["seatsRemaining"], this.minSeatsLeft);
+
+			// Add to the array of professors
+			this.professors = this.professors.concat(sec.content.profs.map((s: string) => s.toLowerCase()));
 
 
 			// Deal with the schedule
