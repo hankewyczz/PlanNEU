@@ -10,7 +10,8 @@
  * @return {number}    The result of the comparison
  */	
 function compareDaysOff(r1: Result, r2: Result): number {
-	return r1.daysOff - r2.daysOff;
+	// We want the result with the LARGEST number of days off to come first
+	return r2.daysOff - r1.daysOff;
 }
 
 
@@ -22,7 +23,7 @@ function compareDaysOff(r1: Result, r2: Result): number {
  */
 function compareStartTime(r1: Result, r2: Result): number {
 	// We want the latest (largest) start time first
-	return r1.earliestStart - r2.earliestStart;
+	return r2.earliestStart - r1.earliestStart;
 }
 
 
@@ -34,7 +35,7 @@ function compareStartTime(r1: Result, r2: Result): number {
  */
 function compareEndTime(r1: Result, r2: Result): number {
 	// We want the earliest (smallest) end time first
-	return r2.latestEnd - r1.latestEnd;
+	return r1.latestEnd - r2.latestEnd;
 }
 
 
@@ -45,7 +46,7 @@ function compareEndTime(r1: Result, r2: Result): number {
  * @return {number}    The result of the comparison
  */
 function compareSeatsLeft(r1: Result, r2: Result): number {
-	return r1.minSeatsLeft - r2.minSeatsLeft;
+	return r2.minSeatsLeft - r1.minSeatsLeft;
 }
 
 
@@ -56,5 +57,5 @@ function compareSeatsLeft(r1: Result, r2: Result): number {
  * @return {number}    The result of the comparison
  */
 function compareHonorsCourses(r1: Result, r2: Result): number {
-	return r1.honorsCount - r2.honorsCount;
+	return r2.honorsCount - r1.honorsCount;
 }
