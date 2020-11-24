@@ -31,9 +31,10 @@ class Section {
 	courseId: string;
 	name: string;
 	fullName: string;
+	profs: string[];
 
 	content: { [key: string]: any };
-	times: Times;
+	times: Times | null;
 
 	/**
 	 * Creates a Section instance.
@@ -50,7 +51,7 @@ class Section {
 		this.courseId = course.courseId;
 		this.name = course.name;
 		this.fullName = course.fullName;
-		
+		this.profs = content.profs;
 
 		// Get only the class meetings
 		const meetings = content.meetings.filter((obj: any) => obj.type === "Class");
@@ -58,7 +59,12 @@ class Section {
 		if (meetings.length > 0) {
 			this.times = new Times(meetings[0]["times"]);
 		}
+		else if (this.content.online) {
+			// It's an online course, has no times
+			this.times = null;
+		}
 		else {
+			console.log(content);
 			throw new Error("No meeting times found");
 		}
 	}
@@ -72,7 +78,8 @@ class Section {
 		out += `: ${this.content.subject} ${this.content.classId}`;
 
 		// The online status of this Section
-		out += (this.content["online"]) ? " (Online)<br>" : "<br>";
+		out += (this.content["online"]) ? " <b>[Online]</b> " : " ";
+		out += `(${this.profs.join(", ")})<br>`;
 		return out;
 	}
 }
@@ -110,6 +117,11 @@ function anySectionsOverlap(result: Result): boolean {
 
 /* Checks if two Sections overlap (time-based) */
 function sectionsOverlap(s1: Section, s2: Section): boolean {
+	// Courses with no times can't overlap
+	if (s1.times == null || s2.times == null) {
+		return false;
+	}
+
 	const s1Times: Times = s1.times;
 	const s2Times: Times = s2.times;
 

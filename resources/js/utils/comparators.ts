@@ -2,6 +2,24 @@
 ///// Sorting Comparators /////
 ///////////////////////////////
 
+function comparatorFromString(compStr: string): (r1: Result, r2: Result) => number {
+	switch (compStr) {
+		case "seatsLeft":
+			return compareSeatsLeft;
+		case "daysOff":
+			return compareDaysOff;
+		case "startTime":
+			return compareStartTime;
+		case "endTime":
+			return compareEndTime;
+		case "honorsCourses":
+			return compareHonorsCourses;
+		default:
+			throw new Error("Unknown comparator type");
+	}
+
+}
+
 
 /**
  * Compares two Results by the number of days off.

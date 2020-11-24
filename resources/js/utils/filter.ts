@@ -123,7 +123,10 @@ function enoughDaysOff(result: Result, numDays: number = 0, daysOff: string[] = 
  */
 function preferredProfs(result: Result, profs: string[]): boolean {
 	for (let professor of profs) {
-		if (!result.professors.includes(professor.toLowerCase())) {
+
+		let index = result.professors.findIndex(item => professor.toLowerCase() === item.toLowerCase());
+
+		if (index === -1) {
 			// We required a professor, but the result doesn't have it
 			return false;
 		}

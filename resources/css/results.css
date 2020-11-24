@@ -52,3 +52,22 @@
 #form-to-results {
 	text-align: center;
 }
+
+#course-result-header {
+  width: 50%;
+  margin-top: 2%;
+  display: flex;
+  justify-content: center;
+}
+
+.course-result {
+  background-color: #EDEDED;
+  margin: 20 0;
+  padding: 20;
+  border-radius: 10px;
+}
+
+#sort-selector {
+  margin-right: 2%;
+}
+

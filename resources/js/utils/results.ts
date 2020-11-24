@@ -28,24 +28,30 @@ class Result {
 
 		for (let sec of sections) {
 			this.honorsCount += (sec.content.honors) ? 1 : 0;
-			this.earliestStart = Math.min(sec.times.earliestStart, this.earliestStart);
-			this.latestEnd = Math.max(sec.times.latestEnd, this.latestEnd);
+
+			if (sec.times != null) {
+				this.earliestStart = Math.min(sec.times.earliestStart, this.earliestStart);
+				this.latestEnd = Math.max(sec.times.latestEnd, this.latestEnd);
+			}
+
 			this.minSeatsLeft = Math.min(sec.content["seatsRemaining"], this.minSeatsLeft);
 
 			// Add to the array of professors
-			this.professors = this.professors.concat(sec.content.profs.map((s: string) => s.toLowerCase()));
+			this.professors = this.professors.concat(sec.profs);
 
 
 			// Deal with the schedule
-			const times: Times = sec.times;
+			if (sec.times != null) {
+				const times: Times = sec.times;
 
-			// For each day
-			for (const day of times.days) {
-				// This day is no longer free
-				this.areDaysFree[day] = false;
-				// Handle each meeting
-				for (const meetTime of times.content[day]) {
-					this.days[day][meetTime.start] = this.timeStr(meetTime, sec);
+				// For each day
+				for (const day of times.days) {
+					// This day is no longer free
+					this.areDaysFree[day] = false;
+					// Handle each meeting
+					for (const meetTime of times.content[day]) {
+						this.days[day][meetTime.start] = this.timeStr(meetTime, sec);
+					}
 				}
 			}
 		}

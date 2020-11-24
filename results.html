@@ -133,8 +133,25 @@
                 </div>
             </div>
             <div id="side-course-col">
+
                 <h3>Results</h3>
+                <div id="course-result-header">
+                    
+                    <!-- Semester selector -->
+                    <select id="sort-selector" name="semester" class="custom-select" onchange="sortResults(this.value)">
+                        <option value="" disabled selected>Sort results by...</option>
+                        <option value="seatsLeft">Seats left</option>
+                        <option value="daysOff">Days off</option>
+                        <option value="startTime">Latest start time</option>
+                        <option value="endTime">Earliest end time</option>
+                        <option value="honorsCourses">Number of honors courses</option>
+                    </select>
+
+                    <button class="btn btn-primary" id="sort-order" onclick="toggleSortOrder(this)">Ascending ↑</button>
+                </div>
                 <hr>
+
+                <div id="results-div"></div>
             </div>
         </div>
     </div>

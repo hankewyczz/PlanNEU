@@ -1,9 +1,12 @@
 // For each course, we store an array of the course Sections
 var sectionArrOfArr: Section[][];
+var RESULTS: Result[];
+var RESULTS_DIV: string = "results-div";
+
 
 // Combination constants
-const COMBO_WARNING: number = 100_000;	// If we have more than this amount of combinations, warn the user
-const COMBO_ERROR: number = 10_000_000;	// Ditto, but if it's over this number, throw an error
+const COMBO_WARNING: number = 50_000;	// If we have more than this amount of combinations, warn the user
+const COMBO_ERROR: number = 5_000_000;	// Ditto, but if it's over this number, throw an error
 
 
 /**
@@ -70,7 +73,8 @@ async function prepareSections(): Promise<void> {
 			return; // We don't want to enable the submit button
 		}
 		else if (combinations >= COMBO_WARNING) {
-			handleMessage(`Over ${COMBO_WARNING.toLocaleString()} possible schedule combinations`, Message.Warning);
+			handleMessage(`Over ${COMBO_WARNING.toLocaleString()} possible schedule combinations. Please
+				be patient!`, Message.Warning);
 		}
 		else {
 			handleMessage(`${combinations.toLocaleString()} possible schedule combinations`);
@@ -179,19 +183,73 @@ function handleFilterInputs(): Filter {
  */
 function handleGenerateScheduleAndFilter() {
 	try {
-		handleMessage("Generating all combinations...");
+		handleMessage("Generating results...");
 		
-		let filter = handleFilterInputs();
-		let combinations: Result[] = createCombinations(sectionArrOfArr, filter);
-
-		for (let combo of combinations) {
-			console.log(combo.toString());
-		}
-		
-		handleMessage(`Generated ${combinations.length} results`, Message.Success);
+		// We wrap it in a timeout, just so the message actually updates
+		setTimeout(function() {
+			let filter = handleFilterInputs();
+			RESULTS = createCombinations(sectionArrOfArr, filter);
+			redrawResults();
+			
+			if (RESULTS.length === 0) {
+				handleMessage("No results - please use fewer filters", Message.Error);
+			}
+			else {
+				handleMessage(`Generated ${RESULTS.length} results`, Message.Success);
+			}	
+		}, 200);	
 	}
 	catch (err) {
 		console.log(err);
 		handleMessage(err.message, Message.Error);
 	}
+}
+
+
+/**
+ * Renders the results
+ */
+function redrawResults(): void {
+	let resultDiv = document.getElementById(RESULTS_DIV) as HTMLElement;
+
+	resultDiv.innerHTML = "";
+
+	for (let result of RESULTS) {
+		resultDiv.appendChild(generateVisualResult(result));
+	}
+}
+
+/**
+ * Renders and returns a visual representation of a result
+ * @param {Result} result The result we render
+ */
+function generateVisualResult(result: Result): HTMLElement {
+	let courseResult = document.createElement("div");
+	courseResult.className = "course-result";
+	courseResult.innerHTML = result.toString();
+
+	return courseResult;
+}
+
+
+/**
+ * Sorts and redraws the results
+ * @param {string} strComp The string value of the sorting function
+ */
+function sortResults(strComp: string): void {
+	RESULTS.sort(comparatorFromString(strComp));
+	redrawResults();
+}
+
+
+/**
+ * Toggles the sort order
+ * @param {HTMLButtonElement} button The button which controls the sorting order
+ */
+function toggleSortOrder(button: HTMLButtonElement): void {
+	let text = (button.innerHTML === "Ascending ↑") ? "Descending ↓" : "Ascending ↑";
+	button.innerHTML = text;
+
+	RESULTS.reverse();
+	redrawResults();
 }
