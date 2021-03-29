@@ -1,9 +1,3 @@
-interface CourseContent {
-    class: Class;
-    sections: SectionContent[];
-    type: string;
-}
-
 interface Class {
     classAttributes: string[];
     classId: string;
@@ -24,7 +18,9 @@ interface Class {
     prereqsFor: PrereqsFor;
     prettyUrl: string;
     subject: string;
+    sections: SectionContent[];
     termId: string;
+    type: string;
     url: string;
     desc: string;
 }

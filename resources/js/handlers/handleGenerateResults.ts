@@ -61,7 +61,7 @@ async function getCoursesFromUrl(): Promise<Section[][]> {
  */
 async function prepareSections(): Promise<void> {
 	try {
-		handleMessage("Fetching course section data...");
+		// handleMessage("Fetching course section data...");
 		sectionArrOfArr = await getCoursesFromUrl();
 
 
@@ -73,8 +73,8 @@ async function prepareSections(): Promise<void> {
 			return; // We don't want to enable the submit button
 		}
 		else if (combinations >= COMBO_WARNING) {
-			handleMessage(`Over ${COMBO_WARNING.toLocaleString()} possible schedule combinations. Please
-				be patient!`, Message.Warning);
+			handleMessage(`Over ${COMBO_WARNING.toLocaleString()} possible schedule combinations. Please be patient!`, 
+				Message.Warning);
 		}
 		else {
 			handleMessage(`${combinations.toLocaleString()} possible schedule combinations`);
@@ -87,6 +87,7 @@ async function prepareSections(): Promise<void> {
 		console.log(err);
 		handleMessage(err.message, Message.Error);
 	}
+	
 }
 
 
@@ -102,7 +103,7 @@ function handleFilterInputs(): Filter {
 	// Do we only want to show the open schedules?
 	let onlyOpenStr: string = (document.querySelector('input[name="open-seats"]:checked') as HTMLInputElement).value;
 	if (onlyOpenStr === 'true') {
-		filter.add(isSeatsLeft);
+		filter.addSec(isSeatsLeft);
 	}
 
 	// Get the start/end time values
@@ -117,7 +118,7 @@ function handleFilterInputs(): Filter {
 		throw new Error("Start time must be before the end time");
 	}
 
-	filter.add((s) => isValidTime(s, startTime, endTime));
+	filter.addSec((s) => isValidTime(s, startTime, endTime));
 
 	// Deal with days off
 	let minDaysOffStr: string = (document.getElementById("min-days-off") as HTMLInputElement).value;
@@ -155,7 +156,7 @@ function handleFilterInputs(): Filter {
 	}
 
 	if (honors) {
-		filter.add(s => (anyHonors(s) && meetsMinHonorsReq(s, minHonors)));
+		filter.add(s => meetsMinHonorsReq(s, minHonors));
 	}
 	else {
 		// Return false if there are any honors courses
@@ -183,8 +184,8 @@ function handleFilterInputs(): Filter {
  */
 function handleGenerateScheduleAndFilter() {
 	try {
-		handleMessage("Generating results...");
-		
+		handleMessage(`Generating results...`);
+
 		// We wrap it in a timeout, just so the message actually updates
 		setTimeout(function() {
 			let filter = handleFilterInputs();
@@ -214,8 +215,8 @@ function redrawResults(): void {
 
 	resultDiv.innerHTML = "";
 
-	for (let result of RESULTS) {
-		resultDiv.appendChild(generateVisualResult(result));
+	for (let i = 0; i < 100 && i < RESULTS.length; i++) {
+		resultDiv.appendChild(generateVisualResult(RESULTS[i]));
 	}
 }
 

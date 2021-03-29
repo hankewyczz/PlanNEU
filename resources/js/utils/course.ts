@@ -6,8 +6,7 @@
 // NOTE: Ask them to add the Access-Control-Allow-Origin response header
 // 		Otherwise, I can't GET right from this script, so we use a proxy
 // 		https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
-const PROXY_URL: string = "https://cors-anywhere.herokuapp.com/";
-const BASE_API_URL: string = PROXY_URL + "https://searchneu.com/search?";
+const BASE_API_URL: string = "https://api.searchneu.com/graphql";
 const API_VERSION: string = "2";
 
 
@@ -34,7 +33,7 @@ class Course {
 	fullName: string;
 
 	// Course content
-	content: CourseContent | null;
+	content: Class | null;
 
 	/**
 	 * Constructs a Course instance.
@@ -62,9 +61,9 @@ class Course {
 	 */
 	addContent(content: any): void {
 		// Save the content (and cast it)
-		this.content = (content["results"][0] as CourseContent);
+		this.content = (content as Class);
 		// Generate and save the full name
-		this.fullName = `${this.name}: ${this.content["class"]["name"]}`;
+		this.fullName = `${this.name}: ${this.content["name"]}`;
 	}
 
 	// Check if this course has already been saved
@@ -78,7 +77,7 @@ class Course {
 	 */
 	sections(): Section[] {
 		// We have to cast it 
-		let content: CourseContent = this.content as CourseContent;
+		let content = (this.content as Class);
 		// Map each section object into an actual Section instance.
 		return content.sections.map((sec: SectionContent) => new Section(this, sec));
 	}
@@ -135,14 +134,12 @@ function getSavedCourse(courseName: string): Course {
  */
 function saveCourse(course: Course, body: {[key: string]: any}): void {
 	// We should've already checked the body for validity, but we do it again
-	if (typeof body === "object" && !Array.isArray(body)) {
-		if ('results' in body && body['results'].length > 0) {
-			course.addContent(body);
-			USER_COURSES[course.name] = course;
-			return;
-		}
+	if ('type' in body && body['type'] == "ClassOccurrence") {
+		course.addContent(body);
+		USER_COURSES[course.name] = course;
+		return;
 	}
-	throw new Error("Course content is not properly formatted (requires 'results' key)")
+	throw new Error("Course content is not properly formatted")
 }
 
 
@@ -251,22 +248,17 @@ function getQueryUrl(course: Course): string {
 	}
 
 	// Setup the base query URL
-	let queryURL = BASE_API_URL;
+	let queryURL = `${BASE_API_URL}${course.semester}/search?`;
 
-	queryURL += addQuery("query", "");					// Add a blank search query
+	//search?apiVersion=2&classIdRange=min-1000_max-2000&filters=%7B"subject"%3A%5B"CS"%5D%2C"classIdRange"%3A%7B"min"%3A3800%2C"max"%3A3800%7D%7D&maxIndex=1&minIndex=0&subject=CS
+
+	queryURL += addQuery("apiVersion", API_VERSION);	// Set the API version
 	queryURL += addQuery("termId", course.semester);	// Specify which semester we're searching in
 	queryURL += addQuery("minIndex", "0");				// We only want one result
 	queryURL += addQuery("maxIndex", "1");				// Only get results from 0-1 (get the first one)
-	queryURL += addQuery("apiVersion", API_VERSION);	// Set the API version
+	queryURL += addQuery("classIdRange", `min-${course.courseId}_max-${course.courseId}`);
+	queryURL += addQuery("subject", course.subject);
 
-	// Create the filters
-	const subjectFilter = `"subject":["${course.subject}"]`;
-	const classIdFilter = `"classIdRange":{"min":${course.courseId},"max":${course.courseId}}`;
-	let filters = `{${subjectFilter},${classIdFilter}}`;
-
-	// We encode the filters to be URL safe
-	filters = encodeURIComponent(filters);
-	queryURL += addQuery("filters", filters);	// Add the filters to the URL
 
 	return queryURL;
 }
@@ -279,24 +271,146 @@ function getQueryUrl(course: Course): string {
  * @throws {Error}				  [if the response was unexpected or improperly formatted]
  */
 async function getCourseFromApi(course: Course): Promise<void> {
-	const response = await fetch(getQueryUrl(course))
-		.then(response => response.json())
-		// Error doesn't propagate, so we force it
-		.catch(() => { throw new Error("Could not access the courses API") });
-		
 
-	// Check if the response is a dictionary (it should be)
-	if (typeof response !== "object" || !('results' in response)) {
+	const data = JSON.stringify({
+		query: `query searchResults($termId: Int!, $query: String, $offset: Int = 0, $first: Int = 10, $subject: [String!], $nupath: [String!], $campus: [String!], $classType: [String!], $classIdRange: IntRange) {
+  search(
+    termId: $termId
+    query: $query
+    offset: $offset
+    first: $first
+    subject: $subject
+    nupath: $nupath
+    campus: $campus
+    classType: $classType
+    classIdRange: $classIdRange
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage
+    }
+    filterOptions {
+      nupath {
+        value
+        count
+        description
+      }
+      subject {
+        value
+        count
+        description
+      }
+      classType {
+        value
+        count
+        description
+      }
+      campus {
+        value
+        count
+        description
+      }
+    }
+    nodes {
+      type: __typename
+      ... on Employee {
+        bigPictureUrl
+        emails
+        firstName
+        googleScholarId
+        lastName
+        link
+        name
+        officeRoom
+        personalSite
+        phone
+        primaryDepartment
+        primaryRole
+        streetAddress
+      }
+      ... on ClassOccurrence {
+        name
+        subject
+        classId
+        termId
+        host
+        desc
+        nupath
+        prereqs
+        coreqs
+        prereqsFor
+        optPrereqsFor
+        maxCredits
+        minCredits
+        classAttributes
+        url
+        lastUpdateTime
+        sections {
+          campus
+          classId
+          classType
+          crn
+          honors
+          host
+          lastUpdateTime
+          meetings
+          profs
+          seatsCapacity
+          seatsRemaining
+          subject
+          termId
+          url
+          waitCapacity
+          waitRemaining
+        }
+      }
+    }
+  }
+}
+`,
+		variables: `{
+			"termId": ${course.semester},
+			"query": "",
+			"offset": 0,
+			"subject": [
+				"${course.subject}"
+			],
+			"classIdRange": {
+				"min": ${course.courseId},
+				"max": ${course.courseId}
+			}
+		}`
+	});
+
+
+
+	const response = await fetch(BASE_API_URL, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			'Accept': 'application/json',
+		},
+		body: data
+	}).then(r => r.json())
+	
+
+	let courseResult;
+	try {
+		courseResult = response['data']['search']['nodes'];
+	}
+	catch(err) {
 		throw new Error("Invalid response from API");
 	}
-		
-	// Check if anything came up for our search
-	if (response['results'].length == 0) {
+	
+	try {
+		courseResult = courseResult[0];
+	}
+	catch (err) {
 		throw new Error("No matching course found");
 	}
-	
+
 	// If we get here, we just save the course
-	saveCourse(course, response);
+	saveCourse(course, courseResult);
 }
 
 
@@ -314,7 +428,7 @@ function getCoreqs(course: Course): string {
 	}
 
 	// Gets the coreqs of this course
-	const coreqs = (course.content as CourseContent)["class"]["coreqs"];
+	const coreqs = (course.content as Class)["coreqs"];
 
 
 	/**

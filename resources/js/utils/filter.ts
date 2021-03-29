@@ -9,15 +9,21 @@ const MAX_TIME: number = 86340;
  */
 class Filter {
 	filters: ((r: Result) => boolean)[];
+	secFilters: ((s: Section) => boolean)[];
 
 	// Construct with an empty filters array
 	constructor() {
 		this.filters = [];
+		this.secFilters = [];
 	}
 
 	// Adds a filter
 	add(func: ((r: Result) => boolean)) {
 		this.filters.push(func);
+	}
+
+	addSec(func: ((s: Section) => boolean)) {
+		this.secFilters.push(func);
 	}
 
 	// Evaluates an array of functions
@@ -28,7 +34,16 @@ class Filter {
 			}
 		}
 		return true;
-	}	
+	}
+
+	funcSec(s: Section): boolean {
+		for (let predicate of this.secFilters) {
+			if (!predicate(s)) {
+				return false;
+			}
+		}
+		return true;
+	}
 }
 
 
@@ -61,29 +76,6 @@ function anyHonors(result: Result): boolean {
  */
 function meetsMinHonorsReq(result: Result, minHonors: number = 0): boolean {
 	return result.honorsCount >= minHonors;
-}
-
-
-
-/**
- * Checks if these sections is within the valid time range
- * @param  {Result} 			  result The Result we're checking
- * @param  {number = MIN_TIME}    start The start time of this range
- * @param  {number = MAX_TIME}    end   The end time of this range
- * @return {boolean}            Whether all of the Sections are in the valid time range or not
- */
-function isValidTime(result: Result, start: number = MIN_TIME, end: number = MAX_TIME): boolean {
-	return (result.earliestStart >= start) && (result.latestEnd <= end);
-}
-
-
-/**
- * Checks if these sections all have seats left
- * @param  {Result} 	result  The Result we're checking
- * @return {boolean}            Whether all of these Sections have seats left or not
- */
-function isSeatsLeft(result: Result): boolean {
-	return result.minSeatsLeft > 0;
 }
 
 
@@ -132,4 +124,30 @@ function preferredProfs(result: Result, profs: string[]): boolean {
 		}
 	}
 	return true;
+}
+
+
+
+
+
+
+/**
+ * Checks if these sections is within the valid time range
+ * @param  {Result} 			  result The Result we're checking
+ * @param  {number = MIN_TIME}    start The start time of this range
+ * @param  {number = MAX_TIME}    end   The end time of this range
+ * @return {boolean}            Whether all of the Sections are in the valid time range or not
+ */
+function isValidTime(sec: Section, start: number = MIN_TIME, end: number = MAX_TIME): boolean {
+	return (sec.times === null) || ((sec.times.earliestStart >= start) && (sec.times.latestEnd <= end));
+}
+
+
+/**
+ * Checks if these sections all have seats left
+ * @param  {Result} 	result  The Result we're checking
+ * @return {boolean}            Whether all of these Sections have seats left or not
+ */
+function isSeatsLeft(sec: Section): boolean {
+	return sec.content["seatsRemaining"] > 0;
 }

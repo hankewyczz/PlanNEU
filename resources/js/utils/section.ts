@@ -191,6 +191,18 @@ function createCombinations(arrayOfArrays: Section[][], filter: Filter): Result[
 		return [];
 	}
 
+	let start = new Date();
+
+	for (let i = arrayOfArrays.length - 1; i >= 0; i--) {
+		for (let j = arrayOfArrays[i].length - 1; j >= 0; j--) {
+			if (!filter.funcSec(arrayOfArrays[i][j])) {	
+				arrayOfArrays[i].splice(j, 1);
+			}
+		}
+		if (arrayOfArrays[i].length == 0) {
+			arrayOfArrays.splice(i, 1);
+		}
+	}
 	
 	let results: Result[] = [];
 
@@ -227,6 +239,9 @@ function createCombinations(arrayOfArrays: Section[][], filter: Filter): Result[
 
 	// Create the combinations
 	combination();
+
+	let end = new Date();
+	console.log((end.getTime() - start.getTime()) / 1000);
 
 	// Return the combinations
 	return results;
