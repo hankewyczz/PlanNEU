@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1639367993001" clover="3.2.0">
+  <project timestamp="1639367993002" name="All files">
+    <metrics statements="8" coveredstatements="8" conditionals="1" coveredconditionals="1" methods="3" coveredmethods="1" elements="12" coveredelements="10" complexity="0" loc="8" ncloc="8" packages="1" files="1" classes="1"/>
+    <file name="parseSection.ts" path="/mnt/c/Users/Zachar/Documents/Coding/GitHub/planneu/api/parsers/parseSection.ts">
+      <metrics statements="8" coveredstatements="8" conditionals="1" coveredconditionals="1" methods="3" coveredmethods="1"/>
+      <line num="3" count="1" type="stmt"/>
+      <line num="11" count="1" type="stmt"/>
+      <line num="12" count="18" type="stmt"/>
+      <line num="14" count="18" type="stmt"/>
+      <line num="15" count="63" type="cond" truecount="1" falsecount="0"/>
+      <line num="16" count="43" type="stmt"/>
+      <line num="19" count="63" type="stmt"/>
+      <line num="22" count="18" type="stmt"/>
+    </file>
+  </project>
+</coverage>

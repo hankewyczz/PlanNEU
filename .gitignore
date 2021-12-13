@@ -13,4 +13,4 @@ package-lock.json
 /resources/js/test/lib
 /resources/js/utils/*.js
 /resources/js/handlers/*.js
-/build
+/dist
