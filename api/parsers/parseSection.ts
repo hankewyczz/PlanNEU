@@ -9,14 +9,14 @@ import {
 import { INTERVALS_IN_DAY, INTERVAL_LENGTH } from "../../utils/global";
 
 export function parseSection(section: Section): ParsedSection {
-    // We do this since the conversion makes Typescript complain
-    // So, the outer function preserves the Section requirement, and the inner does all the work. 
-    function __parseSection(section: any): ParsedSection {
-        section.meetings = parseBackendMeetings(section.meetings);
-        return section;
-    }
+  // We do this since the conversion makes Typescript complain
+  // So, the outer function preserves the Section requirement, and the inner does all the work.
+  function __parseSection(section: any): ParsedSection {
+    section.meetings = parseBackendMeetings(section.meetings);
+    return section;
+  }
 
-    return __parseSection(section);
+  return __parseSection(section);
 }
 
 export function parseBackendMeetings(
@@ -25,6 +25,10 @@ export function parseBackendMeetings(
   let allMeetings: null | BinaryMeetingTime = null;
 
   for (const meeting of meetings) {
+    // We don't care about exam times :( 
+    if (meeting.type.toLowerCase().includes("exam")) {
+      continue;
+    }
     const oneMeeting = parseBackendMeeting(meeting);
 
     if (allMeetings === null) {
@@ -92,11 +96,9 @@ export function parseBackendMeeting(
   );
 }
 
-
-
 export function minifySection(section: ParsedSection): MinimalSection {
   return {
-    "crn": section.crn,
-    "meetings": section.meetings,
-  }
+    crn: section.crn,
+    meetings: section.meetings,
+  };
 }

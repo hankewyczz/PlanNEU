@@ -9,6 +9,9 @@ export interface Course {
   sections?: Section[];
 }
 
+// The same as a course, but with parsed sections
+export type ParsedCourse = Omit<Course, 'sections'> & Record<"sections", ParsedSection[]>;
+
 export type Requisite = string | BooleanReq | CourseReq;
 
 export interface BooleanReq {
@@ -48,12 +51,14 @@ export interface MinimalSection {
   meetings: BinaryMeetingTime;
 }
 
-export interface MinimalCourse {
-  termId: string;
-  subject: string;
-  classId: string;
-  name: string;
-  sections: MinimalSection[];
+export class MinimalResult {
+  crns: string[];
+  meetings: BinaryMeetingTime;
+
+  constructor(crns: string[], meetings: BinaryMeetingTime) {
+    this.crns = crns;
+    this.meetings = meetings;
+  }
 }
 
 export interface BackendMeeting {
