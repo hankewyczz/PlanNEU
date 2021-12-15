@@ -89,21 +89,25 @@ describe("parsing meeting times & checking overlap", () => {
       parseBackendMeetings(meetingData.no_meetings);
     }).toThrow();
   });
+
+  test("Snapshot", () => {
+    expect(parseBackendMeetings(meetingData.cs3000_4)).toMatchObject(meetingData.cs3000_4_parsed)
+  })
 });
 
 
 describe("Parse sections", () => {
   test("Sections parse properly", () => {
-    const copy_1 = {...sectionData.algo1};
-    const copy_2 = {...sectionData.algo2};
-    const copy_3 = {...sectionData.algo3};
+    const copy_1 = {...sectionData.algo1()};
+    const copy_2 = {...sectionData.algo2()};
+    const copy_3 = {...sectionData.algo3()};
 
     expect(parseSection(copy_1)).toMatchObject(sectionData.algo1_parsed())
     expect(parseSection(copy_2)).toMatchObject(sectionData.algo2_parsed())
     expect(parseSection(copy_3)).toMatchObject(sectionData.algo3_parsed())
   })
 
-  test("Minimal sections", () => {    
+  test("Minimal sections", () => {
     expect(minifySection(sectionData.algo1_parsed())).toMatchObject(sectionData.algo1_minimal())
     expect(minifySection(sectionData.algo2_parsed())).toMatchObject(sectionData.algo2_minimal())
     expect(minifySection(sectionData.algo3_parsed())).toMatchObject(sectionData.algo3_minimal())

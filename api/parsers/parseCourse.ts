@@ -7,6 +7,9 @@ export function parseCourses(courses: Course[]): ParsedCourse[] {
 }
 
 
+/**
+ * Parses a Course to a ParsedCourse IN PLACE (ie. mutates the passed course)
+ */
 export function parseCourse(course: Course): ParsedCourse {
     const parsedSections = course.sections?.map(s => parseSection(s));
     const sections = (parsedSections) ? parsedSections : [];

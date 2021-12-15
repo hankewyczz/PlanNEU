@@ -2,6 +2,7 @@ import {
   BackendMeeting,
   BinaryMeetingTime,
   MeetingDay,
+  MeetingTime,
   MinimalSection,
   ParsedSection,
   Section,
@@ -12,7 +13,7 @@ export function parseSection(section: Section): ParsedSection {
   // We do this since the conversion makes Typescript complain
   // So, the outer function preserves the Section requirement, and the inner does all the work.
   function __parseSection(section: any): ParsedSection {
-    section.meetings = parseBackendMeetings(section.meetings);
+    section.meetings = parseBackendMeetings(section.meetings) as BinaryMeetingTime;
     return section;
   }
 
@@ -69,12 +70,13 @@ export function parseBackendMeeting(
     const dayIntervals = new Array(INTERVALS_IN_DAY).fill(0);
 
     // If there's no meetings on this day, all intervals are free
-    if (!(dayStr in meeting.times)) {
+    const dayMeetings = meeting.times[dayStr];
+    if (dayMeetings === undefined) {
       binaryRepresentation.push(dayIntervals.join(""));
       continue;
     }
 
-    for (const meetingTime of meeting.times[dayStr]) {
+    for (const meetingTime of dayMeetings) {
       for (let interval = 0; interval <= INTERVALS_IN_DAY; interval++) {
         const intervalTime = interval * INTERVAL_LENGTH;
         if (

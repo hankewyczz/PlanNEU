@@ -1,6 +1,6 @@
 import { minCourses, parseCourses } from "../../api/parsers/parseCourse";
 import { generateCombinations } from "../generateResults";
-import data from "./data/genResults.data";
+import data from "../../api/parsers/tests/data/courses.data";
 
 test("Gen results", () => {
     const parsedCourses = parseCourses([

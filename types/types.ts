@@ -72,7 +72,7 @@ export interface BackendMeeting {
 // TODO - are there ever any Saturday/Sunday classes
 // We compare the meeting times n! times, so any reduction in problem space translates to very real optimiations
 export type MeetingDay = "0" | "1" | "2" | "3" | "4" | "5" | "6";
-export type MeetingTimes = Record<Partial<MeetingDay>, MeetingTime[]>;
+export type MeetingTimes = Partial<Record<MeetingDay, MeetingTime[]>>;
 
 // A single meeting time, ex: "9:50-11:30am"
 export interface MeetingTime {
