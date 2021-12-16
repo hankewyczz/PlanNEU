@@ -11,24 +11,18 @@ export function parseCourses(courses: Course[]): ParsedCourse[] {
  * Parses a Course to a ParsedCourse IN PLACE (ie. mutates the passed course)
  */
 export function parseCourse(course: Course): ParsedCourse {
-    const parsedSections = course.sections?.map(s => parseSection(s));
-    const sections = (parsedSections) ? parsedSections : [];
-
-    return {...course, "sections": sections}
+    return {...course, "sections": course.sections.map(s => parseSection(s))}
 }
 
 export function minCourses(courses: ParsedCourse[]): MinimalSection[][] {
-    const allSections: MinimalSection[][] = [];
+    return courses.map(c => minCourse(c));
+}
 
-    for (const course of courses) {
-        const courseSections: MinimalSection[] = course.sections.map(s => {
-            return {
-                "crn": s.crn,
-                "meetings": s.meetings,
-            }
-        });
-        allSections.push(courseSections)
-    }
-
-    return allSections
+export function minCourse(course: ParsedCourse): MinimalSection[] {
+    return course.sections.map(s => {
+        return {
+            "crn": s.crn,
+            "meetings": s.meetings,
+        }
+    });
 }

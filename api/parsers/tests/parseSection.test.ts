@@ -1,7 +1,7 @@
 import { minifySection, parseBackendMeeting, parseBackendMeetings, parseSection } from "../parseSection";
 import meetingData from "./data/backendMeetings.data";
 import sectionData from "./data/sections.data"
-import { BinaryMeetingTime } from "../../../types/types";
+import { BinaryMeetingTime } from "../../../types/meetingTimes";
 
 describe("parsing meeting times & checking overlap", () => {
   test("no breaks", () => {

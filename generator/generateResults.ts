@@ -1,9 +1,9 @@
+import { BinaryMeetingTime } from "../types/meetingTimes";
 import {
-    BinaryMeetingTime,
     MinimalResult,
     MinimalSection,
 } from "../types/types";
-import { MAX_COURSES, MAX_SECTIONS_PER_COURSE } from "../utils/global";
+import { MAX_COURSES, MAX_POSSIBILITIES } from "../utils/global";
 
 /*
 Generating a schedule is, computationally speaking, a tricky problem.
@@ -21,10 +21,21 @@ Due to the factorially-expanding runtime, we need to reduce the complexity as mu
 export function generateCombinations(
     courses: MinimalSection[][]
 ): MinimalResult[] {
+    // TODO - move this all to the parent function, so we can use course names for the second error
     // We limit the number of courses we generate results for, to prevent overloading the server
     if (courses.length > MAX_COURSES) {
-        throw Error(`A max of ${MAX_COURSES} courses are allowed; please remove some courses and try again.`)
+        throw Error(
+            `A max of ${MAX_COURSES} courses are allowed; please remove some courses and try again.`
+        );
     }
+    if (courses.reduce((acc, cur) => acc * cur.length, 1) > MAX_POSSIBILITIES) {
+        throw Error(`Too many possible combinations. Please try removing course MAX_COURSE_NAME and trying agian.`)
+    }
+
+    // We sort so that the courses with the fewest number of sections are handled first
+    // When there aren't many sections, each time conflict will reduce the number of work done down the line dramatically
+    // tldr: makes this more efficient
+    courses.sort((a, b) => a.length - b.length);
 
     const start = new Date();
 
@@ -35,11 +46,7 @@ export function generateCombinations(
      */
     function combination(courseIndex = 0, output: MinimalResult | null = null) {
         // Iterate over every section in this inner array
-        for (let i = 0; i <  courses[courseIndex].length; i++) {
-            // Limit the number of sections we consider
-            if (i >= MAX_SECTIONS_PER_COURSE) {
-                break;
-            }
+        for (let i = 0; i < courses[courseIndex].length; i++) {
             const sec = courses[courseIndex][i];
             // If there's no output yet, initialize it
             // We don't want to update `output` directly - we want it to be constant for each section
@@ -48,10 +55,9 @@ export function generateCombinations(
             if (output === null) {
                 outputObj = new MinimalResult([sec.crn], sec.meetings);
             } else {
-                outputObj = output;
                 // Try to add this section to the output
                 const combined = BinaryMeetingTime.combine(
-                    outputObj.meetings,
+                    output.meetings,
                     sec.meetings
                 );
 
@@ -61,7 +67,7 @@ export function generateCombinations(
 
                 // Create a new object, so we aren't mutating the same one
                 outputObj = new MinimalResult(
-                    [...outputObj.crns, sec.crn],
+                    [...output.crns, sec.crn],
                     combined
                 );
             }

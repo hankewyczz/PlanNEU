@@ -1,6 +1,6 @@
+import { BinaryMeetingTime } from "../../types/meetingTimes";
 import {
   BackendMeeting,
-  BinaryMeetingTime,
   MeetingDay,
   MeetingTime,
   MinimalSection,

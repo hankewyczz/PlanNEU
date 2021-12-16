@@ -4,15 +4,15 @@ import data from "../../api/parsers/tests/data/courses.data";
 
 test("Gen results", () => {
     const parsedCourses = parseCourses([
-        data.cs2800_20210,
-        data.cs2801_202210,
-        data.cs3000_202210,
-        data.cs3001_202210,
-        data.cs3800_202210,
-        data.eece2323_202210,
-        data.eece_2322_202210,
-        // data.thtr_1170_202210,
-        data.honr_1102_202210,
+        data.cs2800_20210(),
+        data.cs2801_202210(),
+        data.cs3000_202210(),
+        data.cs3001_202210(),
+        data.cs3800_202210(),
+        data.eece2323_202210(),
+        data.eece_2322_202210(),    
+        // data.honr_1102_202210(),
+        // data.thtr_1170_202210(),    
     ]);
     const minifiedCourses = minCourses(parsedCourses);
     console.log(

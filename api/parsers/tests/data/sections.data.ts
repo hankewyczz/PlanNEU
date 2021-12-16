@@ -1,4 +1,5 @@
-import { BinaryMeetingTime, Section } from "../../../../types/types";
+import { BinaryMeetingTime } from "../../../../types/meetingTimes";
+import { Section } from "../../../../types/types";
 
 export default {
     algo1() {
