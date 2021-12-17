@@ -1,136 +1,9 @@
-import sectionData from "./sections.data";
+import sections from "./sections.data";
 
 import { Course, MinimalSection, Section } from "../../../../types/types";
 
 export default {
-    cs3800_202210() {
-        return {
-            termId: "202210",
-            subject: "CS",
-            classId: "3800",
-            name: "Theory of Computation",
-            coreqs: {
-                type: "and",
-                values: [],
-            },
-            sections: [
-                {
-                    classType: "Lecture",
-                    crn: "10376",
-                    seatsCapacity: 49,
-                    seatsRemaining: 7,
-                    waitCapacity: 0,
-                    waitRemaining: 0,
-                    lastUpdateTime: 1638994699283,
-                    campus: "Boston",
-                    honors: false,
-                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=10376",
-                    profs: ["Jason Hemann"],
-                    meetings: [
-                        {
-                            type: "Final Exam",
-                            times: {
-                                "5": [
-                                    {
-                                        end: 54000,
-                                        start: 46800,
-                                    },
-                                ],
-                            },
-                            where: "TBA",
-                            endDate: 18978,
-                            startDate: 18978,
-                        },
-                        {
-                            type: "Class",
-                            times: {
-                                "2": [
-                                    {
-                                        end: 61500,
-                                        start: 55500,
-                                    },
-                                ],
-                                "5": [
-                                    {
-                                        end: 61500,
-                                        start: 55500,
-                                    },
-                                ],
-                            },
-                            where: "Hurtig Hall 130",
-                            endDate: 18969,
-                            startDate: 18878,
-                        },
-                    ],
-                },
-                {
-                    classType: "Lecture",
-                    crn: "16453",
-                    seatsCapacity: 87,
-                    seatsRemaining: 12,
-                    waitCapacity: 0,
-                    waitRemaining: 0,
-                    lastUpdateTime: 1638994699283,
-                    campus: "Boston",
-                    honors: false,
-                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=16453",
-                    profs: ["Jason Hemann"],
-                    meetings: [
-                        {
-                            type: "Final Exam",
-                            times: {
-                                "2": [
-                                    {
-                                        end: 54000,
-                                        start: 46800,
-                                    },
-                                ],
-                            },
-                            where: "TBA",
-                            endDate: 18975,
-                            startDate: 18975,
-                        },
-                        {
-                            type: "Class",
-                            times: {
-                                "2": [
-                                    {
-                                        end: 54900,
-                                        start: 48900,
-                                    },
-                                ],
-                                "5": [
-                                    {
-                                        end: 54900,
-                                        start: 48900,
-                                    },
-                                ],
-                            },
-                            where: "Richards Hall 300",
-                            endDate: 18969,
-                            startDate: 18878,
-                        },
-                    ],
-                },
-            ] as Section[],
-        } as Course;
-    },
-    cs3000_202210_parsed() {
-        return {
-            ...this.cs3000_202210,
-            sections: [
-                sectionData.algo1_parsed(),
-                sectionData.algo2_parsed(),
-                sectionData.algo3_parsed(),
-            ],
-        };
-    },
-    cs3000_202210_min_sections: [
-        sectionData.algo1_minimal(),
-        sectionData.algo2_minimal(),
-        sectionData.algo3_minimal(),
-    ] as MinimalSection[],
-    cs3800_no_sections: {
+    course_with_no_sections: {
         termId: "202210",
         subject: "CS",
         classId: "3800",
@@ -141,6 +14,36 @@ export default {
         },
         sections: [] as Section[],
     } as Course,
+
+    // Theory of comp
+    cs3800_202210() {
+        return {
+            termId: "202210",
+            subject: "CS",
+            classId: "3800",
+            name: "Theory of Computation",
+            coreqs: {
+                type: "and",
+                values: [],
+            },
+            sections: [sections.cs3800_202210_1(), sections.cs3800_202210_2()],
+        } as Course;
+    },
+    cs3800_202210_parsed() {
+        return {
+            ...this.cs3800_202210(),
+            sections: [
+                sections.cs3800_202210_1_parsed(),
+                sections.cs3800_202210_2_parsed(),
+            ],
+        };
+    },
+    cs3800_202210_min_sections: [
+        sections.cs3800_202210_1_minimal,
+        sections.cs3800_202210_2_minimal,
+    ] as MinimalSection[],
+
+    // Algo
     cs3000_202210() {
         return {
             termId: "202210",
@@ -157,156 +60,29 @@ export default {
                 ],
             },
             sections: [
-                {
-                    classType: "Lecture",
-                    crn: "14087",
-                    seatsCapacity: 114,
-                    seatsRemaining: 2,
-                    waitCapacity: 0,
-                    waitRemaining: 0,
-                    lastUpdateTime: 1638994699283,
-                    campus: "Boston",
-                    honors: false,
-                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=14087",
-                    profs: ["Andrew Van Der Poel"],
-                    meetings: [
-                        {
-                            type: "Final Exam",
-                            times: {
-                                "2": [
-                                    {
-                                        end: 54000,
-                                        start: 46800,
-                                    },
-                                ],
-                            },
-                            where: "TBA",
-                            endDate: 18975,
-                            startDate: 18975,
-                        },
-                        {
-                            type: "Class",
-                            times: {
-                                "2": [
-                                    {
-                                        end: 54900,
-                                        start: 48900,
-                                    },
-                                ],
-                                "5": [
-                                    {
-                                        end: 54900,
-                                        start: 48900,
-                                    },
-                                ],
-                            },
-                            where: "Cargill Hall 097",
-                            endDate: 18969,
-                            startDate: 18878,
-                        },
-                    ],
-                },
-                {
-                    classType: "Lecture",
-                    crn: "15730",
-                    seatsCapacity: 49,
-                    seatsRemaining: 1,
-                    waitCapacity: 0,
-                    waitRemaining: 0,
-                    lastUpdateTime: 1638994699283,
-                    campus: "Boston",
-                    honors: false,
-                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=15730",
-                    profs: ["Andrew Van Der Poel"],
-                    meetings: [
-                        {
-                            type: "Final Exam",
-                            times: {
-                                "5": [
-                                    {
-                                        end: 54000,
-                                        start: 46800,
-                                    },
-                                ],
-                            },
-                            where: "TBA",
-                            endDate: 18978,
-                            startDate: 18978,
-                        },
-                        {
-                            type: "Class",
-                            times: {
-                                "2": [
-                                    {
-                                        end: 61500,
-                                        start: 55500,
-                                    },
-                                ],
-                                "5": [
-                                    {
-                                        end: 61500,
-                                        start: 55500,
-                                    },
-                                ],
-                            },
-                            where: "Knowles Center 010",
-                            endDate: 18969,
-                            startDate: 18878,
-                        },
-                    ],
-                },
-                {
-                    classType: "Lecture",
-                    crn: "14051",
-                    seatsCapacity: 250,
-                    seatsRemaining: 30,
-                    waitCapacity: 0,
-                    waitRemaining: 0,
-                    lastUpdateTime: 1638994699283,
-                    campus: "Boston",
-                    honors: false,
-                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=14051",
-                    profs: ["Rajmohan Rajaraman"],
-                    meetings: [
-                        {
-                            type: "Class",
-                            times: {
-                                "2": [
-                                    {
-                                        end: 41400,
-                                        start: 35400,
-                                    },
-                                ],
-                                "5": [
-                                    {
-                                        end: 41400,
-                                        start: 35400,
-                                    },
-                                ],
-                            },
-                            where: "Science Engineering Complex 102",
-                            endDate: 18969,
-                            startDate: 18878,
-                        },
-                        {
-                            type: "Final Exam",
-                            times: {
-                                "1": [
-                                    {
-                                        end: 54000,
-                                        start: 46800,
-                                    },
-                                ],
-                            },
-                            where: "TBA",
-                            endDate: 18974,
-                            startDate: 18974,
-                        },
-                    ],
-                },
-            ] as Section[],
+                sections.cs3000_202210_1(),
+                sections.cs3000_202210_2(),
+                sections.cs3000_202210_3(),
+            ],
         } as Course;
     },
+    cs3000_202210_parsed() {
+        return {
+            ...this.cs3000_202210(),
+            sections: [
+                sections.cs3000_202210_1_parsed(),
+                sections.cs3000_202210_2_parsed(),
+                sections.cs3000_202210_3_parsed(),
+            ],
+        };
+    },
+    cs3000_202210_min_sections: [
+        sections.cs3000_202210_1_minimal,
+        sections.cs3000_202210_2_minimal,
+        sections.cs3000_202210_3_minimal,
+    ] as MinimalSection[],
+
+    // Algo recitation
     cs3001_202210() {
         return {
             termId: "202210",
@@ -323,271 +99,48 @@ export default {
                 ],
             },
             sections: [
-                {
-                    classType: "Recitation/Discussion",
-                    crn: "16199",
-                    seatsCapacity: 42,
-                    seatsRemaining: 0,
-                    waitCapacity: 0,
-                    waitRemaining: 0,
-                    lastUpdateTime: 1638994699283,
-                    campus: "Boston",
-                    honors: false,
-                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=16199",
-                    profs: [],
-                    meetings: [
-                        {
-                            type: "Class",
-                            times: {
-                                "1": [
-                                    {
-                                        end: 46200,
-                                        start: 42300,
-                                    },
-                                ],
-                            },
-                            where: "Snell Library 015",
-                            endDate: 18969,
-                            startDate: 18878,
-                        },
-                    ],
-                },
-                {
-                    classType: "Recitation/Discussion",
-                    crn: "16200",
-                    seatsCapacity: 44,
-                    seatsRemaining: 0,
-                    waitCapacity: 0,
-                    waitRemaining: 0,
-                    lastUpdateTime: 1638994699283,
-                    campus: "Boston",
-                    honors: false,
-                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=16200",
-                    profs: ["Elizabeth O'Reilly", "Alexander Gonzalez"],
-                    meetings: [
-                        {
-                            type: "Class",
-                            times: {
-                                "1": [
-                                    {
-                                        end: 46200,
-                                        start: 42300,
-                                    },
-                                ],
-                            },
-                            where: "International Village 022",
-                            endDate: 18969,
-                            startDate: 18878,
-                        },
-                    ],
-                },
-                {
-                    classType: "Recitation/Discussion",
-                    crn: "16201",
-                    seatsCapacity: 44,
-                    seatsRemaining: 1,
-                    waitCapacity: 0,
-                    waitRemaining: 0,
-                    lastUpdateTime: 1638994699283,
-                    campus: "Boston",
-                    honors: false,
-                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=16201",
-                    profs: [],
-                    meetings: [
-                        {
-                            type: "Class",
-                            times: {
-                                "1": [
-                                    {
-                                        end: 52800,
-                                        start: 48900,
-                                    },
-                                ],
-                            },
-                            where: "International Village 022",
-                            endDate: 18969,
-                            startDate: 18878,
-                        },
-                    ],
-                },
-                {
-                    classType: "Recitation/Discussion",
-                    crn: "16204",
-                    seatsCapacity: 48,
-                    seatsRemaining: 4,
-                    waitCapacity: 0,
-                    waitRemaining: 0,
-                    lastUpdateTime: 1638994699283,
-                    campus: "Boston",
-                    honors: false,
-                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=16204",
-                    profs: [],
-                    meetings: [
-                        {
-                            type: "Class",
-                            times: {
-                                "1": [
-                                    {
-                                        end: 63600,
-                                        start: 59700,
-                                    },
-                                ],
-                            },
-                            where: "Snell Library 037",
-                            endDate: 18969,
-                            startDate: 18878,
-                        },
-                    ],
-                },
-                {
-                    classType: "Recitation/Discussion",
-                    crn: "16206",
-                    seatsCapacity: 42,
-                    seatsRemaining: 10,
-                    waitCapacity: 0,
-                    waitRemaining: 0,
-                    lastUpdateTime: 1638994699283,
-                    campus: "Boston",
-                    honors: false,
-                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=16206",
-                    profs: [],
-                    meetings: [
-                        {
-                            type: "Class",
-                            times: {
-                                "1": [
-                                    {
-                                        end: 68700,
-                                        start: 64800,
-                                    },
-                                ],
-                            },
-                            where: "Snell Library 111",
-                            endDate: 18969,
-                            startDate: 18878,
-                        },
-                    ],
-                },
-                {
-                    classType: "Recitation/Discussion",
-                    crn: "16202",
-                    seatsCapacity: 44,
-                    seatsRemaining: 0,
-                    waitCapacity: 0,
-                    waitRemaining: 0,
-                    lastUpdateTime: 1638994699283,
-                    campus: "Boston",
-                    honors: false,
-                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=16202",
-                    profs: [],
-                    meetings: [
-                        {
-                            type: "Class",
-                            times: {
-                                "1": [
-                                    {
-                                        end: 52800,
-                                        start: 48900,
-                                    },
-                                ],
-                            },
-                            where: "Dodge Hall 330",
-                            endDate: 18969,
-                            startDate: 18878,
-                        },
-                    ],
-                },
-                {
-                    classType: "Recitation/Discussion",
-                    crn: "16203",
-                    seatsCapacity: 48,
-                    seatsRemaining: 0,
-                    waitCapacity: 0,
-                    waitRemaining: 0,
-                    lastUpdateTime: 1638994699283,
-                    campus: "Boston",
-                    honors: false,
-                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=16203",
-                    profs: [],
-                    meetings: [
-                        {
-                            type: "Class",
-                            times: {
-                                "1": [
-                                    {
-                                        end: 57300,
-                                        start: 53400,
-                                    },
-                                ],
-                            },
-                            where: "Snell Library 121",
-                            endDate: 18969,
-                            startDate: 18878,
-                        },
-                    ],
-                },
-                {
-                    classType: "Recitation/Discussion",
-                    crn: "16205",
-                    seatsCapacity: 48,
-                    seatsRemaining: 13,
-                    waitCapacity: 0,
-                    waitRemaining: 0,
-                    lastUpdateTime: 1638994699283,
-                    campus: "Boston",
-                    honors: false,
-                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=16205",
-                    profs: [],
-                    meetings: [
-                        {
-                            type: "Class",
-                            times: {
-                                "1": [
-                                    {
-                                        end: 63600,
-                                        start: 59700,
-                                    },
-                                ],
-                            },
-                            where: "Richards Hall 227",
-                            endDate: 18969,
-                            startDate: 18878,
-                        },
-                    ],
-                },
-                {
-                    classType: "Recitation/Discussion",
-                    crn: "18553",
-                    seatsCapacity: 48,
-                    seatsRemaining: 0,
-                    waitCapacity: 0,
-                    waitRemaining: 0,
-                    lastUpdateTime: 1638994699283,
-                    campus: "Boston",
-                    honors: false,
-                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=18553",
-                    profs: [],
-                    meetings: [
-                        {
-                            type: "Class",
-                            times: {
-                                "1": [
-                                    {
-                                        end: 57300,
-                                        start: 53400,
-                                    },
-                                ],
-                            },
-                            where: "Shillman Hall 415",
-                            endDate: 18969,
-                            startDate: 18878,
-                        },
-                    ],
-                },
+                sections.cs3001_202210_1(),
+                sections.cs3001_202210_2(),
+                sections.cs3001_202210_3(),
+                sections.cs3001_202210_4(),
+                sections.cs3001_202210_5(),
+                sections.cs3001_202210_6(),
+                sections.cs3001_202210_7(),
+                sections.cs3001_202210_8(),
+                sections.cs3001_202210_9(),
             ] as Section[],
         } as Course;
     },
-    cs2800_20210() {
+    cs3001_202210_parsed() {
+        return {
+            ...this.cs3001_202210(),
+            sections: [
+                sections.cs3001_202210_1_parsed(),
+                sections.cs3001_202210_2_parsed(),
+                sections.cs3001_202210_3_parsed(),
+                sections.cs3001_202210_4_parsed(),
+                sections.cs3001_202210_5_parsed(),
+                sections.cs3001_202210_6_parsed(),
+                sections.cs3001_202210_7_parsed(),
+                sections.cs3001_202210_8_parsed(),
+                sections.cs3001_202210_9_parsed(),
+            ],
+        };
+    },
+    cs3001_202210_min_sections: [
+        sections.cs3001_202210_1_minimal,
+        sections.cs3001_202210_2_minimal,
+        sections.cs3001_202210_3_minimal,
+        sections.cs3001_202210_4_minimal,
+        sections.cs3001_202210_5_minimal,
+        sections.cs3001_202210_6_minimal,
+        sections.cs3001_202210_7_minimal,
+        sections.cs3001_202210_8_minimal,
+        sections.cs3001_202210_9_minimal,
+    ] as MinimalSection[],
+
+    // Logic and comp
+    cs2800_202210() {
         return {
             termId: "202210",
             subject: "CS",
@@ -603,132 +156,28 @@ export default {
                 ],
             },
             sections: [
-                {
-                    classType: "Lecture",
-                    crn: "10146",
-                    seatsCapacity: 48,
-                    seatsRemaining: 0,
-                    waitCapacity: 0,
-                    waitRemaining: 0,
-                    lastUpdateTime: 1638994699283,
-                    campus: "Boston",
-                    honors: false,
-                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=10146",
-                    profs: ["Stavros Trypakis"],
-                    meetings: [
-                        {
-                            type: "Class",
-                            times: {
-                                "1": [
-                                    {
-                                        end: 41700,
-                                        start: 37800,
-                                    },
-                                ],
-                                "3": [
-                                    {
-                                        end: 41700,
-                                        start: 37800,
-                                    },
-                                ],
-                                "4": [
-                                    {
-                                        end: 41700,
-                                        start: 37800,
-                                    },
-                                ],
-                            },
-                            where: "Dodge Hall 070",
-                            endDate: 18969,
-                            startDate: 18878,
-                        },
-                    ],
-                },
-                {
-                    classType: "Lecture",
-                    crn: "16217",
-                    seatsCapacity: 48,
-                    seatsRemaining: 3,
-                    waitCapacity: 0,
-                    waitRemaining: 0,
-                    lastUpdateTime: 1638994699283,
-                    campus: "Boston",
-                    honors: false,
-                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=16217",
-                    profs: ["Stavros Trypakis"],
-                    meetings: [
-                        {
-                            type: "Class",
-                            times: {
-                                "1": [
-                                    {
-                                        end: 63600,
-                                        start: 59700,
-                                    },
-                                ],
-                                "3": [
-                                    {
-                                        end: 63600,
-                                        start: 59700,
-                                    },
-                                ],
-                                "4": [
-                                    {
-                                        end: 63600,
-                                        start: 59700,
-                                    },
-                                ],
-                            },
-                            where: "Dodge Hall 070",
-                            endDate: 18969,
-                            startDate: 18878,
-                        },
-                    ],
-                },
-                {
-                    classType: "Lecture",
-                    crn: "18549",
-                    seatsCapacity: 48,
-                    seatsRemaining: 4,
-                    waitCapacity: 0,
-                    waitRemaining: 0,
-                    lastUpdateTime: 1638994699283,
-                    campus: "Boston",
-                    honors: false,
-                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=18549",
-                    profs: ["Olin Shivers III"],
-                    meetings: [
-                        {
-                            type: "Class",
-                            times: {
-                                "1": [
-                                    {
-                                        end: 63600,
-                                        start: 59700,
-                                    },
-                                ],
-                                "3": [
-                                    {
-                                        end: 63600,
-                                        start: 59700,
-                                    },
-                                ],
-                                "4": [
-                                    {
-                                        end: 63600,
-                                        start: 59700,
-                                    },
-                                ],
-                            },
-                            where: "Dodge Hall 130",
-                            endDate: 18969,
-                            startDate: 18878,
-                        },
-                    ],
-                },
-            ] as Section[],
+                sections.cs2800_202210_1(),
+                sections.cs2800_202210_2(),
+                sections.cs2800_202210_3(),
+            ],
         } as Course;
     },
+    cs2800_202210_parsed() {
+        return {
+            ...this.cs2800_202210(),
+            sections: [
+                sections.cs2800_202210_1_parsed(),
+                sections.cs2800_202210_2_parsed(),
+                sections.cs2800_202210_3_parsed(),
+            ],
+        };
+    },
+    cs2800_202210_min_sections: [
+        sections.cs2800_202210_1_minimal,
+        sections.cs2800_202210_2_minimal,
+        sections.cs2800_202210_3_minimal,
+    ] as MinimalSection[],
+
     cs2801_202210() {
         return {
             termId: "202210",
@@ -745,125 +194,32 @@ export default {
                 ],
             },
             sections: [
-                {
-                    classType: "Lab",
-                    crn: "10946",
-                    seatsCapacity: 36,
-                    seatsRemaining: 6,
-                    waitCapacity: 0,
-                    waitRemaining: 0,
-                    lastUpdateTime: 1638994699283,
-                    campus: "Boston",
-                    honors: false,
-                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=10946",
-                    profs: ["Stavros Trypakis"],
-                    meetings: [
-                        {
-                            type: "Class",
-                            times: {
-                                "5": [
-                                    {
-                                        end: 55200,
-                                        start: 52200,
-                                    },
-                                ],
-                            },
-                            where: "West Village H 210B",
-                            endDate: 18969,
-                            startDate: 18878,
-                        },
-                    ],
-                },
-                {
-                    classType: "Lab",
-                    crn: "19062",
-                    seatsCapacity: 36,
-                    seatsRemaining: 0,
-                    waitCapacity: 0,
-                    waitRemaining: 0,
-                    lastUpdateTime: 1638994699283,
-                    campus: "Boston",
-                    honors: false,
-                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=19062",
-                    profs: ["Stavros Trypakis"],
-                    meetings: [
-                        {
-                            type: "Class",
-                            times: {
-                                "5": [
-                                    {
-                                        end: 45300,
-                                        start: 42300,
-                                    },
-                                ],
-                            },
-                            where: "West Village H 210B",
-                            endDate: 18969,
-                            startDate: 18878,
-                        },
-                    ],
-                },
-                {
-                    classType: "Lab",
-                    crn: "11775",
-                    seatsCapacity: 36,
-                    seatsRemaining: 0,
-                    waitCapacity: 0,
-                    waitRemaining: 0,
-                    lastUpdateTime: 1638994699283,
-                    campus: "Boston",
-                    honors: false,
-                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=11775",
-                    profs: ["Stavros Trypakis"],
-                    meetings: [
-                        {
-                            type: "Class",
-                            times: {
-                                "5": [
-                                    {
-                                        end: 58500,
-                                        start: 55500,
-                                    },
-                                ],
-                            },
-                            where: "West Village H 210B",
-                            endDate: 18969,
-                            startDate: 18878,
-                        },
-                    ],
-                },
-                {
-                    classType: "Lab",
-                    crn: "10619",
-                    seatsCapacity: 36,
-                    seatsRemaining: 1,
-                    waitCapacity: 0,
-                    waitRemaining: 0,
-                    lastUpdateTime: 1638994699283,
-                    campus: "Boston",
-                    honors: false,
-                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=10619",
-                    profs: ["Stavros Trypakis"],
-                    meetings: [
-                        {
-                            type: "Class",
-                            times: {
-                                "5": [
-                                    {
-                                        end: 51900,
-                                        start: 48900,
-                                    },
-                                ],
-                            },
-                            where: "West Village H 210B",
-                            endDate: 18969,
-                            startDate: 18878,
-                        },
-                    ],
-                },
+                sections.cs2801_202210_1(),
+                sections.cs2801_202210_2(),
+                sections.cs2801_202210_3(),
+                sections.cs2801_202210_4(),
             ],
         } as Course;
     },
+    cs2801_202210_parsed() {
+        return {
+            ...this.cs2801_202210(),
+            sections: [
+                sections.cs2801_202210_1_parsed(),
+                sections.cs2801_202210_2_parsed(),
+                sections.cs2801_202210_3_parsed(),
+                sections.cs2801_202210_4_parsed(),
+            ],
+        };
+    },
+    cs2801_202210_min_sections: [
+        sections.cs2801_202210_1_minimal,
+        sections.cs2801_202210_2_minimal,
+        sections.cs2801_202210_3_minimal,
+        sections.cs2801_202210_4_minimal,
+    ] as MinimalSection[],
+
+    // EECE2323
     eece2323_202210() {
         return {
             termId: "202210",
@@ -880,213 +236,42 @@ export default {
                 ],
             },
             sections: [
-                {
-                    classType: "Lab",
-                    crn: "16946",
-                    seatsCapacity: 42,
-                    seatsRemaining: 20,
-                    waitCapacity: 5,
-                    waitRemaining: 5,
-                    lastUpdateTime: 1638994699006,
-                    campus: "Boston",
-                    honors: false,
-                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=16946",
-                    profs: ["John Kimani"],
-                    meetings: [
-                        {
-                            type: "Class",
-                            times: {
-                                "5": [
-                                    {
-                                        end: 40500,
-                                        start: 33300,
-                                    },
-                                ],
-                            },
-                            where: "Hayden Hall 009",
-                            endDate: 18969,
-                            startDate: 18878,
-                        },
-                    ],
-                },
-                {
-                    classType: "Lab",
-                    crn: "10526",
-                    seatsCapacity: 42,
-                    seatsRemaining: 0,
-                    waitCapacity: 5,
-                    waitRemaining: 5,
-                    lastUpdateTime: 1638994699006,
-                    campus: "Boston",
-                    honors: false,
-                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=10526",
-                    profs: ["John Kimani"],
-                    meetings: [
-                        {
-                            type: "Class",
-                            times: {
-                                "2": [
-                                    {
-                                        end: 56700,
-                                        start: 49500,
-                                    },
-                                ],
-                            },
-                            where: "Hayden Hall 009",
-                            endDate: 18969,
-                            startDate: 18878,
-                        },
-                    ],
-                },
-                {
-                    classType: "Lab",
-                    crn: "18984",
-                    seatsCapacity: 19,
-                    seatsRemaining: 8,
-                    waitCapacity: 5,
-                    waitRemaining: 5,
-                    lastUpdateTime: 1638994699006,
-                    campus: "Boston",
-                    honors: false,
-                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=18984",
-                    profs: ["Thomas Consi"],
-                    meetings: [
-                        {
-                            type: "Class",
-                            times: {
-                                "5": [
-                                    {
-                                        end: 56700,
-                                        start: 49500,
-                                    },
-                                ],
-                            },
-                            where: "Hayden Hall 009",
-                            endDate: 18969,
-                            startDate: 18878,
-                        },
-                    ],
-                },
-                {
-                    classType: "Lab",
-                    crn: "18691",
-                    seatsCapacity: 42,
-                    seatsRemaining: 15,
-                    waitCapacity: 5,
-                    waitRemaining: 5,
-                    lastUpdateTime: 1638994699006,
-                    campus: "Boston",
-                    honors: false,
-                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=18691",
-                    profs: ["Thomas Consi"],
-                    meetings: [
-                        {
-                            type: "Class",
-                            times: {
-                                "5": [
-                                    {
-                                        end: 48600,
-                                        start: 41400,
-                                    },
-                                ],
-                            },
-                            where: "Hayden Hall 009",
-                            endDate: 18969,
-                            startDate: 18878,
-                        },
-                    ],
-                },
-                {
-                    classType: "Lab",
-                    crn: "19466",
-                    seatsCapacity: 19,
-                    seatsRemaining: 1,
-                    waitCapacity: 5,
-                    waitRemaining: 5,
-                    lastUpdateTime: 1638994699006,
-                    campus: "Boston",
-                    honors: false,
-                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=19466",
-                    profs: ["Emad Aboelela"],
-                    meetings: [
-                        {
-                            type: "Class",
-                            times: {
-                                "2": [
-                                    {
-                                        end: 64800,
-                                        start: 57600,
-                                    },
-                                ],
-                            },
-                            where: "Hayden Hall 009",
-                            endDate: 18969,
-                            startDate: 18878,
-                        },
-                    ],
-                },
-                {
-                    classType: "Lab",
-                    crn: "10524",
-                    seatsCapacity: 42,
-                    seatsRemaining: 7,
-                    waitCapacity: 5,
-                    waitRemaining: 5,
-                    lastUpdateTime: 1638994699006,
-                    campus: "Boston",
-                    honors: false,
-                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=10524",
-                    profs: ["Miriam Leeser"],
-                    meetings: [
-                        {
-                            type: "Class",
-                            times: {
-                                "2": [
-                                    {
-                                        end: 40500,
-                                        start: 33300,
-                                    },
-                                ],
-                            },
-                            where: "Hayden Hall 009",
-                            endDate: 18969,
-                            startDate: 18878,
-                        },
-                    ],
-                },
-                {
-                    classType: "Lab",
-                    crn: "10525",
-                    seatsCapacity: 42,
-                    seatsRemaining: 2,
-                    waitCapacity: 5,
-                    waitRemaining: 5,
-                    lastUpdateTime: 1638994699006,
-                    campus: "Boston",
-                    honors: false,
-                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=10525",
-                    profs: ["Emad Aboelela"],
-                    meetings: [
-                        {
-                            type: "Class",
-                            times: {
-                                "2": [
-                                    {
-                                        end: 48600,
-                                        start: 41400,
-                                    },
-                                ],
-                            },
-                            where: "Hayden Hall 009",
-                            endDate: 18969,
-                            startDate: 18878,
-                        },
-                    ],
-                },
+                sections.eece2323_202210_1(),
+                sections.eece2323_202210_2(),
+                sections.eece2323_202210_3(),
+                sections.eece2323_202210_4(),
+                sections.eece2323_202210_5(),
+                sections.eece2323_202210_6(),
+                sections.eece2323_202210_7(),
             ],
         } as Course;
     },
-    eece_2322_202210() {
+    eece2323_202210_parsed() {
+        return {
+            ...this.eece2323_202210(),
+            sections: [
+                sections.eece2323_202210_1_parsed(),
+                sections.eece2323_202210_2_parsed(),
+                sections.eece2323_202210_3_parsed(),
+                sections.eece2323_202210_4_parsed(),
+                sections.eece2323_202210_5_parsed(),
+                sections.eece2323_202210_6_parsed(),
+                sections.eece2323_202210_7_parsed(),
+            ],
+        };
+    },
+    eece2323_202210_min_sections: [
+        sections.eece2323_202210_1_minimal,
+        sections.eece2323_202210_2_minimal,
+        sections.eece2323_202210_3_minimal,
+        sections.eece2323_202210_4_minimal,
+        sections.eece2323_202210_5_minimal,
+        sections.eece2323_202210_6_minimal,
+        sections.eece2323_202210_7_minimal,
+    ] as MinimalSection[],
+
+    // fundamentals of digital design
+    eece2322_202210() {
         return {
             termId: "202210",
             subject: "EECE",
@@ -1102,279 +287,36 @@ export default {
                 ],
             },
             sections: [
-                {
-                    classType: "Lecture",
-                    crn: "16944",
-                    seatsCapacity: 49,
-                    seatsRemaining: 3,
-                    waitCapacity: 5,
-                    waitRemaining: 5,
-                    lastUpdateTime: 1638994699006,
-                    campus: "Boston",
-                    honors: false,
-                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=16944",
-                    profs: ["John Kimani"],
-                    meetings: [
-                        {
-                            type: "Class",
-                            times: {
-                                "1": [
-                                    {
-                                        end: 52800,
-                                        start: 48900,
-                                    },
-                                ],
-                                "3": [
-                                    {
-                                        end: 52800,
-                                        start: 48900,
-                                    },
-                                ],
-                                "4": [
-                                    {
-                                        end: 52800,
-                                        start: 48900,
-                                    },
-                                ],
-                            },
-                            where: "Richards Hall 253",
-                            endDate: 18969,
-                            startDate: 18878,
-                        },
-                        {
-                            type: "Final Exam",
-                            times: {
-                                "5": [
-                                    {
-                                        end: 63000,
-                                        start: 55800,
-                                    },
-                                ],
-                            },
-                            where: "TBA",
-                            endDate: 18978,
-                            startDate: 18978,
-                        },
-                    ],
-                },
-                {
-                    classType: "Lecture",
-                    crn: "10350",
-                    seatsCapacity: 48,
-                    seatsRemaining: 4,
-                    waitCapacity: 8,
-                    waitRemaining: 8,
-                    lastUpdateTime: 1638994699006,
-                    campus: "Boston",
-                    honors: false,
-                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=10350",
-                    profs: ["Miriam Leeser"],
-                    meetings: [
-                        {
-                            type: "Final Exam",
-                            times: {
-                                "1": [
-                                    {
-                                        end: 36000,
-                                        start: 28800,
-                                    },
-                                ],
-                            },
-                            where: "TBA",
-                            endDate: 18974,
-                            startDate: 18974,
-                        },
-                        {
-                            type: "Class",
-                            times: {
-                                "1": [
-                                    {
-                                        end: 41700,
-                                        start: 37800,
-                                    },
-                                ],
-                                "3": [
-                                    {
-                                        end: 41700,
-                                        start: 37800,
-                                    },
-                                ],
-                                "4": [
-                                    {
-                                        end: 41700,
-                                        start: 37800,
-                                    },
-                                ],
-                            },
-                            where: "Science Engineering Complex 142",
-                            endDate: 18969,
-                            startDate: 18878,
-                        },
-                    ],
-                },
-                {
-                    classType: "Lecture",
-                    crn: "18690",
-                    seatsCapacity: 49,
-                    seatsRemaining: 4,
-                    waitCapacity: 8,
-                    waitRemaining: 8,
-                    lastUpdateTime: 1638994699006,
-                    campus: "Boston",
-                    honors: false,
-                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=18690",
-                    profs: ["Emad Aboelela"],
-                    meetings: [
-                        {
-                            type: "Final Exam",
-                            times: {
-                                "5": [
-                                    {
-                                        end: 36000,
-                                        start: 28800,
-                                    },
-                                ],
-                            },
-                            where: "TBA",
-                            endDate: 18971,
-                            startDate: 18971,
-                        },
-                        {
-                            type: "Class",
-                            times: {
-                                "1": [
-                                    {
-                                        end: 37200,
-                                        start: 33300,
-                                    },
-                                ],
-                                "3": [
-                                    {
-                                        end: 37200,
-                                        start: 33300,
-                                    },
-                                ],
-                                "4": [
-                                    {
-                                        end: 37200,
-                                        start: 33300,
-                                    },
-                                ],
-                            },
-                            where: "Robinson Hall 107",
-                            endDate: 18969,
-                            startDate: 18878,
-                        },
-                    ],
-                },
-                {
-                    classType: "Lecture",
-                    crn: "19033",
-                    seatsCapacity: 49,
-                    seatsRemaining: 6,
-                    waitCapacity: 0,
-                    waitRemaining: 0,
-                    lastUpdateTime: 1638994699006,
-                    campus: "Boston",
-                    honors: false,
-                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=19033",
-                    profs: ["John Kimani"],
-                    meetings: [
-                        {
-                            type: "Class",
-                            times: {
-                                "1": [
-                                    {
-                                        end: 59400,
-                                        start: 53400,
-                                    },
-                                ],
-                                "3": [
-                                    {
-                                        end: 59400,
-                                        start: 53400,
-                                    },
-                                ],
-                            },
-                            where: "Snell Library 035",
-                            endDate: 18969,
-                            startDate: 18878,
-                        },
-                        {
-                            type: "Final Exam",
-                            times: {
-                                "5": [
-                                    {
-                                        end: 63000,
-                                        start: 55800,
-                                    },
-                                ],
-                            },
-                            where: "TBA",
-                            endDate: 18978,
-                            startDate: 18978,
-                        },
-                    ],
-                },
-                {
-                    classType: "Lecture",
-                    crn: "10553",
-                    seatsCapacity: 49,
-                    seatsRemaining: 33,
-                    waitCapacity: 8,
-                    waitRemaining: 8,
-                    lastUpdateTime: 1638994699006,
-                    campus: "Boston",
-                    honors: false,
-                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=10553",
-                    profs: ["Thomas Consi"],
-                    meetings: [
-                        {
-                            type: "Final Exam",
-                            times: {
-                                "3": [
-                                    {
-                                        end: 36000,
-                                        start: 28800,
-                                    },
-                                ],
-                            },
-                            where: "TBA",
-                            endDate: 18976,
-                            startDate: 18976,
-                        },
-                        {
-                            type: "Class",
-                            times: {
-                                "1": [
-                                    {
-                                        end: 63600,
-                                        start: 59700,
-                                    },
-                                ],
-                                "3": [
-                                    {
-                                        end: 63600,
-                                        start: 59700,
-                                    },
-                                ],
-                                "4": [
-                                    {
-                                        end: 63600,
-                                        start: 59700,
-                                    },
-                                ],
-                            },
-                            where: "Kariotis Hall 011",
-                            endDate: 18969,
-                            startDate: 18878,
-                        },
-                    ],
-                },
+                sections.eece2322_202210_1(),
+                sections.eece2322_202210_2(),
+                sections.eece2322_202210_3(),
+                sections.eece2322_202210_4(),
+                sections.eece2322_202210_5(),
             ],
         } as Course;
     },
-    thtr_1170_202210() {
+    eece2322_202210_parsed() {
+        return {
+            ...this.eece2322_202210(),
+            sections: [
+                sections.eece2322_202210_1_parsed(),
+                sections.eece2322_202210_2_parsed(),
+                sections.eece2322_202210_3_parsed(),
+                sections.eece2322_202210_4_parsed(),
+                sections.eece2322_202210_5_parsed(),
+            ],
+        };
+    },
+    eece2322_202210_min_sections: [
+        sections.eece2322_202210_1_minimal,
+        sections.eece2322_202210_2_minimal,
+        sections.eece2322_202210_3_minimal,
+        sections.eece2322_202210_4_minimal,
+        sections.eece2322_202210_5_minimal,
+    ] as MinimalSection[],
+
+    /// public speaking
+    thtr1170_202210() {
         return {
             termId: "202210",
             subject: "THTR",
@@ -1736,7 +678,276 @@ export default {
             ] as Section[],
         } as Course;
     },
-    honr_1102_202210() {
+
+    // Tech and human values
+    phil1145_202210() {
+        return {
+            termId: "202210",
+            subject: "PHIL",
+            classId: "1145",
+            name: "Technology and Human Values",
+            coreqs: {
+                type: "and",
+                values: [],
+            },
+            sections: [
+                {
+                    classType: "Lecture",
+                    crn: "16941",
+                    seatsCapacity: 40,
+                    seatsRemaining: 1,
+                    waitCapacity: 10,
+                    waitRemaining: 10,
+                    lastUpdateTime: 1639767552189,
+                    campus: "Boston",
+                    honors: false,
+                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=16941",
+                    profs: ["Meica Magnani"],
+                    meetings: [
+                        {
+                            type: "Class",
+                            times: {
+                                "3": [
+                                    {
+                                        end: 48300,
+                                        start: 42300,
+                                    },
+                                ],
+                                "5": [
+                                    {
+                                        end: 48300,
+                                        start: 42300,
+                                    },
+                                ],
+                            },
+                            where: "Shillman Hall 210",
+                            endDate: 18969,
+                            startDate: 18878,
+                        },
+                        {
+                            type: "Final Exam",
+                            times: {
+                                "4": [
+                                    {
+                                        end: 54000,
+                                        start: 46800,
+                                    },
+                                ],
+                            },
+                            where: "Hurtig Hall 130",
+                            endDate: 18977,
+                            startDate: 18977,
+                        },
+                    ],
+                },
+                {
+                    classType: "Lecture",
+                    crn: "12155",
+                    seatsCapacity: 40,
+                    seatsRemaining: 0,
+                    waitCapacity: 10,
+                    waitRemaining: 10,
+                    lastUpdateTime: 1639767552189,
+                    campus: "Boston",
+                    honors: false,
+                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=12155",
+                    profs: ["Vance Ricks"],
+                    meetings: [
+                        {
+                            type: "Class",
+                            times: {
+                                "2": [
+                                    {
+                                        end: 54900,
+                                        start: 48900,
+                                    },
+                                ],
+                                "5": [
+                                    {
+                                        end: 54900,
+                                        start: 48900,
+                                    },
+                                ],
+                            },
+                            where: "Dodge Hall 270",
+                            endDate: 18969,
+                            startDate: 18878,
+                        },
+                    ],
+                },
+                {
+                    classType: "Lecture",
+                    crn: "13532",
+                    seatsCapacity: 40,
+                    seatsRemaining: 0,
+                    waitCapacity: 10,
+                    waitRemaining: 10,
+                    lastUpdateTime: 1639767552189,
+                    campus: "Boston",
+                    honors: false,
+                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=13532",
+                    profs: ["Meica Magnani"],
+                    meetings: [
+                        {
+                            type: "Final Exam",
+                            times: {
+                                "4": [
+                                    {
+                                        end: 36000,
+                                        start: 28800,
+                                    },
+                                ],
+                            },
+                            where: "West Village G 102",
+                            endDate: 18977,
+                            startDate: 18977,
+                        },
+                        {
+                            type: "Class",
+                            times: {
+                                "1": [
+                                    {
+                                        end: 48300,
+                                        start: 42300,
+                                    },
+                                ],
+                                "4": [
+                                    {
+                                        end: 48300,
+                                        start: 42300,
+                                    },
+                                ],
+                            },
+                            where: "Dodge Hall 470",
+                            endDate: 18969,
+                            startDate: 18878,
+                        },
+                    ],
+                },
+                {
+                    classType: "Lecture",
+                    crn: "13132",
+                    seatsCapacity: 41,
+                    seatsRemaining: 0,
+                    waitCapacity: 10,
+                    waitRemaining: 10,
+                    lastUpdateTime: 1639767552189,
+                    campus: "Boston",
+                    honors: false,
+                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=13132",
+                    profs: ["Chad Lee-Stronach"],
+                    meetings: [
+                        {
+                            type: "Class",
+                            times: {
+                                "2": [
+                                    {
+                                        end: 41400,
+                                        start: 35400,
+                                    },
+                                ],
+                                "5": [
+                                    {
+                                        end: 41400,
+                                        start: 35400,
+                                    },
+                                ],
+                            },
+                            where: "Richards Hall 227",
+                            endDate: 18969,
+                            startDate: 18878,
+                        },
+                        {
+                            type: "Final Exam",
+                            times: {
+                                "1": [
+                                    {
+                                        end: 54000,
+                                        start: 46800,
+                                    },
+                                ],
+                            },
+                            where: "West Village H 110",
+                            endDate: 18974,
+                            startDate: 18974,
+                        },
+                    ],
+                },
+                {
+                    classType: "Lecture",
+                    crn: "13623",
+                    seatsCapacity: 40,
+                    seatsRemaining: 1,
+                    waitCapacity: 10,
+                    waitRemaining: 10,
+                    lastUpdateTime: 1639767552189,
+                    campus: "Boston",
+                    honors: false,
+                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=13623",
+                    profs: ["Vance Ricks"],
+                    meetings: [
+                        {
+                            type: "Class",
+                            times: {
+                                "2": [
+                                    {
+                                        end: 61500,
+                                        start: 55500,
+                                    },
+                                ],
+                                "5": [
+                                    {
+                                        end: 61500,
+                                        start: 55500,
+                                    },
+                                ],
+                            },
+                            where: "Forsyth Building 237",
+                            endDate: 18969,
+                            startDate: 18878,
+                        },
+                    ],
+                },
+                {
+                    classType: "Lecture",
+                    crn: "13624",
+                    seatsCapacity: 35,
+                    seatsRemaining: 2,
+                    waitCapacity: 10,
+                    waitRemaining: 10,
+                    lastUpdateTime: 1639767552189,
+                    campus: "Boston",
+                    honors: true,
+                    url: "https://wl11gp.neu.edu/udcprod8/bwckschd.p_disp_detail_sched?term_in=202210&crn_in=13624",
+                    profs: ["John Basl"],
+                    meetings: [
+                        {
+                            type: "Class",
+                            times: {
+                                "3": [
+                                    {
+                                        end: 48300,
+                                        start: 42300,
+                                    },
+                                ],
+                                "5": [
+                                    {
+                                        end: 48300,
+                                        start: 42300,
+                                    },
+                                ],
+                            },
+                            where: "Hayden Hall 424",
+                            endDate: 18969,
+                            startDate: 18878,
+                        },
+                    ],
+                },
+            ],
+        } as Course;
+    },
+
+    honr1102_202210() {
         return {
             termId: "202210",
             subject: "HONR",
