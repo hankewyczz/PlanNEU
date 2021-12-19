@@ -1,6 +1,12 @@
 import sections from "./sections.data";
 
-import { Course, MinimalSection, Section } from "../../../../types/types";
+import {
+    Course,
+    MinimalSection,
+    ParsedCourse,
+    ParsedSection,
+    Section,
+} from "../../../../types/types";
 
 export default {
     course_with_no_sections: {
@@ -14,6 +20,30 @@ export default {
         },
         sections: [] as Section[],
     } as Course,
+
+    // Game engines
+    cs4850_202210() {
+        return {
+            termId: "202230",
+            subject: "CS",
+            classId: "4850",
+            name: "Building Game Engines",
+            coreqs: {
+                type: "and",
+                values: [],
+            },
+            sections: [sections.cs4850_202210_1()],
+        } as Course;
+    },
+    cs4850_202210_parsed() {
+        return {
+            ...this.cs4850_202210(),
+            sections: [sections.cs4850_202210_1_parsed()],
+        };
+    },
+    cs4850_202210_min_sections: [
+        sections.cs4850_202210_1_minimal,
+    ] as MinimalSection[],
 
     // Theory of comp
     cs3800_202210() {
@@ -66,7 +96,7 @@ export default {
             ],
         } as Course;
     },
-    cs3000_202210_parsed() {
+    cs3000_202210_parsed(): ParsedCourse {
         return {
             ...this.cs3000_202210(),
             sections: [

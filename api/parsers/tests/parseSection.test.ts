@@ -47,6 +47,7 @@ describe("Parse sections", () => {
     expect(parseSection(sections.eece2322_202210_3())).toMatchObject(sections.eece2322_202210_3_parsed())
     expect(parseSection(sections.eece2322_202210_4())).toMatchObject(sections.eece2322_202210_4_parsed())
     expect(parseSection(sections.eece2322_202210_5())).toMatchObject(sections.eece2322_202210_5_parsed())
+    expect(parseSection(sections.cs4850_202210_1())).toMatchObject(sections.cs4850_202210_1_parsed())
   })
 
 

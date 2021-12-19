@@ -1,4 +1,20 @@
-import { Course, Section } from "../../../types/types";
+import { Result } from "../../../types/types";
+import sections from "../../../api/parsers/tests/data/sections.data";
 
 export default {
+    cs3000_202210_only: [["14087"], ["15730"], ["14051"]] as Result[],
+    cs3800_202210_only: [["10376"], ["16453"]] as Result[],
+    cs3000_and_cs3800_202210: [
+        ["14087", "10376"],
+        ["15730", "16453"],
+        ["14051", "10376"],
+        ["14051", "16453"],
+    ] as Result[],
+
+    complex_example: [
+        ["14087", "10376", "31730", "10146"],
+        ["15730", "16453", "31730", "10146"],
+        ["14051", "10376", "31730", "10146"],
+        ["14051", "16453", "31730", "10146"],
+    ] as Result[],
 };

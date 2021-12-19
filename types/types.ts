@@ -52,7 +52,7 @@ export interface MinimalSection {
   meetings: BinaryMeetingTime;
 }
 
-export class MinimalResult {
+export class PartialResult {
   crns: string[];
   meetings: BinaryMeetingTime;
 
@@ -61,6 +61,8 @@ export class MinimalResult {
     this.meetings = meetings;
   }
 }
+
+export type Result = string[];
 
 export interface BackendMeeting {
   startDate: number; // Number of days since epoch
