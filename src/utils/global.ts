@@ -20,7 +20,10 @@ export const NUM_RESULTS = 50;
 /**
  * It's pretty annoying that Jest doesn't have a way to check for deep unordered array equality.
  */
-export function resultsEquality(array1: CRNsResult[], array2: CRNsResult[]): void {
+export function resultsEquality(
+  array1: CRNsResult[],
+  array2: CRNsResult[]
+): void {
   const arr1 = array1.map((result) => result.sort()).sort();
   const arr2 = array2.map((result) => result.sort()).sort();
 

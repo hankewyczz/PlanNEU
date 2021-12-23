@@ -16,7 +16,9 @@ export type ParsedCourse = Omit<Course, "sections"> &
 export function isParsedCourse(course: any): course is ParsedCourse {
   const props = ["termId", "subject", "classId", "name", "coreqs", "sections"];
 
-  if (!props.every((prop) => Object.prototype.hasOwnProperty.call(course, prop))) {
+  if (
+    !props.every((prop) => Object.prototype.hasOwnProperty.call(course, prop))
+  ) {
     return false;
   }
 
@@ -76,7 +78,9 @@ export function isParsedSection(section: any): section is ParsedSection {
     "meetings",
   ];
 
-  if (!props.every((prop) => Object.prototype.hasOwnProperty.call(section, prop))) {
+  if (
+    !props.every((prop) => Object.prototype.hasOwnProperty.call(section, prop))
+  ) {
     return false;
   }
 

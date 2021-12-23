@@ -82,7 +82,10 @@ export function generateMinifiedCombinations(
   /**
    * Recursive inner function to create combinations.
    */
-  function combination(courseIndex = 0, output: PartialResult | null = null): void {
+  function combination(
+    courseIndex = 0,
+    output: PartialResult | null = null
+  ): void {
     // Check if we've already hit our quota
     if (results.length >= NUM_RESULTS) {
       return;
