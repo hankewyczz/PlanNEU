@@ -1,88 +1,121 @@
 <head>
-	<!-- Meta -->
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Plan NEU | Select courses</title>
+  <!-- Meta -->
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Plan NEU | Select courses</title>
 
-	<!-- Stylesheets -->
-	<!-- Bootstrap stylesheets -->
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-	<!-- Personal stylesheets -->
-	<link rel="stylesheet" href="./style/addCourses.css">
-	<link rel="stylesheet" href="./style/main.css">
+  <!-- Stylesheets -->
+  <!-- Bootstrap stylesheets -->
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+  />
+  <link
+    rel="stylesheet"
+    href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+  />
+  <!-- Personal stylesheets -->
+  <link rel="stylesheet" href="./style/addCourses.css" />
+  <link rel="stylesheet" href="./style/main.css" />
 </head>
 
-
 <body>
-    <div id="message-div"></div>
+  <div id="message-div"></div>
 
-    <div class="main-div">
-        <h1 class="title">Course Selection</h1>
-        <hr>
+  <div class="main-div">
+    <h1 class="title">Course Selection</h1>
+    <hr />
 
+    <div class="row">
+      <div id="main-course-col">
+        <!-- The main input -->
+        <div id="course-left-col-main">
+          <input
+            type="text"
+            placeholder="Enter subject and class ID"
+            class="form-control"
+            onkeyup="validateInput(event)"
+            id="user-course-input"
+          />
 
-        <div class="row">
-            <div id="main-course-col">
-                
-                <!-- The main input -->
-                <div id="course-left-col-main">
-                    <input type="text" placeholder="Enter subject and class ID" class="form-control" onkeyup="validateInput(event)" id="user-course-input" />
-
-                    <button class="btn btn-primary submit-input-button" onclick="handleSingleCourse()">&#x2192;</button>
-                </div>
-                <form action="results.html" method="get" onsubmit="setValues()" id="form-to-results">
-                    <!--  For some reason, JS doesn't parse the first paramater, so we add a dummy -->
-                    <input name="hidden" hidden />
-                    <input name="courses" id="submit-input-courses" hidden />
-
-
-                    <!-- Semester selector -->
-                    <select id="semester-selector" name="semester" class="custom-select">
-                        <option value="202210">Fall 2021</option>
-                        <option value="202160">Summer II 2021</option>
-                        <option value="202150">Summer Full 2021</option>
-                        <option value="202140">Summer I 2021</option>
-                        <option value="202130">Spring 2021</option>
-                        <option value="202110">Fall 2020</option>
-                        <option value="202040">Summer I 2020</option>
-                        <option value="202060">Summer II 2020</option>
-                        <option value="202050">Summer Full 2020</option>
-                    </select>
-                    <button class="btn btn-primary" style="margin-bottom: 2%">See Possible Schedules</button>
-                </form>
-
-                <hr>
-                <h3 style="text-align: center; cursor: pointer" onclick="toggleInstructions()">Instructions <span id="arrow">&#9660;</span></h3>
-                <div id="instructions">
-                    <ul>
-                        
-                        <li>To add a class, just type the subject and course ID</li>
-                        <ul>
-                            <li>For example, to add "CS 4550: Web Development", I would type "CS4550".</li>
-                        </ul>
-                        <li>Next, hit the "Enter" key or press the arrow button</li>
-                        <ul>
-                            <li>If we find a course matching your input, we'll add it!</li>
-                            <li>If the course has any corequisites, you'll see an option to add them</li>
-                        </ul>
-                        <li>Finally, select a semester and  hit "Submit"!</li>
-                    </ul>
-                </div>
-            </div>
-            <div id="side-course-col">
-                <h3>Courses Selected</h3>
-                <hr>
-            </div>
+          <button
+            class="btn btn-primary submit-input-button"
+            onclick="handleSingleCourse()"
+          >
+            &#x2192;
+          </button>
         </div>
+        <form
+          action="results.html"
+          method="get"
+          onsubmit="setValues()"
+          id="form-to-results"
+        >
+          <!--  For some reason, JS doesn't parse the first paramater, so we add a dummy -->
+          <input name="hidden" hidden />
+          <input name="courses" id="submit-input-courses" hidden />
 
-        <!-- Footer -->
-        <div class="footer">
-            <h2><img src="https://raw.githubusercontent.com/sandboxnu/searchneu/5f3d2c089ad1dfb9fe00f6f11ea991ab6a3b5112/frontend/components/images/boston.svg" width="80%"/></h2>
+          <!-- Semester selector -->
+          <select id="semester-selector" name="semester" class="custom-select">
+            <option value="202210">Fall 2021</option>
+            <option value="202160">Summer II 2021</option>
+            <option value="202150">Summer Full 2021</option>
+            <option value="202140">Summer I 2021</option>
+            <option value="202130">Spring 2021</option>
+            <option value="202110">Fall 2020</option>
+            <option value="202040">Summer I 2020</option>
+            <option value="202060">Summer II 2020</option>
+            <option value="202050">Summer Full 2020</option>
+          </select>
+          <button class="btn btn-primary" style="margin-bottom: 2%">
+            See Possible Schedules
+          </button>
+        </form>
+
+        <hr />
+        <h3
+          style="text-align: center; cursor: pointer"
+          onclick="toggleInstructions()"
+        >
+          Instructions <span id="arrow">&#9660;</span>
+        </h3>
+        <div id="instructions">
+          <ul>
+            <li>To add a class, just type the subject and course ID</li>
+            <ul>
+              <li>
+                For example, to add "CS 4550: Web Development", I would type
+                "CS4550".
+              </li>
+            </ul>
+            <li>Next, hit the "Enter" key or press the arrow button</li>
+            <ul>
+              <li>If we find a course matching your input, we'll add it!</li>
+              <li>
+                If the course has any corequisites, you'll see an option to add
+                them
+              </li>
+            </ul>
+            <li>Finally, select a semester and hit "Submit"!</li>
+          </ul>
         </div>
+      </div>
+      <div id="side-course-col">
+        <h3>Courses Selected</h3>
+        <hr />
+      </div>
     </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <h2>
+        <img
+          src="https://raw.githubusercontent.com/sandboxnu/searchneu/5f3d2c089ad1dfb9fe00f6f11ea991ab6a3b5112/frontend/components/images/boston.svg"
+          width="80%"
+        />
+      </h2>
+    </div>
+  </div>
 </body>
-
-
 
 <!-- Object Utils -->
 <script src="resources/js/utils/course.js"></script>

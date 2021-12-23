@@ -1,5 +1,5 @@
 component_depth: 4
 exclude:
-- /resources/js/test/lib/.*
-- /resources/js/handlers/.*\.js
-- /resources/js/utils/.*\.js
+  - /resources/js/test/lib/.*
+  - /resources/js/handlers/.*\.js
+  - /resources/js/utils/.*\.js

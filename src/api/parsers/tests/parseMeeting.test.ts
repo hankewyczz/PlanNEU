@@ -62,16 +62,12 @@ describe("parsing meeting times & checking overlap", () => {
 
     expect(BinaryMeetingTime.combine(cs3800_1, cs3000_2)).toBeTruthy();
     expect(BinaryMeetingTime.combine(cs3800_1, cs3000_3)).toBeTruthy();
-    expect(
-      BinaryMeetingTime.combine(cs3800_1, cs3800_2)
-    ).toBeTruthy();
+    expect(BinaryMeetingTime.combine(cs3800_1, cs3800_2)).toBeTruthy();
     expect(BinaryMeetingTime.combine(cs3800_1, cs4850)).toBeTruthy();
 
     expect(BinaryMeetingTime.combine(cs3800_2, cs3000_1)).toBeTruthy();
     expect(BinaryMeetingTime.combine(cs3800_2, cs3000_3)).toBeTruthy();
-    expect(
-      BinaryMeetingTime.combine(cs3800_2, cs3800_1)
-    ).toBeTruthy();
+    expect(BinaryMeetingTime.combine(cs3800_2, cs3800_1)).toBeTruthy();
   });
 
   test("Partial overlap", () => {
@@ -90,6 +86,8 @@ describe("parsing meeting times & checking overlap", () => {
   });
 
   test("Snapshot", () => {
-    expect(parseBackendMeetings(meetings.cs3000_4)).toMatchObject(meetings.cs3000_4_parsed)
-  })
+    expect(parseBackendMeetings(meetings.cs3000_4)).toMatchObject(
+      meetings.cs3000_4_parsed
+    );
+  });
 });

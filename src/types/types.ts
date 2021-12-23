@@ -1,4 +1,3 @@
-import { INTERVALS_IN_DAY } from "../utils/global";
 import { BinaryMeetingTime } from "./meetingTimes";
 
 export interface Course {
@@ -11,7 +10,22 @@ export interface Course {
 }
 
 // The same as a course, but with parsed sections
-export type ParsedCourse = Omit<Course, 'sections'> & Record<"sections", ParsedSection[]>;
+export type ParsedCourse = Omit<Course, "sections"> &
+  Record<"sections", ParsedSection[]>;
+
+export function isParsedCourse(course: any): course is ParsedCourse {
+  const props = ["termId", "subject", "classId", "name", "coreqs", "sections"];
+
+  if (!props.every((prop) => Object.prototype.hasOwnProperty.call(course, prop))) {
+    return false;
+  }
+
+  if (!course.sections.every((sec: any) => isParsedSection(sec))) {
+    return false;
+  }
+
+  return true;
+}
 
 export type Requisite = string | BooleanReq | CourseReq;
 
@@ -43,8 +57,35 @@ export interface Section {
 }
 
 // The same as a section, but with parsed meetings
-export type ParsedSection = Omit<Section, 'meetings'> & Record<"meetings", BinaryMeetingTime>;
+export type ParsedSection = Omit<Section, "meetings"> &
+  Record<"meetings", BinaryMeetingTime>;
 
+export function isParsedSection(section: any): section is ParsedSection {
+  const props = [
+    "classType",
+    "crn",
+    "seatsCapacity",
+    "seatsRemaining",
+    "waitCapacity",
+    "waitRemaining",
+    "lastUpdateTime",
+    "campus",
+    "honors",
+    "url",
+    "profs",
+    "meetings",
+  ];
+
+  if (!props.every((prop) => Object.prototype.hasOwnProperty.call(section, prop))) {
+    return false;
+  }
+
+  if (!(section.meetings instanceof BinaryMeetingTime)) {
+    return false;
+  }
+
+  return true;
+}
 
 // Used for generating combinations
 export interface MinimalSection {
@@ -62,7 +103,14 @@ export class PartialResult {
   }
 }
 
-export type Result = string[];
+// A list of CRNs of the sections
+export type CRNsResult = string[];
+
+export interface Results {
+  courses: ParsedCourse[];
+  sections: Record<string, ParsedSection>;
+  results: CRNsResult[];
+}
 
 export interface BackendMeeting {
   startDate: number; // Number of days since epoch
@@ -74,7 +122,15 @@ export interface BackendMeeting {
 
 // TODO - are there ever any Saturday/Sunday classes
 // We compare the meeting times n! times, so any reduction in problem space translates to very real optimiations
-export type MeetingDay = "0" | "1" | "2" | "3" | "4" | "5" | "6";
+export enum MeetingDay {
+  SUNDAY = "0",
+  MONDAY = "1",
+  TUESDAY = "2",
+  WEDNESDAY = "3",
+  THURSDAY = "4",
+  FRIDAY = "5",
+  SATURDAY = "6",
+}
 export type MeetingTimes = Partial<Record<MeetingDay, MeetingTime[]>>;
 
 // A single meeting time, ex: "9:50-11:30am"

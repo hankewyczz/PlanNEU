@@ -9,11 +9,8 @@ module.exports = {
   // The directory where Jest should output its coverage files
   coverageDirectory: "coverage",
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
-  testPathIgnorePatterns: [
-    "/node_modules/",
-    "/old/"
-  ],
+  testPathIgnorePatterns: ["/node_modules/", "/old/"],
   transform: {
-    '^.+\\.ts?$': 'ts-jest',
+    "^.+\\.ts?$": "ts-jest",
   },
 };

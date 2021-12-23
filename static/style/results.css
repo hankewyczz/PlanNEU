@@ -2,14 +2,12 @@
   box-sizing: border-box;
 }
 
-
 /* Main column */
 #filter-selection-col {
   flex: 20%;
   padding: 20px 20px;
-  background-color:#EDEDED;
+  background-color: #ededed;
 }
-
 
 /* Sidebar/right column */
 #side-course-col {
@@ -18,39 +16,37 @@
   margin: 0 2%;
 }
 
-
 .filter-input {
-	margin-bottom: 2%;
-	width: 80%;
-	margin-right: 1%;
+  margin-bottom: 2%;
+  width: 80%;
+  margin-right: 1%;
 }
 
 .submit-input-button {
-	height: calc(2.25rem + 2px);
-	width: calc(2.25rem + 2px);
-	padding: 0px;
-	font-size: 1.5em;
+  height: calc(2.25rem + 2px);
+  width: calc(2.25rem + 2px);
+  padding: 0px;
+  font-size: 1.5em;
 }
-
 
 /* Responsive layout - when the screen is less than 700px wide, make the two columns stack on top of each other instead of next to each other */
 @media screen and (max-width: 700px) {
-  .row, .navbar {   
+  .row,
+  .navbar {
     flex-direction: column;
   }
   #filter-selection-col {
-  	margin: 0 2%;
+    margin: 0 2%;
   }
 }
 
-
 .remove-course {
-	color: red;
-	cursor: pointer;
+  color: red;
+  cursor: pointer;
 }
 
 #form-to-results {
-	text-align: center;
+  text-align: center;
 }
 
 #course-result-header {
@@ -61,7 +57,7 @@
 }
 
 .course-result {
-  background-color: #EDEDED;
+  background-color: #ededed;
   margin: 20 0;
   padding: 20;
   border-radius: 10px;
@@ -70,4 +66,3 @@
 #sort-selector {
   margin-right: 2%;
 }
-
