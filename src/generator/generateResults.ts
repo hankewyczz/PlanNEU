@@ -13,12 +13,14 @@ import { MAX_COURSES, MAX_POSSIBILITIES, NUM_RESULTS } from "../utils/global";
 
 export function generateResults(
   courses: ParsedCourse[],
-  filter: Filter
+  course_filter: Filter
 ): Results {
   // Filter the sections, and remove any courses that are now empty lists
   const sections = courses
     .map((course) => course.sections)
-    .map((secs) => secs.filter(filter.checkSectionCompatibility))
+    .map((secs) =>
+      secs.filter((secs) => course_filter.checkSectionCompatibility(secs))
+    )
     .filter((course) => course.length > 0);
 
   // We limit the number of courses we generate results for, to prevent overloading the server
@@ -82,15 +84,10 @@ export function generateMinifiedCombinations(
   /**
    * Recursive inner function to create combinations.
    */
-  function combination(
+  function _combination(
     courseIndex = 0,
     output: PartialResult | null = null
   ): void {
-    // Check if we've already hit our quota
-    if (results.length >= NUM_RESULTS) {
-      return;
-    }
-
     // Iterate over every section in this inner array
     for (let i = 0; i < courses[courseIndex].length; i++) {
       const sec = courses[courseIndex][i];
@@ -116,17 +113,21 @@ export function generateMinifiedCombinations(
       }
 
       if (courseIndex === courses.length - 1) {
+        // Check if we've already hit our quota
+        if (results.length >= NUM_RESULTS) {
+          return;
+        }
         // We're at the end of a combination -- add it to the results array
         results.push(outputObj.crns);
       } else {
         // Otherwise, we increment the index and keep going
-        combination(courseIndex + 1, outputObj);
+        _combination(courseIndex + 1, outputObj);
       }
     }
   }
 
   // Create the combinations
-  combination();
+  _combination();
 
   return results;
 }

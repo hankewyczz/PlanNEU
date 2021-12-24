@@ -1,18 +1,27 @@
-import { minCourse } from "../../api/parsers/parseCourse";
-import { generateMinifiedCombinations } from "../generateResults";
+import {
+  minCourse,
+  minCourses,
+  parseCourses,
+} from "../../api/parsers/parseCourse";
+import {
+  generateMinifiedCombinations,
+  generateResults,
+} from "../generateResults";
 import courses from "../../api/parsers/tests/data/courses.data";
 import results from "./data/genResults.data";
-import { resultsEquality } from "../../utils/global";
+import { nestedArrayEquality, NUM_RESULTS } from "../../utils/global";
+import { FilterBuilder } from "../../filters/filter";
+import sections from "../../api/parsers/tests/data/sections.data";
 
 describe("Generating combinations", () => {
   test("Only one course", () => {
     // The results should return the same sections, since they won't be scheduled against anything else
-    resultsEquality(
+    nestedArrayEquality(
       generateMinifiedCombinations([minCourse(courses.cs3000_202210_parsed())]),
       results.cs3000_202210_only
     );
 
-    resultsEquality(
+    nestedArrayEquality(
       generateMinifiedCombinations([minCourse(courses.cs3800_202210_parsed())]),
       results.cs3800_202210_only
     );
@@ -20,7 +29,7 @@ describe("Generating combinations", () => {
 
   test("Two courses, partial overlap", () => {
     // CS3800 and CS3000
-    resultsEquality(
+    nestedArrayEquality(
       generateMinifiedCombinations([
         minCourse(courses.cs3000_202210_parsed()),
         minCourse(courses.cs3800_202210_parsed()),
@@ -68,30 +77,93 @@ describe("Generating combinations", () => {
       minCourse(courses.cs4850_202210_parsed()),
     ]);
 
-    resultsEquality(results_1, results.complex_example);
+    nestedArrayEquality(results_1, results.complex_example);
+  });
+
+  test("Limit number of results", () => {
+    const results_1 = generateMinifiedCombinations(
+      minCourses(
+        parseCourses([courses.honr1102_202210(), courses.thtr1170_202210()])
+      )
+    );
+
+    expect(results_1.length <= NUM_RESULTS).toBeTruthy();
   });
 });
 
-// test("Gen results", () => {
-//     const parsedCourses = parseCourses([
-//         data.cs2800_202210(),
-//         data.cs2801_202210(),
-//         data.cs3000_202210(),
-//         data.cs3001_202210(),
-//         data.cs3800_202210(),
-//         data.eece2323_202210(),
-//         data.eece2322_202210(),
-//         // data.phil1145_202210(),
-//         // data.honr1102_202210(),
-//         // data.thtr1170_202210(),
-//     ]);
-//     const minifiedCourses = minCourses(parsedCourses);
-//     console.log(
-//         `${minifiedCourses.reduce(
-//             (acc, cur) => acc * cur.length,
-//             1
-//         )} possibilities`
-//     );
-//     const results = generateCombinations(minifiedCourses);
-//     console.log(`${results.length} found`);
-// });
+describe("Testing complete result generation", () => {
+  test("Too many courses (but not too many combos)", () => {
+    const parsed_courses = parseCourses([
+      courses.cs2800_202210(),
+      courses.cs2800_202210(),
+      courses.cs2800_202210(),
+      courses.cs2800_202210(),
+      courses.cs2800_202210(),
+      courses.cs2800_202210(),
+      courses.cs2800_202210(),
+      courses.cs2800_202210(),
+      courses.cs2800_202210(),
+    ]);
+
+    expect(() => {
+      generateResults(parsed_courses, new FilterBuilder().build());
+    }).toThrow();
+  });
+
+  test("Too many combinations (but not too many courses)", () => {
+    const parsed_courses = parseCourses([
+      courses.cs3001_202210(),
+      courses.eece2323_202210(),
+      courses.eece2322_202210(),
+      courses.phil1145_202210(),
+      courses.honr1102_202210(),
+      courses.thtr1170_202210(),
+    ]);
+
+    expect(() => {
+      generateResults(parsed_courses, new FilterBuilder().build());
+    }).toThrow();
+  });
+
+  test("Make sure that section mapping is accurate", () => {
+    const parsed_courses = parseCourses([
+      courses.cs3800_202210(),
+      courses.cs3000_202210(),
+    ]);
+    const filter = new FilterBuilder().setStartTime(36_000).build();
+    const results = generateResults(parsed_courses, filter);
+
+    expect(Object.keys(results.sections).sort()).toEqual([
+      "10376",
+      "14087",
+      "15730",
+      "16453",
+    ]);
+    expect(results.sections["10376"]).toEqual(
+      sections.cs3800_202210_1_parsed()
+    );
+    expect(results.sections["14087"]).toEqual(
+      sections.cs3000_202210_1_parsed()
+    );
+    expect(results.sections["15730"]).toEqual(
+      sections.cs3000_202210_2_parsed()
+    );
+    expect(results.sections["16453"]).toEqual(
+      sections.cs3800_202210_2_parsed()
+    );
+  });
+
+  test("Make sure that courses result is accurate", () => {
+    const parsed_courses = parseCourses([
+      courses.cs3800_202210(),
+      courses.cs3000_202210(),
+    ]);
+    const filter = new FilterBuilder().setStartTime(36_000).build();
+    const results = generateResults(parsed_courses, filter);
+
+    // The courses should be COMPLETE, even though some sections were filtered out int he process
+    expect(results.courses.sort()).toEqual(
+      parseCourses([courses.cs3800_202210(), courses.cs3000_202210()]).sort()
+    );
+  });
+});

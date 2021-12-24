@@ -1,3 +1,4 @@
+import { isParsedSection } from "../../../types/types";
 import { minifySection, parseSection } from "../parseSection";
 import sections from "./data/sections.data";
 
@@ -227,5 +228,16 @@ describe("Parse sections", () => {
     expect(minifySection(sections.eece2322_202210_5_parsed())).toMatchObject(
       sections.eece2322_202210_5_minimal
     );
+  });
+
+  test("Type checks", () => {
+    expect(isParsedSection(sections.eece2322_202210_5_parsed())).toBeTruthy();
+    expect(isParsedSection(sections.cs2800_202210_2_parsed())).toBeTruthy();
+    expect(isParsedSection(sections.cs3001_202210_1_parsed())).toBeTruthy();
+
+    expect(isParsedSection(sections.eece2322_202210_5())).toBeFalsy();
+    expect(isParsedSection(sections.cs2800_202210_2())).toBeFalsy();
+    expect(isParsedSection(sections.cs3001_202210_1())).toBeFalsy();
+    expect(isParsedSection(sections.cs3001_202210_1_minimal)).toBeFalsy();
   });
 });

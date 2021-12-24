@@ -21,7 +21,7 @@ export class BinaryMeetingTime {
   startDate: number; // Number of days since epoch
   endDate: number;
   days: Set<MeetingDay>;
-  private times: string;
+  readonly times: string;
 
   // A BinaryMeetingTime which will never conflict with anything
   static EMPTY = new BinaryMeetingTime(
@@ -85,10 +85,6 @@ export class BinaryMeetingTime {
       combinedStr.join(""),
       union
     );
-  }
-
-  getTimes(): string {
-    return this.times;
   }
 
   /** Compares this BinaryMeetingTime to a single time string. Returns false if they overlap
