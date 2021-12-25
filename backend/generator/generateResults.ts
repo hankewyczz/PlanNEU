@@ -1,4 +1,4 @@
-import { minifySection } from "../api/parsers/parseSection";
+import { minifySection } from "../api_outgoing/parsers/parseSection";
 import { Filter } from "../filters/filter";
 import { BinaryMeetingTime } from "../types/meetingTimes";
 import {

@@ -6,10 +6,15 @@
     "build": "tsc",
     "test": "jest",
     "style": "yarn prettier --write . --ignore-path .gitignore",
-    "lint": "yarn eslint --ignore-path .gitignore --ext .js,.jsx,.ts,.tsx ."
+    "lint": "yarn eslint --ignore-path .gitignore --ext .js,.jsx,.ts,.tsx .",
+    "generate:graphql": "graphql-codegen -r dotenv/config --config codegen.yml"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
+    "@graphql-codegen/cli": "^2.3.0",
+    "@graphql-codegen/typescript": "^2.4.1",
+    "@graphql-codegen/typescript-graphql-request": "^4.3.2",
+    "@graphql-codegen/typescript-operations": "^2.2.1",
     "@types/jest": "^27.0.3",
     "@typescript-eslint/eslint-plugin": "^5.8.0",
     "@typescript-eslint/parser": "^5.8.0",
@@ -24,6 +29,9 @@
     "typescript": "^4.5.3"
   },
   "dependencies": {
+    "apollo-server": "^3.5.0",
+    "graphql": "^16.2.0",
+    "graphql-request": "^3.7.0",
     "jest": "^27.4.4",
     "ts-jest": "^27.1.1"
   },
