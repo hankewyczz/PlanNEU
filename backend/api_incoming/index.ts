@@ -16,7 +16,7 @@ const server = new ApolloServer({
     typeDefs: [baseQuery, parsedCourseTypeDef, resultTypeDef],
     resolvers,
 });
-server.listen(4000).then(({ url }) => {
+server.listen(4001).then(({ url }) => {
     console.log(`🚀  Server ready at ${url}`);
 });
 

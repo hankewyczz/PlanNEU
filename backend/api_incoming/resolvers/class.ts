@@ -8,12 +8,12 @@ async function hashToCourse(hash: string, termId: string): Promise<Course | null
     const course = isCourseHash(hash);
 
     if (course) {
-        return getCourse(course.subject, course.classId, termId);
+        return await getCourse(course.subject, course.classId, termId);
     }
     else {
         const section = isSectionHash(hash)
         if (section) {
-            return getSection(section.subject, section.classId, termId, section.crn);
+            return await getSection(section.subject, section.classId, termId, section.crn);
         }
     }
 

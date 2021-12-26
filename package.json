@@ -6,6 +6,7 @@
     "build": "tsc",
     "test": "jest",
     "dev": "nodemon backend/api_incoming/index.ts",
+    "dev:fullstack": "yarn dev & yarn --cwd /home/zachar/coding/Sandbox/course-catalog-api/ dev",
     "style": "yarn prettier --write . --ignore-path .gitignore",
     "lint": "yarn eslint --ignore-path .gitignore --ext .js,.jsx,.ts,.tsx .",
     "generate:graphql": "graphql-codegen --config codegen.yml"
