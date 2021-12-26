@@ -215,13 +215,13 @@ export type TermInfo = {
   text: Scalars["String"];
 };
 
-export type GetClassQueryVariables = Exact<{
+export type GetCourseQueryVariables = Exact<{
   subject: Scalars["String"];
   classId: Scalars["String"];
   termId: Scalars["String"];
 }>;
 
-export type GetClassQuery = {
+export type GetCourseQuery = {
   __typename?: "Query";
   class?:
     | {
@@ -257,8 +257,8 @@ export type GetClassQuery = {
     | undefined;
 };
 
-export const GetClassDocument = gql`
-  query getClass($subject: String!, $classId: String!, $termId: String!) {
+export const GetCourseDocument = gql`
+  query getCourse($subject: String!, $classId: String!, $termId: String!) {
     class(subject: $subject, classId: $classId) {
       occurrence(termId: $termId) {
         termId
@@ -297,17 +297,17 @@ export function getSdk(
   withWrapper: SdkFunctionWrapper = defaultWrapper
 ) {
   return {
-    getClass(
-      variables: GetClassQueryVariables,
+    getCourse(
+      variables: GetCourseQueryVariables,
       requestHeaders?: Dom.RequestInit["headers"]
-    ): Promise<GetClassQuery> {
+    ): Promise<GetCourseQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.request<GetClassQuery>(GetClassDocument, variables, {
+          client.request<GetCourseQuery>(GetCourseDocument, variables, {
             ...requestHeaders,
             ...wrappedRequestHeaders,
           }),
-        "getClass"
+        "getCourse"
       );
     },
   };

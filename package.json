@@ -5,9 +5,10 @@
   "scripts": {
     "build": "tsc",
     "test": "jest",
+    "dev": "nodemon backend/api_incoming/index.ts",
     "style": "yarn prettier --write . --ignore-path .gitignore",
     "lint": "yarn eslint --ignore-path .gitignore --ext .js,.jsx,.ts,.tsx .",
-    "generate:graphql": "graphql-codegen -r dotenv/config --config codegen.yml"
+    "generate:graphql": "graphql-codegen --config codegen.yml"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
@@ -33,7 +34,9 @@
     "graphql": "^16.2.0",
     "graphql-request": "^3.7.0",
     "jest": "^27.4.4",
-    "ts-jest": "^27.1.1"
+    "nodemon": "^2.0.15",
+    "ts-jest": "^27.1.1",
+    "ts-node": "^10.4.0"
   },
   "husky": {
     "hooks": {

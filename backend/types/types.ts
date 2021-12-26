@@ -1,5 +1,62 @@
 import { BinaryMeetingTime } from "./meetingTimes";
 
+export type CourseHash = {
+  subject: string;
+  classId: string;
+};
+export type SectionHash = {
+  subject: string;
+  classId: string;
+  crn: string;
+}
+
+
+function validSubjectAndId(subject: string, classId: string): boolean {
+  return (/^[a-zA-Z]*$/.test(subject) && /^[0-9]{4}$/.test(classId))
+}
+
+export function isCourseHash(str: string): false | CourseHash {
+  const parts = str.split("/");
+  
+  if (parts.length !== 2) {
+    return false
+  }
+
+  if (!validSubjectAndId(parts[0], parts[1])) {
+    return false
+  }
+
+  return {
+    subject: parts[0],
+    classId: parts[1]
+  }
+}
+
+
+export function isSectionHash(str: string): false | SectionHash {
+  const parts = str.split("/");
+  
+  if (parts.length !== 3) {
+    return false
+  }
+
+  if (!validSubjectAndId(parts[0], parts[1])) {
+    return false
+  }
+
+  if (!/^[0-9]*$/.test(parts[2])) {
+    return false;
+  }
+
+  return {
+    subject: parts[0],
+    classId: parts[1],
+    crn: parts[2]
+  }
+
+}
+
+
 export interface Course {
   termId: string;
   subject: string;
@@ -111,8 +168,8 @@ export class PartialResult {
 export type CRNsResult = string[];
 
 export interface Results {
-  courses: ParsedCourse[];
-  sections: Record<string, ParsedSection>;
+  courses: Course[];
+  sections: Record<string, Section>;
   results: CRNsResult[];
 }
 

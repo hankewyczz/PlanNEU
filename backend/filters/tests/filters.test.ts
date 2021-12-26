@@ -5,7 +5,7 @@ import {
   INTERVAL_LENGTH,
   SECONDS_IN_DAY,
 } from "../../utils/global";
-import sections from "../../api/parsers/tests/data/sections.data";
+import sections from "../../api_outgoing/parsers/tests/data/sections.data";
 import { FilterBuilder } from "../filter";
 
 describe("Test start time filter", () => {

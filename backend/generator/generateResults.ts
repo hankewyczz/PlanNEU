@@ -1,3 +1,4 @@
+import { parseCourses } from "../api_outgoing/parsers/parseCourse";
 import { minifySection } from "../api_outgoing/parsers/parseSection";
 import { Filter } from "../filters/filter";
 import { BinaryMeetingTime } from "../types/meetingTimes";
@@ -5,18 +6,18 @@ import {
   PartialResult,
   MinimalSection,
   CRNsResult,
-  ParsedCourse,
-  ParsedSection,
   Results,
+  Course,
+  Section,
 } from "../types/types";
 import { MAX_COURSES, MAX_POSSIBILITIES, NUM_RESULTS } from "../utils/global";
 
 export function generateResults(
-  courses: ParsedCourse[],
+  courses: Course[],
   course_filter: Filter
 ): Results {
   // Filter the sections, and remove any courses that are now empty lists
-  const sections = courses
+  const sections = parseCourses(courses)
     .map((course) => course.sections)
     .map((secs) =>
       secs.filter((secs) => course_filter.checkSectionCompatibility(secs))
@@ -29,9 +30,17 @@ export function generateResults(
       `A max of ${MAX_COURSES} courses are allowed; please remove some courses and try again.`
     );
   }
+  else if (sections.length === 0) {
+    return {
+      results: [],
+      sections: {},
+      courses: [],
+    }
+  }
 
   // Check if we exceed the max possible combinations
   const num_combinations = sections.reduce((acc, cur) => acc * cur.length, 1);
+  console.log(num_combinations)
 
   if (num_combinations > MAX_POSSIBILITIES) {
     throw Error(`Too many possible combinations (over ${MAX_POSSIBILITIES.toLocaleString()}).
@@ -46,9 +55,9 @@ export function generateResults(
   const results = generateMinifiedCombinations(minimized_sections);
 
   // Create a CRN -> ParsedSection mapping
-  const section_mapping: Record<string, ParsedSection> = {};
-  sections.forEach((secs) =>
-    secs.forEach((sec) => (section_mapping[sec.crn] = sec))
+  const unparsed_sections = courses.map(c => c.sections).flat();
+  const section_mapping: Record<string, Section> = {};
+  unparsed_sections.forEach(sec => (section_mapping[sec.crn] = sec)
   );
 
   return {

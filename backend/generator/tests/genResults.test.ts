@@ -2,16 +2,16 @@ import {
   minCourse,
   minCourses,
   parseCourses,
-} from "../../api/parsers/parseCourse";
+} from "../../api_outgoing/parsers/parseCourse";
 import {
   generateMinifiedCombinations,
   generateResults,
 } from "../generateResults";
-import courses from "../../api/parsers/tests/data/courses.data";
+import courses from "../../api_outgoing/parsers/tests/data/courses.data";
 import results from "./data/genResults.data";
 import { nestedArrayEquality, NUM_RESULTS } from "../../utils/global";
 import { FilterBuilder } from "../../filters/filter";
-import sections from "../../api/parsers/tests/data/sections.data";
+import sections from "../../api_outgoing/parsers/tests/data/sections.data";
 
 describe("Generating combinations", () => {
   test("Only one course", () => {
@@ -93,7 +93,7 @@ describe("Generating combinations", () => {
 
 describe("Testing complete result generation", () => {
   test("Too many courses (but not too many combos)", () => {
-    const parsed_courses = parseCourses([
+    const course_list = [
       courses.cs2800_202210(),
       courses.cs2800_202210(),
       courses.cs2800_202210(),
@@ -103,35 +103,35 @@ describe("Testing complete result generation", () => {
       courses.cs2800_202210(),
       courses.cs2800_202210(),
       courses.cs2800_202210(),
-    ]);
+    ];
 
     expect(() => {
-      generateResults(parsed_courses, new FilterBuilder().build());
+      generateResults(course_list, new FilterBuilder().build());
     }).toThrow();
   });
 
   test("Too many combinations (but not too many courses)", () => {
-    const parsed_courses = parseCourses([
+    const course_list = [
       courses.cs3001_202210(),
       courses.eece2323_202210(),
       courses.eece2322_202210(),
       courses.phil1145_202210(),
       courses.honr1102_202210(),
       courses.thtr1170_202210(),
-    ]);
+    ];
 
     expect(() => {
-      generateResults(parsed_courses, new FilterBuilder().build());
+      generateResults(course_list, new FilterBuilder().build());
     }).toThrow();
   });
 
   test("Make sure that section mapping is accurate", () => {
-    const parsed_courses = parseCourses([
+    const course_list = [
       courses.cs3800_202210(),
       courses.cs3000_202210(),
-    ]);
+    ];
     const filter = new FilterBuilder().setStartTime(36_000).build();
-    const results = generateResults(parsed_courses, filter);
+    const results = generateResults(course_list, filter);
 
     expect(Object.keys(results.sections).sort()).toEqual([
       "10376",
@@ -154,12 +154,12 @@ describe("Testing complete result generation", () => {
   });
 
   test("Make sure that courses result is accurate", () => {
-    const parsed_courses = parseCourses([
+    const course_list = [
       courses.cs3800_202210(),
       courses.cs3000_202210(),
-    ]);
+    ];
     const filter = new FilterBuilder().setStartTime(36_000).build();
-    const results = generateResults(parsed_courses, filter);
+    const results = generateResults(course_list, filter);
 
     // The courses should be COMPLETE, even though some sections were filtered out int he process
     expect(results.courses.sort()).toEqual(

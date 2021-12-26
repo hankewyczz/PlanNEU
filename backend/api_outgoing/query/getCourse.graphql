@@ -1,4 +1,4 @@
-query getClass($subject: String!, $classId: String!, $termId: String!) {
+query getCourse($subject: String!, $classId: String!, $termId: String!) {
 	class(subject: $subject, classId: $classId) {
     occurrence(termId: $termId) {
       termId
