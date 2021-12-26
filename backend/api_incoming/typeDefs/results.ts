@@ -12,10 +12,15 @@ const typeDef = gql`
             filterMinSeatsLeft: Int
             filterMinHonors: Int): Results
     }
+    type Stats {
+        time: Int!
+        numCombinations: Int!
+    }
     type Results {
         results: [[String]]!
         sections: JSON
         courses: [Course]!
+        stats: Stats
     }
 `;
 

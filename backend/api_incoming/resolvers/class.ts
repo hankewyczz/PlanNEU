@@ -31,7 +31,7 @@ const getResults = async (
     filterMinSeatsLeft: number | null,
     filterMinHonors: number | null
 ) => {
-    
+    const start = new Date();
     const filter = new FilterBuilder()
         .setStartTime(filterStartTime)
         .setEndTime(filterEndTime)
@@ -41,13 +41,14 @@ const getResults = async (
         .setMinHonorsCourses(filterMinHonors)
         .build();
 
-    const start = new Date();
+    
     const course_objs: (Course | null)[] = await Promise.all(courses.map(hash => hashToCourse(hash, termId)));
 
-    console.log((new Date().getTime() - start.getTime()) / 1000)
 
     const filtered_courses = course_objs.filter(c => c !== null && c !== undefined) as Course[];    
-    return generateResults(filtered_courses, filter);
+    const results = generateResults(filtered_courses, filter);
+    results.stats.time = new Date().getTime() - start.getTime();
+    return results;
 };
 
 const resolvers = {

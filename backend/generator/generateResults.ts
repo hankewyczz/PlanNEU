@@ -16,7 +16,6 @@ export function generateResults(
     courses: Course[],
     course_filter: Filter
 ): Results {
-
     // Create a CRN -> unparsed section mapping (do this first, since the sections will be mutated)
     const unparsed_sections = courses
         .map((c) => JSON.parse(JSON.stringify(c.sections))) // Sections are composed of primative types, so this is an OK way to clone
@@ -42,12 +41,15 @@ export function generateResults(
             results: [],
             sections: {},
             courses: [],
+            stats: {
+                numCombinations: 0,
+                time: 0,
+            },
         };
     }
 
     // Check if we exceed the max possible combinations
     const num_combinations = sections.reduce((acc, cur) => acc * cur.length, 1);
-    console.log(num_combinations);
 
     if (num_combinations > MAX_POSSIBILITIES) {
         throw Error(`Too many possible combinations (over ${MAX_POSSIBILITIES.toLocaleString()}).
@@ -65,6 +67,10 @@ export function generateResults(
         results: results,
         sections: section_mapping,
         courses: courses,
+        stats: {
+            numCombinations: num_combinations,
+            time: 0, // will be overridden
+        },
     };
 }
 

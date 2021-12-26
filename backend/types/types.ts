@@ -167,10 +167,16 @@ export class PartialResult {
 // A list of CRNs of the sections
 export type CRNsResult = string[];
 
+export interface ResultStats {
+  numCombinations: number;
+  time: number;
+}
+
 export interface Results {
   courses: Course[];
   sections: Record<string, Section>;
   results: CRNsResult[];
+  stats: ResultStats;
 }
 
 export interface BackendMeeting {
