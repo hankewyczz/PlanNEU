@@ -1,7 +1,7 @@
 overwrite: true
 schema: https://api.searchneu.com
 documents:
-  - 'backend/api_outgoing/query/*.graphql'
+  - 'api_outgoing/query/*.graphql'
 generates:
   generated/graphql.ts:
     plugins:

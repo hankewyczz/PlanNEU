@@ -2,15 +2,38 @@ import { gql } from "apollo-server";
 
 const typeDef = gql`
     extend type Query {
-        generateResults(
+        generateSchedule(
             courses: [String]!
             termId: String!
-            filterStartTime: Int
-            filterEndTime: Int
+            filterStartTime: String
+            filterEndTime: String
             filterDaysFree: [String]!
-            filterMinNumDaysFree: Int
-            filterMinSeatsLeft: Int
-            filterMinHonors: Int): Results
+            filterMinNumDaysFree: String
+            filterMinSeatsLeft: String
+            filterMinHonors: String): Results
+    }
+    type Course {
+        name: String!
+        subject: String!
+        classId: String!
+        termId: String!
+        coreqs: JSON
+        sections: [ParsedSection!]!
+    }
+
+    type ParsedSection {
+        classType: String!
+        crn: String!
+        seatsCapacity: Int!
+        seatsRemaining: Int!
+        waitCapacity: Int!
+        waitRemaining: Int!
+        lastUpdateTime: Float
+        campus: String!
+        honors: Boolean!
+        url: String!
+        profs: [String!]!
+        meetings: JSON
     }
     type Stats {
         time: Int!

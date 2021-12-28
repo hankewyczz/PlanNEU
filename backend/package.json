@@ -5,8 +5,8 @@
   "scripts": {
     "build": "tsc",
     "test": "jest",
-    "dev": "nodemon backend/api_incoming/index.ts",
-    "dev:api": "yarn backend:dev & yarn --cwd /home/zachar/coding/Sandbox/course-catalog-api/ dev",
+    "dev": "nodemon api_incoming/index.ts",
+    "dev:api": "yarn dev & yarn --cwd /home/zachar/coding/Sandbox/course-catalog-api/ dev",
     "dev:frontend": "yarn --cwd ./frontend dev",
     "style": "yarn prettier --write . --ignore-path .gitignore",
     "lint": "yarn eslint --ignore-path .gitignore --ext .js,.jsx,.ts,.tsx .",
@@ -36,7 +36,6 @@
     "graphql": "^16.2.0",
     "graphql-request": "^3.7.0",
     "jest": "^27.4.4",
-    "next": "^12.0.7",
     "nodemon": "^2.0.15",
     "ts-jest": "^27.1.1",
     "ts-node": "^10.4.0"

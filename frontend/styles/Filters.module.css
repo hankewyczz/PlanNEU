@@ -1,0 +1,9 @@
+#filters-parent {
+    width: 30%;
+    padding: 2%;
+    background-color: #ddd;
+}
+
+#filters-parent div {
+    padding: 2% 0;
+}

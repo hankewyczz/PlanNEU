@@ -20,7 +20,7 @@ export class FilterBuilder {
     }
 
     setStartTime(start: number | null): FilterBuilder {
-        if (start !== null) {
+        if (start !== null && start >= 0 && start <= SECONDS_IN_DAY) {
             this._start_time = start;
         }
 
@@ -28,7 +28,7 @@ export class FilterBuilder {
     }
 
     setEndTime(end: number | null): FilterBuilder {
-        if (end !== null) {
+        if (end !== null && end >= 0 && end <= SECONDS_IN_DAY) {
             this._end_time = end;
         }
         return this;
@@ -40,21 +40,22 @@ export class FilterBuilder {
     }
 
     setMinDaysFree(num_days_free: number | null): FilterBuilder {
-        if (num_days_free !== null) {
+        if (num_days_free !== null && num_days_free >= 0) {
             this._min_num_days_free = num_days_free;
         }
         return this;
     }
 
     setSeatsLeft(seats_left: number | null): FilterBuilder {
-        if (seats_left !== null) {
+        if (seats_left !== null && seats_left >= 0) {
             this._min_seats_left = seats_left;
         }
         return this;
     }
 
     setMinHonorsCourses(min_honors_courses: number | null): FilterBuilder {
-        if (min_honors_courses !== null) {
+        // We might want to allow a '-1', to signify NO honors courses allowed
+        if (min_honors_courses !== null && min_honors_courses >= 0) {
             this._min_honors_courses = min_honors_courses;
         }
         return this;
@@ -76,7 +77,7 @@ export class Filter {
     // Latest end time
     readonly end_time: number;
     // The record of which days are free and which aren't
-    readonly days_free: MeetingDay[];
+    readonly days_free: Set<MeetingDay>;
     // The number of days free we want (doesn't matter which ones)
     readonly min_num_days_free: number;
     // The MINIMUM number of seats free we want
@@ -92,7 +93,7 @@ export class Filter {
         // So, we adjust the bounds by 1, so they get the behavior they ACTUALLY wanted
         this.start_time = builder._start_time - 1;
         this.end_time = builder._end_time + 1;
-        this.days_free = builder._days_free;
+        this.days_free = new Set(builder._days_free);
         this.min_num_days_free = builder._min_num_days_free;
         this.min_seats_left = builder._min_seats_left;
         this.min_honors_courses = builder._min_honors_courses;
@@ -104,7 +105,7 @@ export class Filter {
 
         for (const day of Object.values(MeetingDay)) {
             // Handle the case where the entire day is blocked off
-            if (this.days_free.includes(day)) {
+            if (this.days_free.has(day)) {
                 time_string.push(new Array(INTERVALS_IN_DAY).fill(1).join(""));
                 continue;
             }

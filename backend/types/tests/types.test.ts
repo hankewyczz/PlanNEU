@@ -20,6 +20,8 @@ describe("Check hash type guards", () => {
         expect(isSectionHash("CS2500")).toBeFalsy();
         expect(isSectionHash("cs/2500123456")).toBeFalsy();
         expect(isSectionHash("CS/2500")).toBeFalsy();
+        expect(isSectionHash("CS/abc/123")).toBeFalsy();
+        expect(isSectionHash("CS/2800/abc123")).toBeFalsy();
         expect(isSectionHash("ENGQ/2500")).toBeFalsy();
         expect(isSectionHash("subject/2500")).toBeFalsy();
         expect(isSectionHash("CS/1234")).toBeFalsy();

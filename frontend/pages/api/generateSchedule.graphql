@@ -1,0 +1,35 @@
+query generateSchedule(
+    $courses: [String]!
+    $termId: String!
+    $filterDaysFree: [String]!
+    $filterStartTime: String
+    $filterEndTime: String
+    $filterMinNumDaysFree: String
+    $filterMinSeatsLeft: String
+    $filterMinHonors: String
+) {
+    generateSchedule(
+        courses: $courses
+        termId: $termId
+        filterStartTime: $filterStartTime
+        filterEndTime: $filterEndTime
+        filterDaysFree: $filterDaysFree
+        filterMinNumDaysFree: $filterMinNumDaysFree
+        filterMinSeatsLeft: $filterMinSeatsLeft
+        filterMinHonors: $filterMinHonors
+    ) {
+        results
+        sections
+        courses {
+            name
+            subject
+            termId
+            classId
+            coreqs
+        }
+        stats {
+            time
+            numCombinations
+        }
+    }
+}
