@@ -1,7 +1,6 @@
 import { ApolloServer, gql } from "apollo-server";
 import resolvers from "./resolvers/class";
 import resultTypeDef from "./typeDefs/results";
-import parsedCourseTypeDef from "./typeDefs/parsedCourse";
 
 const baseQuery = gql`
     scalar JSON
@@ -13,7 +12,7 @@ const baseQuery = gql`
 `;
 
 const server = new ApolloServer({
-    typeDefs: [baseQuery, parsedCourseTypeDef, resultTypeDef],
+    typeDefs: [baseQuery, resultTypeDef],
     resolvers,
 });
 server.listen(4001).then(({ url }) => {

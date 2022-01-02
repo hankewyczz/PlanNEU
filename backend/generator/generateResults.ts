@@ -9,6 +9,8 @@ import {
     Results,
     Course,
     Section,
+    SectionWithCourse,
+    ParsedSection,
 } from "../types/types";
 import { MAX_COURSES, MAX_POSSIBILITIES, NUM_RESULTS } from "../utils/global";
 
@@ -18,18 +20,23 @@ export function generateResults(
 ): Results {
     // Create a CRN -> unparsed section mapping (do this first, since the sections will be mutated)
     const unparsed_sections = courses
-        .map((c) => JSON.parse(JSON.stringify(c.sections))) // Sections are composed of primative types, so this is an OK way to clone
+        .map((c) => {
+            const sections: Partial<SectionWithCourse>[] = JSON.parse(
+                JSON.stringify(c.sections)
+            );
+            sections.forEach(
+                (sec) => (sec["classId"] = `${c.subject}${c.classId}`)
+            );
+            return sections as SectionWithCourse[];
+        }) // Sections are composed of primative types, so this is an OK way to clone
         .flat();
-    const section_mapping: Record<string, Section> = {};
-    unparsed_sections.forEach((sec) => (section_mapping[sec.crn] = sec));
 
     // Filter the sections, and remove any courses that are now empty lists
     const sections = parseCourses(courses)
         .map((course) => course.sections)
         .map((secs) =>
             secs.filter((secs) => course_filter.checkSectionCompatibility(secs))
-        )
-        .filter((course) => course.length > 0);
+        );
 
     // We limit the number of courses we generate results for, to prevent overloading the server
     if (sections.length > MAX_COURSES) {
@@ -39,7 +46,7 @@ export function generateResults(
     } else if (sections.length === 0) {
         return {
             results: [],
-            sections: {},
+            sections: [],
             courses: [],
             stats: {
                 numCombinations: 0,
@@ -63,9 +70,21 @@ export function generateResults(
 
     const results = generateMinifiedCombinations(minimized_sections);
 
+    // Filter the results
+    const section_mapping: Record<string, ParsedSection> = {};
+    sections.forEach((secs) =>
+        secs.forEach((sec) => {
+            section_mapping[sec.crn] = sec;
+        })
+    );
+    const filtered_results = results.filter((crns) => {
+        const sections_result = crns.map((crn) => section_mapping[crn]);
+        return course_filter.checkCompatibility(sections_result);
+    });
+
     return {
-        results: results,
-        sections: section_mapping,
+        results: filtered_results,
+        sections: unparsed_sections,
         courses: courses,
         stats: {
             numCombinations: num_combinations,

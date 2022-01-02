@@ -7,21 +7,21 @@ import {
     isCourseHash,
     isSectionHash,
     MeetingDay,
-    MeetingTime,
 } from "../../types/types";
 
 async function hashToCourse(
     hash: string,
     termId: string
-): Promise<Course | null> {
+): Promise<Course | never> {
     const course = isCourseHash(hash);
+    let result: Course | null = null;
 
     if (course) {
-        return await getCourse(course.subject, course.classId, termId);
+        result = await getCourse(course.subject, course.classId, termId);
     } else {
         const section = isSectionHash(hash);
         if (section) {
-            return await getSection(
+            result = await getSection(
                 section.subject,
                 section.classId,
                 termId,
@@ -30,7 +30,11 @@ async function hashToCourse(
         }
     }
 
-    return null;
+    if (result === null) {
+        throw Error(`We couldn't find a course/section matching "${hash}" for termId "${termId}"`)
+    }
+
+    return result
 }
 
 // Returns time in seconds
@@ -103,14 +107,19 @@ const getResults = async (
         .setMinHonorsCourses(parseIntNull(filterMinHonors))
         .build();
 
-    const course_objs: (Course | null)[] = await Promise.all(
-        courses.map((hash) => hashToCourse(hash, termId))
+    const course_objs = await Promise.all(
+        courses.map((hash) => {
+            // Propagate the error
+            try {
+                return hashToCourse(hash, termId)
+            }
+            catch (err) {
+                throw err
+            } 
+        })
     );
 
-    const filtered_courses = course_objs.filter(
-        (c) => c !== null && c !== undefined
-    ) as Course[];
-    const results = generateResults(filtered_courses, filter);
+    const results = generateResults(course_objs, filter);
     results.stats.time = new Date().getTime() - start.getTime();
     return results;
 }; 

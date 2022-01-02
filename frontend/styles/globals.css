@@ -3,6 +3,7 @@
 
 html,
 body {
+  height: 100%;
   padding: 0;
   margin: 0;
   font-family: Lato, sans-serif, Segoe UI, Roboto, Helvetica Neue, sans-serif;
@@ -17,8 +18,28 @@ a {
   box-sizing: border-box;
 }
 
-#filters-parent {
-  width: 30%;
-  padding: 2% 5% 2% 2%;
-  background-color: #ddd;
+.column-container {
+  display: flex;
+  flex-wrap: wrap;
+  text-align: center;
+  height: 100%;
+  align-items: stretch;
+}
+
+.column-left {
+  background-color: #F6F6F6;
+  padding: 10px;
+  flex: 30%;
+}
+
+.column-right {
+  padding: 10px;
+  flex: 70%;
+}
+
+/* Responsive layout - makes a one column-layout instead of a two-column layout */
+@media (max-width: 1000px) {
+  .column-right, .column-left {
+    flex: 100%;
+  }
 }

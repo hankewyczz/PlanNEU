@@ -28,25 +28,8 @@ export type Course = {
   classId: Scalars["String"];
   coreqs?: Maybe<Scalars["JSON"]>;
   name: Scalars["String"];
-  sections: Array<ParsedSection>;
   subject: Scalars["String"];
   termId: Scalars["String"];
-};
-
-export type ParsedSection = {
-  __typename?: "ParsedSection";
-  campus: Scalars["String"];
-  classType: Scalars["String"];
-  crn: Scalars["String"];
-  honors: Scalars["Boolean"];
-  lastUpdateTime?: Maybe<Scalars["Float"]>;
-  meetings?: Maybe<Scalars["JSON"]>;
-  profs: Array<Scalars["String"]>;
-  seatsCapacity: Scalars["Int"];
-  seatsRemaining: Scalars["Int"];
-  url: Scalars["String"];
-  waitCapacity: Scalars["Int"];
-  waitRemaining: Scalars["Int"];
 };
 
 export type Query = {
@@ -68,10 +51,27 @@ export type QueryGenerateScheduleArgs = {
 
 export type Results = {
   __typename?: "Results";
-  courses: Array<Maybe<Course>>;
+  courses: Array<Course>;
   results: Array<Maybe<Array<Maybe<Scalars["String"]>>>>;
-  sections?: Maybe<Scalars["JSON"]>;
-  stats?: Maybe<Stats>;
+  sections: Array<Section>;
+  stats: Stats;
+};
+
+export type Section = {
+  __typename?: "Section";
+  campus: Scalars["String"];
+  classId: Scalars["String"];
+  classType: Scalars["String"];
+  crn: Scalars["String"];
+  honors: Scalars["Boolean"];
+  lastUpdateTime?: Maybe<Scalars["Float"]>;
+  meetings: Scalars["JSON"];
+  profs: Array<Scalars["String"]>;
+  seatsCapacity: Scalars["Int"];
+  seatsRemaining: Scalars["Int"];
+  url: Scalars["String"];
+  waitCapacity: Scalars["Int"];
+  waitRemaining: Scalars["Int"];
 };
 
 export type Stats = {
@@ -99,23 +99,31 @@ export type GenerateScheduleQuery = {
     | {
         __typename?: "Results";
         results: Array<Array<string | null | undefined> | null | undefined>;
-        sections?: any | null | undefined;
-        courses: Array<
-          | {
-              __typename?: "Course";
-              name: string;
-              subject: string;
-              termId: string;
-              classId: string;
-              coreqs?: any | null | undefined;
-            }
-          | null
-          | undefined
-        >;
-        stats?:
-          | { __typename?: "Stats"; time: number; numCombinations: number }
-          | null
-          | undefined;
+        sections: Array<{
+          __typename?: "Section";
+          classId: string;
+          classType: string;
+          crn: string;
+          seatsCapacity: number;
+          seatsRemaining: number;
+          waitCapacity: number;
+          waitRemaining: number;
+          lastUpdateTime?: number | null | undefined;
+          campus: string;
+          honors: boolean;
+          url: string;
+          profs: Array<string>;
+          meetings: any;
+        }>;
+        courses: Array<{
+          __typename?: "Course";
+          name: string;
+          subject: string;
+          termId: string;
+          classId: string;
+          coreqs?: any | null | undefined;
+        }>;
+        stats: { __typename?: "Stats"; time: number; numCombinations: number };
       }
     | null
     | undefined;
@@ -143,7 +151,21 @@ export const GenerateScheduleDocument = gql`
       filterMinHonors: $filterMinHonors
     ) {
       results
-      sections
+      sections {
+        classId
+        classType
+        crn
+        seatsCapacity
+        seatsRemaining
+        waitCapacity
+        waitRemaining
+        lastUpdateTime
+        campus
+        honors
+        url
+        profs
+        meetings
+      }
       courses {
         name
         subject

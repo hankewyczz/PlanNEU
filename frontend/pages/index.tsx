@@ -1,11 +1,18 @@
-import type { NextPage } from 'next'
-import Filters from '../components/Filters'
-import '../styles/Home.module.css'
+import type { NextPage } from "next";
+import Filters from "../components/Filters";
+import Results from "../components/Results";
 
 const Home: NextPage = () => {
-  return (
-<Filters />
-  )
-}
+    return (
+        <div className="column-container">
+            <div className="column-left">
+                <Filters />
+            </div>
+            <div className="column-right">
+                <Results />
+            </div>
+        </div>
+    );
+};
 
-export default Home
+export default Home;

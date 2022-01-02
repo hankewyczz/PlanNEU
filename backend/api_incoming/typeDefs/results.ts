@@ -18,10 +18,10 @@ const typeDef = gql`
         classId: String!
         termId: String!
         coreqs: JSON
-        sections: [ParsedSection!]!
     }
 
-    type ParsedSection {
+    type Section {
+        classId: String!
         classType: String!
         crn: String!
         seatsCapacity: Int!
@@ -33,7 +33,7 @@ const typeDef = gql`
         honors: Boolean!
         url: String!
         profs: [String!]!
-        meetings: JSON
+        meetings: JSON!
     }
     type Stats {
         time: Int!
@@ -41,9 +41,9 @@ const typeDef = gql`
     }
     type Results {
         results: [[String]]!
-        sections: JSON
-        courses: [Course]!
-        stats: Stats
+        sections: [Section!]!
+        courses: [Course!]!
+        stats: Stats!
     }
 `;
 

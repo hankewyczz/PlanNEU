@@ -66,8 +66,10 @@ export interface Course {
   sections: Section[];
 }
 
+export type CourseWithoutSections = Omit<Course, "sections">
+
 // The same as a course, but with parsed sections
-export type ParsedCourse = Omit<Course, "sections"> &
+export type ParsedCourse =  CourseWithoutSections &
   Record<"sections", ParsedSection[]>;
 
 export function isParsedCourse(course: any): course is ParsedCourse {
@@ -113,6 +115,10 @@ export interface Section {
   url: string;
   profs: string[];
   meetings: BackendMeeting[];
+}
+
+export interface SectionWithCourse extends Section {
+  classId: string;
 }
 
 // The same as a section, but with parsed meetings
@@ -173,8 +179,8 @@ export interface ResultStats {
 }
 
 export interface Results {
-  courses: Course[];
-  sections: Record<string, Section>;
+  courses: CourseWithoutSections[];
+  sections: SectionWithCourse[];
   results: CRNsResult[];
   stats: ResultStats;
 }

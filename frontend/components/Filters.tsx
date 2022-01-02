@@ -1,15 +1,40 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
+import { useState, useEffect } from "react";
 
-const Filters: NextPage = () => {
+
+
+// Without this, React complains that it doesn't know if this is a controlled input or not
+const HiddenInput = (query: string) => {
     const router = useRouter();
-    console.log(router.query);
-    console.log(router.query.class)
+    const [value, setValue] = useState("");
+
+    useEffect(() => {
+        setValue(router.query[query] as string);
+    }, [router.query[query]]);
 
     return (
+        <input
+            type="hidden"
+            name={query}
+            readOnly
+            value={value}
+            onChange={(e) => {}}
+        />
+    );
+};
+const Filters: NextPage = () => {
+    const router = useRouter();
+    const dayChecked = (day: string) => {
+        return (
+            router.query["specific-days-free"] !== undefined &&
+            router.query["specific-days-free"].includes(day)
+        );
+    };
+    return (
         <form id="filters-parent">
-            <input type="hidden" name="courses" readOnly value={router.query["courses"]} /> 
-            <input type="hidden" name="term-id" readOnly value={router.query["term-id"]} /> 
+            {HiddenInput("courses")}
+            {HiddenInput("term-id")}
             <div className="form-group row">
                 <label
                     htmlFor="min-seats-left"
@@ -24,6 +49,7 @@ const Filters: NextPage = () => {
                         type="number"
                         min="0"
                         placeholder="0"
+                        defaultValue={router.query["min-seats-left"]}
                         className="form-control"
                         aria-describedby="min-seats-leftHelpBlock"
                     />
@@ -46,7 +72,7 @@ const Filters: NextPage = () => {
                         id="start-time"
                         name="start-time"
                         type="time"
-                        defaultValue="00:01"
+                        defaultValue={router.query["start-time"] || "01:00"}
                         aria-describedby="start-timeHelpBlock"
                         className="form-control"
                     />
@@ -68,7 +94,7 @@ const Filters: NextPage = () => {
                         id="end-time"
                         name="end-time"
                         type="time"
-                        defaultValue="23:59"
+                        defaultValue={router.query["end-time"] || "23:59"}
                         className="form-control"
                         aria-describedby="end-timeHelpBlock"
                     />
@@ -91,6 +117,7 @@ const Filters: NextPage = () => {
                         type="number"
                         min="0"
                         placeholder="0"
+                        defaultValue={router.query["min-days-free"]}
                         className="form-control"
                         aria-describedby="min-days-freeHelpBlock"
                     />
@@ -114,7 +141,7 @@ const Filters: NextPage = () => {
                             className="custom-control-input"
                             value="sun"
                             aria-describedby="specific-days-freeHelpBlock"
-                            defaultChecked={true}
+                            defaultChecked={dayChecked("sun")}
                         />
                         <label
                             htmlFor="specific-days-free_0"
@@ -131,6 +158,7 @@ const Filters: NextPage = () => {
                             className="custom-control-input"
                             value="mon"
                             aria-describedby="specific-days-freeHelpBlock"
+                            defaultChecked={dayChecked("mon")}
                         />
                         <label
                             htmlFor="specific-days-free_1"
@@ -147,6 +175,7 @@ const Filters: NextPage = () => {
                             className="custom-control-input"
                             value="tue"
                             aria-describedby="specific-days-freeHelpBlock"
+                            defaultChecked={dayChecked("tue")}
                         />
                         <label
                             htmlFor="specific-days-free_2"
@@ -163,6 +192,7 @@ const Filters: NextPage = () => {
                             aria-describedby="specific-days-freeHelpBlock"
                             className="custom-control-input"
                             value="wed"
+                            defaultChecked={dayChecked("wed")}
                         />
                         <label
                             htmlFor="specific-days-free_3"
@@ -179,6 +209,7 @@ const Filters: NextPage = () => {
                             aria-describedby="specific-days-freeHelpBlock"
                             className="custom-control-input"
                             value="thu"
+                            defaultChecked={dayChecked("thu")}
                         />
                         <label
                             htmlFor="specific-days-free_4"
@@ -195,6 +226,7 @@ const Filters: NextPage = () => {
                             aria-describedby="specific-days-freeHelpBlock"
                             className="custom-control-input"
                             value="fri"
+                            defaultChecked={dayChecked("fri")}
                         />
                         <label
                             htmlFor="specific-days-free_5"
@@ -211,7 +243,7 @@ const Filters: NextPage = () => {
                             aria-describedby="specific-days-freeHelpBlock"
                             className="custom-control-input"
                             value="sat"
-                            defaultChecked={true}
+                            defaultChecked={dayChecked("sat")}
                         />
                         <label
                             htmlFor="specific-days-free_6"
@@ -240,7 +272,7 @@ const Filters: NextPage = () => {
                         id="min-honors-courses"
                         name="min-honors-courses"
                         type="number"
-                        defaultValue="0"
+                        defaultValue={router.query["min-honors-courses"] || 0}
                         className="form-control"
                         aria-describedby="min-honors-coursesHelpBlock"
                     />

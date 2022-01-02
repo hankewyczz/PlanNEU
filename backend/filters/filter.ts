@@ -155,7 +155,6 @@ export class Filter {
         }
 
         const days_free = Object.values(MeetingDay).length - days_occupied.size;
-
         if (days_free < this.min_num_days_free) {
             return false;
         }

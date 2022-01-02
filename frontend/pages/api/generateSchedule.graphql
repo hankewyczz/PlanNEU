@@ -19,7 +19,21 @@ query generateSchedule(
         filterMinHonors: $filterMinHonors
     ) {
         results
-        sections
+        sections {
+            classId
+            classType
+            crn
+            seatsCapacity
+            seatsRemaining
+            waitCapacity
+            waitRemaining
+            lastUpdateTime
+            campus
+            honors
+            url
+            profs
+            meetings
+        }
         courses {
             name
             subject
