@@ -2,7 +2,6 @@ import { parseCourses } from "../parsers/parseCourse";
 import { Filter } from "../filters/filter";
 import { BinaryMeetingTime } from "../parsers/meetingTimes";
 import {
-    MinimalSection,
     CRNsResult,
     Results,
     Course,
@@ -25,7 +24,7 @@ export function generateResults(courses: Course[], course_filter: Filter): Resul
     // Filter the sections, and remove any courses that are now empty lists
     const sections = parseCourses(courses)
         .map((course) => course.sections)
-        .map((secs) => secs.filter((secs) => course_filter.checkSectionCompatibility(secs)));
+        .map((secs) => secs.filter((secs) => course_filter.sectionCompatible(secs)));
 
     
     
@@ -38,7 +37,8 @@ export function generateResults(courses: Course[], course_filter: Filter): Resul
         );
     } 
 
-    const day_compatibility = course_filter.checkDayCompatibility(checkMandatoryDays(sections));
+    const day_compatibility = course_filter.daysCompatible(checkMandatoryDays(sections));
+    
     
     if (sections.length === 0 || !day_compatibility) {
         return {
@@ -75,7 +75,7 @@ export function generateResults(courses: Course[], course_filter: Filter): Resul
 
     for (const result of result_generator) {
         const sections_result = result.map((crn) => section_mapping[crn]);
-        const compatible = course_filter.checkCompatibility(sections_result);
+        const compatible = course_filter.resultCompatible(sections_result);
 
         if (compatible) {
             filtered_results.push(result);

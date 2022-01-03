@@ -1,5 +1,3 @@
-import { CRNsResult } from "../types/types";
-
 export const SECONDS_IN_DAY = 86400;
 
 // To optimize the interval overlap checking, we assume that each interval is composed of blocks no smaller than INTERVAL_BLOCK_SIZE seconds (so, 5 mins)
@@ -14,18 +12,5 @@ export const MAX_COURSES = 8;
 //  of work that we're OK with doing
 export const MAX_POSSIBILITIES = 100_000;
 
-// THe number of results we should generate at a time
+// The number of results we should generate at a time
 export const MAX_NUM_RESULTS = 50;
-
-/**
- * It's pretty annoying that Jest doesn't have a way to check for deep unordered array equality.
- */
-export function nestedArrayEquality(
-  array1: string[][],
-  array2: string[][]
-): void {
-  const arr1 = array1.map((result) => result.sort()).sort();
-  const arr2 = array2.map((result) => result.sort()).sort();
-
-  expect(JSON.stringify(arr1)).toEqual(JSON.stringify(arr2));
-}

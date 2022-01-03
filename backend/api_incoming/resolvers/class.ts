@@ -1,18 +1,9 @@
-import { parseCourses } from "../../parsers/parseCourse";
-import { getCourse, getSection } from "../../api_outgoing/query/queryApi";
+import { getCourse, getSection } from "../../api_outgoing/queryApi";
 import { FilterBuilder } from "../../filters/filter";
 import { generateResults } from "../../generator/generateResults";
-import {
-    Course,
-    isCourseHash,
-    isSectionHash,
-    MeetingDay,
-} from "../../types/types";
+import { Course, isCourseHash, isSectionHash, MeetingDay } from "../../types/types";
 
-async function hashToCourse(
-    hash: string,
-    termId: string
-): Promise<Course | never> {
+async function hashToCourse(hash: string, termId: string): Promise<Course | never> {
     const course = isCourseHash(hash);
     let result: Course | null = null;
 
@@ -21,20 +12,15 @@ async function hashToCourse(
     } else {
         const section = isSectionHash(hash);
         if (section) {
-            result = await getSection(
-                section.subject,
-                section.classId,
-                termId,
-                section.crn
-            );
+            result = await getSection(section.subject, section.classId, termId, section.crn);
         }
     }
 
     if (result === null) {
-        throw Error(`We couldn't find a course/section matching "${hash}" for termId "${termId}"`)
+        throw Error(`We couldn't find a course/section matching "${hash}" for termId "${termId}"`);
     }
 
-    return result
+    return result;
 }
 
 // Returns time in seconds
@@ -81,7 +67,6 @@ function parseIntNull(num: string | undefined): number | null {
     return Number.parseInt(num);
 }
 
-
 const getResults = async (
     courses: string[],
     termId: string,
@@ -111,18 +96,17 @@ const getResults = async (
         courses.map((hash) => {
             // Propagate the error
             try {
-                return hashToCourse(hash, termId)
+                return hashToCourse(hash, termId);
+            } catch (err) {
+                throw err;
             }
-            catch (err) {
-                throw err
-            } 
         })
     );
 
     const results = generateResults(course_objs, filter);
     results.stats.time = new Date().getTime() - start.getTime();
     return results;
-}; 
+};
 
 const resolvers = {
     Query: {
