@@ -1,4 +1,4 @@
-import { Course } from "../../types/types";
+import { Course } from "../types/types";
 import { gqlClient } from "./apiClient";
 
 export async function getCourse(subject: string, classId: string, termId: string): Promise<Course | null> {

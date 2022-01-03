@@ -1,7 +1,7 @@
-import { parseBackendMeeting, parseBackendMeetings } from "../parseSection";
+import { parseBackendMeeting, parseBackendMeetings } from "../parseCourse";
 import meetings from "./data/meetingTimes.data";
 import { BinaryMeetingTime } from "../meetingTimes";
-import { MeetingDay } from "../../../types/types";
+import { MeetingDay } from "../../types/types";
 
 describe("parsing meeting times & checking overlap", () => {
     test("no breaks", () => {
@@ -80,9 +80,6 @@ describe("parsing meeting times & checking overlap", () => {
     test("Error handling", () => {
         expect(() => {
             parseBackendMeetings(meetings.overlap_single_section);
-        }).toThrow();
-        expect(() => {
-            parseBackendMeetings(meetings.no_meetings);
         }).toThrow();
     });
 

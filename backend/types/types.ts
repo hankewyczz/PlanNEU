@@ -1,4 +1,4 @@
-import { BinaryMeetingTime } from "../api_outgoing/parsers/meetingTimes";
+import { BinaryMeetingTime } from "../parsers/meetingTimes";
 
 export type CourseHash = {
     subject: string;
@@ -68,31 +68,6 @@ export type CourseWithoutSections = Omit<Course, "sections">;
 export type ParsedCourse = CourseWithoutSections &
     Record<"sections", ParsedSection[]>;
 
-export function isParsedCourse(course: any): course is ParsedCourse {
-    const props = [
-        "termId",
-        "subject",
-        "classId",
-        "name",
-        "coreqs",
-        "sections",
-    ];
-
-    if (
-        !props.every((prop) =>
-            Object.prototype.hasOwnProperty.call(course, prop)
-        )
-    ) {
-        return false;
-    }
-
-    if (!course.sections.every((sec: any) => isParsedSection(sec))) {
-        return false;
-    }
-
-    return true;
-}
-
 export type Requisite = string | BooleanReq | CourseReq;
 
 export interface BooleanReq {
@@ -129,43 +104,6 @@ export interface SectionWithCourse extends Section {
 // The same as a section, but with parsed meetings
 export type ParsedSection = Omit<Section, "meetings"> &
     Record<"meetings", BinaryMeetingTime>;
-
-export function isParsedSection(section: any): section is ParsedSection {
-    const props = [
-        "classType",
-        "crn",
-        "seatsCapacity",
-        "seatsRemaining",
-        "waitCapacity",
-        "waitRemaining",
-        "lastUpdateTime",
-        "campus",
-        "honors",
-        "url",
-        "profs",
-        "meetings",
-    ];
-
-    if (
-        !props.every((prop) =>
-            Object.prototype.hasOwnProperty.call(section, prop)
-        )
-    ) {
-        return false;
-    }
-
-    if (!(section.meetings instanceof BinaryMeetingTime)) {
-        return false;
-    }
-
-    return true;
-}
-
-// Used for generating combinations
-export interface MinimalSection {
-    crn: string;
-    meetings: BinaryMeetingTime;
-}
 
 export class PartialResult {
     crns: string[];

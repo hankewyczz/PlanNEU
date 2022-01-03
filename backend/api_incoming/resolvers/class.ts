@@ -1,4 +1,4 @@
-import { parseCourses } from "../../api_outgoing/parsers/parseCourse";
+import { parseCourses } from "../../parsers/parseCourse";
 import { getCourse, getSection } from "../../api_outgoing/query/queryApi";
 import { FilterBuilder } from "../../filters/filter";
 import { generateResults } from "../../generator/generateResults";

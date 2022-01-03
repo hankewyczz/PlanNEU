@@ -1,7 +1,6 @@
-import { parseCourses } from "../api_outgoing/parsers/parseCourse";
-import { minifySection } from "../api_outgoing/parsers/parseSection";
+import { parseCourses } from "../parsers/parseCourse";
 import { Filter } from "../filters/filter";
-import { BinaryMeetingTime } from "../api_outgoing/parsers/meetingTimes";
+import { BinaryMeetingTime } from "../parsers/meetingTimes";
 import {
     MinimalSection,
     CRNsResult,
@@ -61,10 +60,8 @@ export function generateResults(courses: Course[], course_filter: Filter): Resul
         Please try removing a course with many sections (like a lab or recitation) and try agian.`);
     }
 
-    // Minifiy and generate the results
-    const minimized_sections = sections.map((secs) => secs.map((sec) => minifySection(sec)));
-
-    const result_generator = generateCombinations(minimized_sections);
+    // Create the result Generator object
+    const result_generator = generateCombinations(sections);
 
     // Filter the results
     const section_mapping: Record<string, ParsedSection> = {};
@@ -134,7 +131,7 @@ Due to the factorially-expanding runtime, we need to reduce the complexity as mu
     - This is an optimized way of checking time overlaps.
     - Assume that the class schedules are on time blocks. In our case, I ~think~ the largest block we can be sure about is 5 mins.
 */
-export function* generateCombinations(courses: MinimalSection[][]): Generator<CRNsResult> {
+export function* generateCombinations(courses: ParsedSection[][]): Generator<CRNsResult> {
     // We sort so that the courses with the fewest number of sections are handled first
     // When there aren't many sections, each time conflict will reduce the number of work done down the line dramatically
     courses.sort((a, b) => a.length - b.length);

@@ -1,5 +1,5 @@
-import { INTERVALS_IN_DAY } from "../../utils/global";
-import { MeetingDay, toMeetingDay } from "../../types/types";
+import { INTERVALS_IN_DAY } from "../utils/global";
+import { MeetingDay, toMeetingDay } from "../types/types";
 
 /**
  * Represents a week's worth of meetings, with time broken into 5-minute chunks

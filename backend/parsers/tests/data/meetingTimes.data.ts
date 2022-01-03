@@ -1,5 +1,5 @@
 import { BinaryMeetingTime } from "../../meetingTimes";
-import { BackendMeeting, MeetingDay } from "../../../../types/types";
+import { BackendMeeting, MeetingDay } from "../../../types/types";
 
 export default {
     fullWeek: {
