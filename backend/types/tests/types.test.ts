@@ -1,6 +1,6 @@
-import { isCourseHash, isSectionHash } from "../types"
+import { isCourseHash, isSectionHash, MeetingDay, toMeetingDay } from "../types"
 
-describe("Check hash type guards", () => {
+describe("Type guards", () => {
     test("isCourseHash", () => {
         expect(isCourseHash("asdbskjdsdf")).toBeFalsy();
         expect(isCourseHash("cs2500")).toBeFalsy();
@@ -28,6 +28,38 @@ describe("Check hash type guards", () => {
 
         expect(isSectionHash("CS/1234/1234567")).toBeTruthy();
         expect(isSectionHash("CS/1234/12345")).toBeTruthy();
+    })
+
+    test("Test toMeetingDay", () => {
+        expect(toMeetingDay(0)).toBe(MeetingDay.SUNDAY)
+        expect(toMeetingDay(1)).toBe(MeetingDay.MONDAY)
+        expect(toMeetingDay(2)).toBe(MeetingDay.TUESDAY)
+        expect(toMeetingDay(3)).toBe(MeetingDay.WEDNESDAY)
+        expect(toMeetingDay(4)).toBe(MeetingDay.THURSDAY)
+        expect(toMeetingDay(5)).toBe(MeetingDay.FRIDAY)
+        expect(toMeetingDay(6)).toBe(MeetingDay.SATURDAY)
+
+        expect(() => toMeetingDay(7)).toThrow()
+        expect(() => toMeetingDay(Number.POSITIVE_INFINITY)).toThrow()
+        expect(() => toMeetingDay(Number.NEGATIVE_INFINITY)).toThrow()
+        expect(() => toMeetingDay(Number.MAX_SAFE_INTEGER)).toThrow()
+        expect(() => toMeetingDay(-1)).toThrow()
+        expect(() => toMeetingDay(Number.NaN)).toThrow()
+        
+        expect(toMeetingDay('0')).toBe(MeetingDay.SUNDAY)
+        expect(toMeetingDay('1')).toBe(MeetingDay.MONDAY)
+        expect(toMeetingDay('2')).toBe(MeetingDay.TUESDAY)
+        expect(toMeetingDay('3')).toBe(MeetingDay.WEDNESDAY)
+        expect(toMeetingDay('4')).toBe(MeetingDay.THURSDAY)
+        expect(toMeetingDay('5')).toBe(MeetingDay.FRIDAY)
+        expect(toMeetingDay('6')).toBe(MeetingDay.SATURDAY)
+
+        expect(() => toMeetingDay('')).toThrow()
+        expect(() => toMeetingDay(7)).toThrow()
+
+
+        
+        
     })
 
     

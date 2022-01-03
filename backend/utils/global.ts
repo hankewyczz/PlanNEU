@@ -14,3 +14,14 @@ export const MAX_POSSIBILITIES = 100_000;
 
 // The number of results we should generate at a time
 export const MAX_NUM_RESULTS = 50;
+
+
+/**
+ * A Jest helper to check for deep, unordered array equality
+ */
+export function nestedArrayEquality(array1: string[][], array2: string[][]): void {
+    const arr1 = array1.map((result) => result.sort()).sort();
+    const arr2 = array2.map((result) => result.sort()).sort();
+
+    expect(JSON.stringify(arr1)).toEqual(JSON.stringify(arr2));
+}

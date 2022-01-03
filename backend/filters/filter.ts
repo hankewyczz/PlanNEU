@@ -191,7 +191,12 @@ export class Filter {
         }
 
         // Check if the combined meeting is a valid one
-        return this.meetingCompatible(BinaryMeetingTime.fromMeetingDays(days))
+
+        const free_days = BinaryMeetingTime.fromMeetingDays(this.specific_days_free);
+        const blocked_days = BinaryMeetingTime.fromMeetingDays(days)
+        const combined = BinaryMeetingTime.combine(free_days, blocked_days);
+
+        return combined instanceof BinaryMeetingTime
     }
 
     /**

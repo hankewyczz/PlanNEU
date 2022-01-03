@@ -1,6 +1,6 @@
 import { getCourse, getSection } from "../../api_outgoing/queryApi";
 import { FilterBuilder } from "../../filters/filter";
-import { generateResults } from "../../generator/generateResults";
+import { generateResults } from "../../generate_results/generateResults";
 import { Course, isCourseHash, isSectionHash, MeetingDay } from "../../types/types";
 
 async function hashToCourse(hash: string, termId: string): Promise<Course | never> {

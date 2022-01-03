@@ -26,20 +26,15 @@ export function generateResults(courses: Course[], course_filter: Filter): Resul
         .map((course) => course.sections)
         .map((secs) => secs.filter((secs) => course_filter.sectionCompatible(secs)));
 
-    
-    
-    
-
     // We limit the number of courses we generate results for, to prevent overloading the server
     if (sections.length > MAX_COURSES) {
         throw Error(
             `A max of ${MAX_COURSES} courses are allowed; please remove some courses and try again.`
         );
-    } 
+    }
 
     const day_compatibility = course_filter.daysCompatible(checkMandatoryDays(sections));
-    
-    
+
     if (sections.length === 0 || !day_compatibility) {
         return {
             results: [],
@@ -97,7 +92,6 @@ export function generateResults(courses: Course[], course_filter: Filter): Resul
     };
 }
 
-
 /**
  * Checks which days are mandatory for courses (ie. days such that every section has a meeting then)
  * @param courses A list of lists of parsed sections (ie. a list of courses)
@@ -109,13 +103,13 @@ export function checkMandatoryDays(courses: ParsedSection[][]): Set<MeetingDay> 
         let course_days = new Set(Object.values(MeetingDay));
 
         for (const section of course) {
-            course_days = new Set([...course_days].filter(i => section.meetings.days().has(i)));
+            course_days = new Set([...course_days].filter((i) => section.meetings.days().has(i)));
         }
 
-        course_days.forEach(elem => all_days.add(elem));
+        course_days.forEach((elem) => all_days.add(elem));
     }
-    
-    return all_days
+
+    return all_days;
 }
 
 /*

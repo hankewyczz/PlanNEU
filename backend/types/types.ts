@@ -105,16 +105,6 @@ export interface SectionWithCourse extends Section {
 export type ParsedSection = Omit<Section, "meetings"> &
     Record<"meetings", BinaryMeetingTime>;
 
-export class PartialResult {
-    crns: string[];
-    meetings: BinaryMeetingTime;
-
-    constructor(crns: string[], meetings: BinaryMeetingTime) {
-        this.crns = crns;
-        this.meetings = meetings;
-    }
-}
-
 // A list of CRNs of the sections
 export type CRNsResult = string[];
 
@@ -150,6 +140,11 @@ export enum MeetingDay {
     SATURDAY = "6",
 }
 
+/**
+ * Converts a string/number to a MeetingDay
+ * @param input A string or a number corresponding to a MeetingDay
+ * @returns The correspnding MeetingDay
+ */
 export function toMeetingDay(input: string | number): MeetingDay {
     if (typeof input === "number") {
         input = input.toString();
