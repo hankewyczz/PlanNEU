@@ -1,4 +1,4 @@
-import { BinaryMeetingTime } from "../types/meetingTimes";
+import { BinaryMeetingTime } from "../api_outgoing/parsers/meetingTimes";
 import { MeetingDay, ParsedSection, toMeetingDay } from "../types/types";
 import {
     INTERVALS_IN_DAY,
@@ -130,29 +130,30 @@ export class Filter {
         return time_string.join("");
     }
 
+    checkMeetingCompatibility(meeting: BinaryMeetingTime): boolean {
+        for (let i = 0; i <= this.times.length; i++) {
+            if (this.times[i] === "1" && meeting.times[i] === "1") {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+
     checkDayCompatibility(days: Set<MeetingDay>): boolean {
         const days_free = Object.values(MeetingDay).length - days.size;
         if (days_free < this.min_num_days_free) {
             return false
         }
 
-        const day_str = [];
+        const meeting = BinaryMeetingTime.fromMeetingDays(days);
         
-        for (let day = 0; day < 7; day++) {
-            if (days.has(toMeetingDay(day))) {
-                day_str.push(new Array(INTERVALS_IN_DAY).fill(1).join(""))
-            }
-            else {
-                day_str.push(new Array(INTERVALS_IN_DAY).fill(0).join(""))
-            }
-        }
-        
-        return new BinaryMeetingTime(day_str.join("")).compatibleWithFilter(this)
+        return this.checkMeetingCompatibility(meeting)
     }
 
     checkSectionCompatibility(section: ParsedSection): boolean {
         // Check for start time, end time, and specific days off
-        if (!section.meetings.compatibleWithFilter(this)) {
+        if (!this.checkMeetingCompatibility(section.meetings)) {
             return false;
         }
 

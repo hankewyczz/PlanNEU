@@ -1,4 +1,4 @@
-import { BinaryMeetingTime } from "../../types/meetingTimes";
+import { BinaryMeetingTime } from "../../api_outgoing/parsers/meetingTimes";
 import { MeetingDay } from "../../types/types";
 import {
   INTERVALS_IN_DAY,

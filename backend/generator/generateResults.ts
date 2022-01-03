@@ -1,7 +1,7 @@
 import { parseCourses } from "../api_outgoing/parsers/parseCourse";
 import { minifySection } from "../api_outgoing/parsers/parseSection";
 import { Filter } from "../filters/filter";
-import { BinaryMeetingTime } from "../types/meetingTimes";
+import { BinaryMeetingTime } from "../api_outgoing/parsers/meetingTimes";
 import {
     MinimalSection,
     CRNsResult,

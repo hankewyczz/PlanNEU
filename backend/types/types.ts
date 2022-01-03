@@ -1,4 +1,4 @@
-import { BinaryMeetingTime } from "./meetingTimes";
+import { BinaryMeetingTime } from "../api_outgoing/parsers/meetingTimes";
 
 export type CourseHash = {
     subject: string;

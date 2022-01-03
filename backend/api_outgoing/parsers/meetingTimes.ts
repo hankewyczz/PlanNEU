@@ -1,22 +1,18 @@
-/*
-BIG PICTURE OVERVIEW:
-Problem: 
-- We need to check for time overlaps quite often, so every little optimization goes a long way
-- At the same time, making it simple helps developer understanding (no need to worry about overthinking it)
+import { INTERVALS_IN_DAY } from "../../utils/global";
+import { MeetingDay, toMeetingDay } from "../../types/types";
 
-Solution: Binary masks
-Each digit in the string represents 5 minutes. If '1', the meeting is in progress. If '0', no meeting.
-We can very easily check for overlap by iterating over the digits and checking if both digits are '1'
-
-This would be even faster via actual binary masks, but Javascript bitwise operations are limited to 32 bit numbers (not enough for our needs).
-*/
-
-import { Filter } from "../filters/filter";
-import { INTERVALS_IN_DAY } from "../utils/global";
-import { MeetingDay, toMeetingDay } from "./types";
-
-// Represents all meeting times for a section
-// The number starts on Sunday, and goes for the entire week.
+/**
+ * Represents a week's worth of meetings, with time broken into 5-minute chunks
+ * 
+ * This is an efficient (important since we use it so often) way of checking for time overlaps. 
+ * 
+ * We take a week's worth of meetings, and represent it as a binary string.
+ * Each character represents 5 minutes. A '1' indicates a meeting, and '0' indicates no meeting.
+ * The string represents all 7 days, starting with Sunday.
+ * 
+ * Unfortunately, Javascript bitwise operations are limited to 32 bit numbers,
+ * so we can't use actual bitwise operations (which would be much faster)
+ */
 export class BinaryMeetingTime {
     readonly times: string;
 
@@ -24,12 +20,36 @@ export class BinaryMeetingTime {
     static EMPTY = new BinaryMeetingTime(new Array(INTERVALS_IN_DAY * 7).fill(0).join(""));
 
     constructor(string: string) {
-        if (string.length !== INTERVALS_IN_DAY * 7) {
-            throw Error(`String is malformed - unexpected length ${string.length}`);
+        // A little sanity check to make sure the times string is of the correct length
+        const expected_length = INTERVALS_IN_DAY * 7;
+        if (string.length !== expected_length) {
+            throw Error(`Malformed - should be length ${expected_length}, but is ${string.length}`);
         }
         this.times = string;
     }
 
+    /**
+     * Creates a BinaryMeetingTime instance from a Set of MeetingDays, blocking each given day off completely
+     * @param days The days which should be blocked off
+     * @returns A BinaryMeetingTime, with the given days blocked off
+     */
+    static fromMeetingDays(days: Set<MeetingDay>) {
+        const day_str = [];
+
+        // Iterate over all the days
+        for (let day = 0; day < 7; day++) {
+            const value = days.has(toMeetingDay(day)) ? '1' : '0';
+            day_str.push(new Array(INTERVALS_IN_DAY).fill(value).join(""))
+        }
+
+        return new BinaryMeetingTime(day_str.join(""));
+    }
+
+
+    /**
+     * Converts this BinaryMeetingTime to a set of MeetingDays, representing the days which have any meetings
+     * @returns A set of MeetingDays on which any event occurs
+     */
     days(): Set<MeetingDay> {
         const days: Set<MeetingDay> = new Set();
         for (let day = 0; day < 7; day++) {
@@ -43,9 +63,12 @@ export class BinaryMeetingTime {
         return days;
     }
 
+
     /**
      * Compares the times of this BinaryMeetingTime with another.
-     * If there is any overlap, False is returned.
+     * @param one A BinaryMeetingTime
+     * @param two A BinaryMeetingTime
+     * @returns If there is any overlap, False is returned.
      * Otherwise, a new BinaryMeetingTime instance is returned
      */
     static combine(one: BinaryMeetingTime, two: BinaryMeetingTime): BinaryMeetingTime | false {
@@ -76,29 +99,17 @@ export class BinaryMeetingTime {
         let combined = BinaryMeetingTime.EMPTY;
         let count = 0;
 
-        meetings.forEach((meeting) => {
+        for (const meeting of meetings) {
             const cur = BinaryMeetingTime.combine(combined, meeting);
-        
+
             if (cur === false) {
                 return count;
             }
 
-            combined = cur;            
+            combined = cur;
             count++;
-        });
+        };
 
         return combined;
-    }
-
-    /** Compares this BinaryMeetingTime to a single time string. Returns false if they overlap
-     * IE. we don't care about start and end dates
-     */
-    compatibleWithFilter(filter: Filter): boolean {
-        for (let i = 0; i <= this.times.length; i++) {
-            if (this.times[i] === "1" && filter.times[i] === "1") {
-                return false;
-            }
-        }
-        return true;
     }
 }
