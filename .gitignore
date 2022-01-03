@@ -14,4 +14,4 @@ package-lock.json
 /resources/js/utils/*.js
 /resources/js/handlers/*.js
 /dist
-/coverage
+**/coverage

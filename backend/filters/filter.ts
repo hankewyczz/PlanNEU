@@ -1,4 +1,5 @@
-import { MeetingDay, ParsedSection } from "../types/types";
+import { BinaryMeetingTime } from "../types/meetingTimes";
+import { MeetingDay, ParsedSection, toMeetingDay } from "../types/types";
 import {
     INTERVALS_IN_DAY,
     INTERVAL_LENGTH,
@@ -129,6 +130,26 @@ export class Filter {
         return time_string.join("");
     }
 
+    checkDayCompatibility(days: Set<MeetingDay>): boolean {
+        const days_free = Object.values(MeetingDay).length - days.size;
+        if (days_free < this.min_num_days_free) {
+            return false
+        }
+
+        const day_str = [];
+        
+        for (let day = 0; day < 7; day++) {
+            if (days.has(toMeetingDay(day))) {
+                day_str.push(new Array(INTERVALS_IN_DAY).fill(1).join(""))
+            }
+            else {
+                day_str.push(new Array(INTERVALS_IN_DAY).fill(0).join(""))
+            }
+        }
+        
+        return new BinaryMeetingTime(day_str.join("")).compatibleWithFilter(this)
+    }
+
     checkSectionCompatibility(section: ParsedSection): boolean {
         // Check for start time, end time, and specific days off
         if (!section.meetings.compatibleWithFilter(this)) {
@@ -151,7 +172,7 @@ export class Filter {
         // Check that the number of days match
         const days_occupied: Set<MeetingDay> = new Set();
         for (const section of result) {
-            section.meetings.days.forEach((elem) => days_occupied.add(elem));
+            section.meetings.days().forEach((elem) => days_occupied.add(elem));
         }
 
         const days_free = Object.values(MeetingDay).length - days_occupied.size;

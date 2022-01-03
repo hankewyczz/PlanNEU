@@ -15,7 +15,7 @@ export const MAX_COURSES = 8;
 export const MAX_POSSIBILITIES = 100_000;
 
 // THe number of results we should generate at a time
-export const NUM_RESULTS = 50;
+export const MAX_NUM_RESULTS = 50;
 
 /**
  * It's pretty annoying that Jest doesn't have a way to check for deep unordered array equality.

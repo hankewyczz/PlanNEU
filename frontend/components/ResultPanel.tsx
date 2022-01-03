@@ -29,6 +29,10 @@ const ResultPanel: NextPage<Props> = ({ crns, courses, sections }) => {
     for (const crn of crns) {
         const section = sections[crn];
         for (const meeting of section.meetings) {
+            // Ignore exams
+            if (meeting.type.toLowerCase().includes('exam')) {
+                continue;
+            }
             for (const [day, day_meetings] of Object.entries(meeting.times)) {
                 // Break it down into objects
                 // Each object contains a CRN, and a single meeting (one start and one end time)
