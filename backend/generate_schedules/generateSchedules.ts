@@ -11,28 +11,34 @@ import {
 } from "../types/types";
 import { MAX_COURSES, MAX_POSSIBILITIES, MAX_NUM_RESULTS } from "../utils/global";
 
-export function generateResults(courses: Course[], course_filter: Filter): Results {
+export function generateSchedules(
+    courses: Course[],
+    course_filter: Filter,
+    limit_results = MAX_NUM_RESULTS
+): Results {
     // Create a CRN -> unparsed section mapping (do this first, since the sections will be mutated)
     const unparsed_sections = courses
         .map((c) => {
+            // Sections are composed of primative types, so this is an OK way to clone
             const sections: Partial<SectionWithCourse>[] = JSON.parse(JSON.stringify(c.sections));
             sections.forEach((sec) => (sec["classId"] = `${c.subject}${c.classId}`));
             return sections as SectionWithCourse[];
-        }) // Sections are composed of primative types, so this is an OK way to clone
+        })
         .flat();
 
     // Filter the sections, and remove any courses that are now empty lists
     const sections = parseCourses(courses)
         .map((course) => course.sections)
-        .map((secs) => secs.filter((secs) => course_filter.sectionCompatible(secs)));
+        .map((secs) => secs.filter((sec) => course_filter.sectionCompatible(sec)));
 
     // We limit the number of courses we generate results for, to prevent overloading the server
     if (sections.length > MAX_COURSES) {
-        throw Error(
-            `A max of ${MAX_COURSES} courses are allowed; please remove some courses and try again.`
-        );
+        throw Error(`Only ${MAX_COURSES} courses are allowed; please remove some and try again.`);
     }
 
+    // Check if the days are compatible - minor optimization.
+    // Some classes MUST have meetings on a given day - knowing this, we can calculate the max possible
+    //  days free. If it doesn't meet the requirement, just return here
     const day_compatibility = course_filter.daysCompatible(checkMandatoryDays(sections));
 
     if (sections.length === 0 || !day_compatibility) {
@@ -49,7 +55,6 @@ export function generateResults(courses: Course[], course_filter: Filter): Resul
 
     // Check if we exceed the max possible combinations
     const num_combinations = sections.reduce((acc, cur) => acc * cur.length, 1);
-
     if (num_combinations > MAX_POSSIBILITIES) {
         throw Error(`Too many possible combinations (over ${MAX_POSSIBILITIES.toLocaleString()}).
         Please try removing a course with many sections (like a lab or recitation) and try agian.`);
@@ -69,13 +74,12 @@ export function generateResults(courses: Course[], course_filter: Filter): Resul
     const filtered_results = [];
 
     for (const result of result_generator) {
-        const sections_result = result.map((crn) => section_mapping[crn]);
-        const compatible = course_filter.resultCompatible(sections_result);
+        const compatible = course_filter.resultCompatible(result.map((crn) => section_mapping[crn]));
 
         if (compatible) {
             filtered_results.push(result);
 
-            if (filtered_results.length >= MAX_NUM_RESULTS) {
+            if (filtered_results.length >= limit_results) {
                 break;
             }
         }
@@ -148,7 +152,7 @@ export function* generateCombinations(courses: ParsedSection[][]): Generator<CRN
         const sections = indexes.map((section, course) => courses[course][section]);
         const combined = BinaryMeetingTime.combineMany(sections.map((s) => s.meetings));
 
-        let i = 0; // Set this up here, so we can override it
+        let i = sizes.length - 1; // Set this up here, so we can override it
         carry = 1;
 
         if (combined instanceof BinaryMeetingTime) {
@@ -159,7 +163,7 @@ export function* generateCombinations(courses: ParsedSection[][]): Generator<CRN
         }
 
         // Increase the index counter
-        for (; i < sizes.length; i++) {
+        for (; i >= 0; i--) {
             // The leading semicolon skips variable initialization
             indexes[i] += carry;
 

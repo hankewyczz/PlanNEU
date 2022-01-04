@@ -79,7 +79,7 @@ export function parseBackendMeeting(meeting: BackendMeeting): BinaryMeetingTime 
       for (const meeting_time of day_meetings) {
           for (let interval = 0; interval < INTERVALS_IN_DAY; interval++) {
               const interval_time = interval * INTERVAL_LENGTH;
-              if (interval_time >= meeting_time.start && interval_time <= meeting_time.end) {
+              if (interval_time >= meeting_time.start && interval_time < meeting_time.end) {
                   day_intervals[interval] = 1;
               }
           }

@@ -1,6 +1,7 @@
 import sections from "./sections.data";
 
 import { Course, ParsedCourse, Section } from "../../../types/types";
+import { parseSection } from "../../parseCourse";
 
 export default {
     course_with_no_sections: {
@@ -256,11 +257,11 @@ export default {
         return {
             ...this.eece2322_202210(),
             sections: [
-                sections.eece2322_202210_1_parsed(),
-                sections.eece2322_202210_2_parsed(),
-                sections.eece2322_202210_3_parsed(),
-                sections.eece2322_202210_4_parsed(),
-                sections.eece2322_202210_5_parsed(),
+              parseSection(sections.eece2322_202210_1()),
+              parseSection(sections.eece2322_202210_2()),
+              parseSection(sections.eece2322_202210_3()),
+              parseSection(sections.eece2322_202210_4()),
+              parseSection(sections.eece2322_202210_5()),
             ],
         };
     },

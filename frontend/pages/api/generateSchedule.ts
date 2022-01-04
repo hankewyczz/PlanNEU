@@ -4,11 +4,17 @@ import { Results } from "../../types/types";
 /**
  * Takes an unknown type, and returns it IF it is a string (otherwise, returns undefined)
  */
-function parseQueryStringOrUndefined(query: unknown): string | undefined {
+function parseQueryString(query: unknown): string | undefined {
     if (typeof query === "string") {
         return query
     }
     return undefined
+}
+
+function parseQueryInt(query: unknown): number | undefined {
+    const parsed = parseQueryString(query);
+
+    return parsed === undefined ? undefined : parseInt(parsed);
 }
 /**
  * Query the API based on the URL parameters.
@@ -59,10 +65,10 @@ export async function generateScheduleFromQuery(
         term_id,
         filter_days_free,
         // For the rest - they can either be a string or undefined, we don't care which one
-        parseQueryStringOrUndefined(query["start-time"]),
-        parseQueryStringOrUndefined(query["end-time"]),
-        parseQueryStringOrUndefined(query["min-days-free"]),
-        parseQueryStringOrUndefined(query["min-seats-left"]),
-        parseQueryStringOrUndefined(query["min-honors-courses"])
+        parseQueryString(query["start-time"]),
+        parseQueryString(query["end-time"]),
+        parseQueryInt(query["min-days-free"]),
+        parseQueryInt(query["min-seats-left"]),
+        parseQueryInt(query["min-honors-courses"])
     )
 }

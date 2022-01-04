@@ -139,9 +139,9 @@ const Filters: NextPage = () => {
                             id="specific-days-free_0"
                             type="checkbox"
                             className="custom-control-input"
-                            value="sun"
+                            value="0"
                             aria-describedby="specific-days-freeHelpBlock"
-                            defaultChecked={dayChecked("sun")}
+                            defaultChecked={dayChecked("0")}
                         />
                         <label
                             htmlFor="specific-days-free_0"
@@ -156,9 +156,9 @@ const Filters: NextPage = () => {
                             id="specific-days-free_1"
                             type="checkbox"
                             className="custom-control-input"
-                            value="mon"
+                            value="1"
                             aria-describedby="specific-days-freeHelpBlock"
-                            defaultChecked={dayChecked("mon")}
+                            defaultChecked={dayChecked("1")}
                         />
                         <label
                             htmlFor="specific-days-free_1"
@@ -173,9 +173,9 @@ const Filters: NextPage = () => {
                             id="specific-days-free_2"
                             type="checkbox"
                             className="custom-control-input"
-                            value="tue"
+                            value="2"
                             aria-describedby="specific-days-freeHelpBlock"
-                            defaultChecked={dayChecked("tue")}
+                            defaultChecked={dayChecked("2")}
                         />
                         <label
                             htmlFor="specific-days-free_2"
@@ -191,8 +191,8 @@ const Filters: NextPage = () => {
                             type="checkbox"
                             aria-describedby="specific-days-freeHelpBlock"
                             className="custom-control-input"
-                            value="wed"
-                            defaultChecked={dayChecked("wed")}
+                            value="3"
+                            defaultChecked={dayChecked("3")}
                         />
                         <label
                             htmlFor="specific-days-free_3"
@@ -208,8 +208,8 @@ const Filters: NextPage = () => {
                             type="checkbox"
                             aria-describedby="specific-days-freeHelpBlock"
                             className="custom-control-input"
-                            value="thu"
-                            defaultChecked={dayChecked("thu")}
+                            value="4"
+                            defaultChecked={dayChecked("4")}
                         />
                         <label
                             htmlFor="specific-days-free_4"
@@ -225,8 +225,8 @@ const Filters: NextPage = () => {
                             type="checkbox"
                             aria-describedby="specific-days-freeHelpBlock"
                             className="custom-control-input"
-                            value="fri"
-                            defaultChecked={dayChecked("fri")}
+                            value="5"
+                            defaultChecked={dayChecked("5")}
                         />
                         <label
                             htmlFor="specific-days-free_5"
@@ -242,8 +242,8 @@ const Filters: NextPage = () => {
                             type="checkbox"
                             aria-describedby="specific-days-freeHelpBlock"
                             className="custom-control-input"
-                            value="sat"
-                            defaultChecked={dayChecked("sat")}
+                            value="6"
+                            defaultChecked={dayChecked("6")}
                         />
                         <label
                             htmlFor="specific-days-free_6"

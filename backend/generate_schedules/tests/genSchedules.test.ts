@@ -1,7 +1,7 @@
 import { parseCourses } from "../../parsers/parseCourse";
-import { generateCombinations, generateResults } from "../generateResults";
+import { generateCombinations, generateSchedules } from "../generateSchedules";
 import courses from "../../parsers/tests/data/courses.data";
-import results from "./data/genResults.data";
+import results from "./data/genSchedules.data";
 import { nestedArrayEquality, MAX_NUM_RESULTS } from "../../utils/global";
 import { FilterBuilder } from "../../filters/filter";
 import sections from "../../parsers/tests/data/sections.data";
@@ -77,19 +77,40 @@ describe("Generating combinations", () => {
 
         nestedArrayEquality(results_1, results.complex_example);
     });
+
+    test("Complex example #2", () => {
+        const results_1 = generateSchedules(
+            [courses.cs3000_202210(), courses.eece2323_202210()],
+            new FilterBuilder().build()
+        );
+
+        nestedArrayEquality(results_1.results, results.complex_example_2);
+    });
+
+    test("Complex example #3", () => {
+        const results_1 = generateSchedules(
+            [courses.cs3000_202210(), courses.eece2323_202210(), courses.eece2322_202210()],
+            new FilterBuilder().build(),
+            300 // Don't limit result number for this
+        );
+
+        nestedArrayEquality(results_1.results, results.complex_example_3);
+    });
+
     test("Limit number of results", () => {
-        const results_1 = generateResults(
-            [courses.honr1102_202210(), courses.thtr1170_202210()], new FilterBuilder().build()
+        const results_1 = generateSchedules(
+            [courses.honr1102_202210(), courses.thtr1170_202210()],
+            new FilterBuilder().build()
         ).results;
 
         expect(results_1.length <= MAX_NUM_RESULTS).toBeTruthy();
     });
 
     test("Remove filtered courses", () => {
-        const results = generateCombinations([courses.cs3000_202210_parsed().sections, []])
+        const results = generateCombinations([courses.cs3000_202210_parsed().sections, []]);
 
         expect([...results]).toEqual([]);
-    })
+    });
 });
 
 describe("Testing complete result generation", () => {
@@ -107,7 +128,7 @@ describe("Testing complete result generation", () => {
         ];
 
         expect(() => {
-            generateResults(course_list, new FilterBuilder().build());
+            generateSchedules(course_list, new FilterBuilder().build());
         }).toThrow();
     });
 
@@ -122,12 +143,12 @@ describe("Testing complete result generation", () => {
         ];
 
         expect(() => {
-            generateResults(course_list, new FilterBuilder().build());
+            generateSchedules(course_list, new FilterBuilder().build());
         }).toThrow();
     });
 
     test("Default result", () => {
-        expect(generateResults([], new FilterBuilder().build())).toMatchObject({
+        expect(generateSchedules([], new FilterBuilder().build())).toMatchObject({
             results: [],
             sections: {},
             courses: [],
@@ -140,7 +161,7 @@ describe("Testing complete result generation", () => {
 
     test("Conflict with days", () => {
         expect(
-            generateResults(
+            generateSchedules(
                 [courses.cs3800_202210()],
                 new FilterBuilder().setSpecificDaysFree([MeetingDay.TUESDAY]).build()
             )
@@ -158,7 +179,7 @@ describe("Testing complete result generation", () => {
     test("Make sure all sections are listed & unparsed", () => {
         const course_list = [courses.cs3800_202210(), courses.cs3000_202210()];
         const filter = new FilterBuilder().setStartTime(36_000).build();
-        const results = generateResults(course_list, filter);
+        const results = generateSchedules(course_list, filter);
 
         expect(results.sections.sort()).toEqual([
             { ...sections.cs3800_202210_1(), classId: "CS3800" },
@@ -172,7 +193,7 @@ describe("Testing complete result generation", () => {
     test("Make sure that courses result is accurate", () => {
         const course_list = [courses.cs3800_202210(), courses.cs3000_202210()];
         const filter = new FilterBuilder().setStartTime(36_000).build();
-        const results = generateResults(course_list, filter);
+        const results = generateSchedules(course_list, filter);
 
         // The courses should be COMPLETE, even though some sections were filtered out int he process
         expect(results.courses.sort()).toEqual(

@@ -1,6 +1,6 @@
 import { getCourse, getSection } from "../api_outgoing/queryApi";
 import { FilterBuilder } from "../filters/filter";
-import { generateResults } from "../generate_results/generateResults";
+import { generateSchedules } from "../generate_schedules/generateSchedules";
 import { Course, isCourseHash, isSectionHash, Results, toMeetingDay } from "../types/types";
 
 /**
@@ -84,7 +84,7 @@ async function apiGenerateSchedule(
         })
     );
 
-    const results = generateResults(course_objs, filter);
+    const results = generateSchedules(course_objs, filter);
     results.stats.time = new Date().getTime() - start.getTime();
     return results;
 }

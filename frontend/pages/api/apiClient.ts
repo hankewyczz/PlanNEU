@@ -11,11 +11,11 @@ export async function generateSchedule(
     courses: string[],
     termId: string,
     filterDaysFree: string[] = [],
-    filterStartTime?: string | undefined,
-    filterEndTime?: string | undefined,
-    filterMinNumDaysFree?: string | undefined,
-    filterMinSeatsLeft?: string | undefined,
-    filterMinHonors?: string | undefined
+    filterStartTime?: string,
+    filterEndTime?: string,
+    filterMinNumDaysFree?: number,
+    filterMinSeatsLeft?: number,
+    filterMinHonors?: number
 ): Promise<Results | never> {
     try {
         console.log("Sending API request...");

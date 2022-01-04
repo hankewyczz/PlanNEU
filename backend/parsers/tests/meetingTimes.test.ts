@@ -1,5 +1,6 @@
-import { parseBackendMeeting, parseBackendMeetings } from "../parseCourse";
+import { parseBackendMeeting, parseBackendMeetings, parseSection } from "../parseCourse";
 import meetings from "./data/meetingTimes.data";
+import sections from "./data/sections.data";
 import { BinaryMeetingTime } from "../meetingTimes";
 import { MeetingDay } from "../../types/types";
 
@@ -77,6 +78,30 @@ describe("parsing meeting times & checking overlap", () => {
         expect(BinaryMeetingTime.combine(cs3000_3, cs4850)).toBeFalsy();
     });
 
+    test("ALMOST overlapping (start time = end time)", () => {
+        expect(
+            BinaryMeetingTime.combine(
+                parseSection(sections.eece2323_202210_7()).meetings,
+                parseSection(sections.cs3000_202210_3()).meetings
+            )
+        ).toBeTruthy();
+
+        expect(
+            BinaryMeetingTime.combineMany([
+                parseSection(sections.eece2323_202210_7()).meetings,
+                parseSection(sections.cs3000_202210_3()).meetings,
+            ])
+        ).toBeInstanceOf(BinaryMeetingTime);
+
+        expect(
+            BinaryMeetingTime.combineMany([
+                parseSection(sections.eece2323_202210_7()).meetings,
+                parseSection(sections.cs3000_202210_3()).meetings,
+                parseSection(sections.eece2322_202210_2()).meetings,
+            ])
+        ).toBeInstanceOf(BinaryMeetingTime);
+    });
+
     test("Error handling", () => {
         expect(() => {
             parseBackendMeetings(meetings.overlap_single_section);
@@ -138,28 +163,39 @@ describe("BinaryMeetingTime methods", () => {
     });
 
     test("Getting days strings", () => {
-        expect(meetings.cs3000_4_parsed.days()).toEqual(new Set<MeetingDay>([MeetingDay.TUESDAY, MeetingDay.FRIDAY]))
+        expect(meetings.cs3000_4_parsed.days()).toEqual(
+            new Set<MeetingDay>([MeetingDay.TUESDAY, MeetingDay.FRIDAY])
+        );
 
         const set1 = new Set<MeetingDay>([
             MeetingDay.SUNDAY,
             MeetingDay.TUESDAY,
             MeetingDay.THURSDAY,
             MeetingDay.SATURDAY,
-        ])
-        
-        const set2 = new Set<MeetingDay>([MeetingDay.MONDAY, MeetingDay.WEDNESDAY, MeetingDay.FRIDAY])
+        ]);
+
+        const set2 = new Set<MeetingDay>([
+            MeetingDay.MONDAY,
+            MeetingDay.WEDNESDAY,
+            MeetingDay.FRIDAY,
+        ]);
 
         expect(BinaryMeetingTime.fromMeetingDays(set1).days()).toEqual(set1);
         expect(BinaryMeetingTime.fromMeetingDays(set2).days()).toEqual(set2);
-
-
     });
 
     test("combineMany", () => {
-        expect(BinaryMeetingTime.combineMany([cs3000_1, cs3800_2])).toBeInstanceOf(BinaryMeetingTime);
-        expect(BinaryMeetingTime.combineMany([cs3000_1, cs3000_2, cs3000_3])).toBeInstanceOf(BinaryMeetingTime);
-        expect(BinaryMeetingTime.combineMany([cs3000_1, cs3000_1, cs3000_1, cs3000_1])).toBeGreaterThanOrEqual(0);
-        expect(BinaryMeetingTime.combineMany([cs3000_1, cs3000_2, cs3000_3, cs3000_1])).toBeGreaterThanOrEqual(0);
-        expect(BinaryMeetingTime.combineMany([cs3000_1, cs3000_2, cs3000_3, cs4850])).toBeGreaterThanOrEqual(0);
-    })
+        expect(BinaryMeetingTime.combineMany([cs3000_1, cs3800_2])).toBeInstanceOf(
+            BinaryMeetingTime
+        );
+        expect(BinaryMeetingTime.combineMany([cs3000_1, cs3000_2, cs3000_3])).toBeInstanceOf(
+            BinaryMeetingTime
+        );
+    });
+
+    test("CombineMany indexes", () => {
+        expect(BinaryMeetingTime.combineMany([cs3000_1, cs3000_1, cs3000_1, cs3000_1])).toBe(1);
+        expect(BinaryMeetingTime.combineMany([cs3000_1, cs3000_2, cs3000_3, cs3000_1])).toBe(3);
+        expect(BinaryMeetingTime.combineMany([cs3800_2, cs3000_2, cs3000_3, cs4850])).toBe(1);
+    });
 });
