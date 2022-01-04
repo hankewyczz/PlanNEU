@@ -10,12 +10,23 @@ export type SectionHash = {
     crn: string;
 };
 
+/**
+ * Checks if a given subject and classId are valid (basic format check)
+ * @param subject A string representing the course/section subject
+ * @param classId THe class ID representing a course
+ * @returns A boolean, indicating if both the subject and classId are valid
+ */
 function validSubjectAndId(subject: string, classId: string): boolean {
     return /^[a-zA-Z]*$/.test(subject) && /^[0-9]{4}$/.test(classId);
 }
 
-export function isCourseHash(str: string): false | CourseHash {
-    const parts = str.split("/");
+/**
+ * Checks if a given string represents a valid Course
+ * @param hash A string, potentially a course hash
+ * @returns A boolean indicating if this string is a course hash
+ */
+export function isCourseHash(hash: string): false | CourseHash {
+    const parts = hash.split("/");
 
     if (parts.length !== 2) {
         return false;
@@ -31,6 +42,11 @@ export function isCourseHash(str: string): false | CourseHash {
     };
 }
 
+/**
+ * Checks if a given string represents a valid Section
+ * @param hash A string, potentially the hash of a section
+ * @returns A boolean indicating if this string is a section hash
+ */
 export function isSectionHash(str: string): false | SectionHash {
     const parts = str.split("/");
 
@@ -65,8 +81,7 @@ export interface Course {
 export type CourseWithoutSections = Omit<Course, "sections">;
 
 // The same as a course, but with parsed sections
-export type ParsedCourse = CourseWithoutSections &
-    Record<"sections", ParsedSection[]>;
+export type ParsedCourse = CourseWithoutSections & Record<"sections", ParsedSection[]>;
 
 export type Requisite = string | BooleanReq | CourseReq;
 
@@ -102,8 +117,7 @@ export interface SectionWithCourse extends Section {
 }
 
 // The same as a section, but with parsed meetings
-export type ParsedSection = Omit<Section, "meetings"> &
-    Record<"meetings", BinaryMeetingTime>;
+export type ParsedSection = Omit<Section, "meetings"> & Record<"meetings", BinaryMeetingTime>;
 
 // A list of CRNs of the sections
 export type CRNsResult = string[];

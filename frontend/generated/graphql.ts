@@ -20,13 +20,12 @@ export type Scalars = {
   Int: number;
   Float: number;
   JSON: any;
-  JSONObject: any;
 };
 
 export type Course = {
   __typename?: "Course";
   classId: Scalars["String"];
-  coreqs?: Maybe<Scalars["JSON"]>;
+  coreqs: Scalars["JSON"];
   name: Scalars["String"];
   subject: Scalars["String"];
   termId: Scalars["String"];
@@ -35,16 +34,16 @@ export type Course = {
 export type Query = {
   __typename?: "Query";
   _empty?: Maybe<Scalars["String"]>;
-  generateSchedule?: Maybe<Results>;
+  generateSchedule: Results;
 };
 
 export type QueryGenerateScheduleArgs = {
   courses: Array<InputMaybe<Scalars["String"]>>;
   filterDaysFree: Array<InputMaybe<Scalars["String"]>>;
   filterEndTime?: InputMaybe<Scalars["String"]>;
-  filterMinHonors?: InputMaybe<Scalars["String"]>;
-  filterMinNumDaysFree?: InputMaybe<Scalars["String"]>;
-  filterMinSeatsLeft?: InputMaybe<Scalars["String"]>;
+  filterMinHonors?: InputMaybe<Scalars["Int"]>;
+  filterMinNumDaysFree?: InputMaybe<Scalars["Int"]>;
+  filterMinSeatsLeft?: InputMaybe<Scalars["Int"]>;
   filterStartTime?: InputMaybe<Scalars["String"]>;
   termId: Scalars["String"];
 };
@@ -52,7 +51,7 @@ export type QueryGenerateScheduleArgs = {
 export type Results = {
   __typename?: "Results";
   courses: Array<Course>;
-  results: Array<Maybe<Array<Maybe<Scalars["String"]>>>>;
+  results: Array<Array<Scalars["String"]>>;
   sections: Array<Section>;
   stats: Stats;
 };
@@ -64,7 +63,7 @@ export type Section = {
   classType: Scalars["String"];
   crn: Scalars["String"];
   honors: Scalars["Boolean"];
-  lastUpdateTime?: Maybe<Scalars["Float"]>;
+  lastUpdateTime: Scalars["Float"];
   meetings: Scalars["JSON"];
   profs: Array<Scalars["String"]>;
   seatsCapacity: Scalars["Int"];
@@ -88,45 +87,42 @@ export type GenerateScheduleQueryVariables = Exact<{
     | InputMaybe<Scalars["String"]>;
   filterStartTime?: InputMaybe<Scalars["String"]>;
   filterEndTime?: InputMaybe<Scalars["String"]>;
-  filterMinNumDaysFree?: InputMaybe<Scalars["String"]>;
-  filterMinSeatsLeft?: InputMaybe<Scalars["String"]>;
-  filterMinHonors?: InputMaybe<Scalars["String"]>;
+  filterMinNumDaysFree?: InputMaybe<Scalars["Int"]>;
+  filterMinSeatsLeft?: InputMaybe<Scalars["Int"]>;
+  filterMinHonors?: InputMaybe<Scalars["Int"]>;
 }>;
 
 export type GenerateScheduleQuery = {
   __typename?: "Query";
-  generateSchedule?:
-    | {
-        __typename?: "Results";
-        results: Array<Array<string | null | undefined> | null | undefined>;
-        sections: Array<{
-          __typename?: "Section";
-          classId: string;
-          classType: string;
-          crn: string;
-          seatsCapacity: number;
-          seatsRemaining: number;
-          waitCapacity: number;
-          waitRemaining: number;
-          lastUpdateTime?: number | null | undefined;
-          campus: string;
-          honors: boolean;
-          url: string;
-          profs: Array<string>;
-          meetings: any;
-        }>;
-        courses: Array<{
-          __typename?: "Course";
-          name: string;
-          subject: string;
-          termId: string;
-          classId: string;
-          coreqs?: any | null | undefined;
-        }>;
-        stats: { __typename?: "Stats"; time: number; numCombinations: number };
-      }
-    | null
-    | undefined;
+  generateSchedule: {
+    __typename?: "Results";
+    results: Array<Array<string>>;
+    sections: Array<{
+      __typename?: "Section";
+      classId: string;
+      classType: string;
+      crn: string;
+      seatsCapacity: number;
+      seatsRemaining: number;
+      waitCapacity: number;
+      waitRemaining: number;
+      lastUpdateTime: number;
+      campus: string;
+      honors: boolean;
+      url: string;
+      profs: Array<string>;
+      meetings: any;
+    }>;
+    courses: Array<{
+      __typename?: "Course";
+      name: string;
+      subject: string;
+      termId: string;
+      classId: string;
+      coreqs: any;
+    }>;
+    stats: { __typename?: "Stats"; time: number; numCombinations: number };
+  };
 };
 
 export const GenerateScheduleDocument = gql`
@@ -136,9 +132,9 @@ export const GenerateScheduleDocument = gql`
     $filterDaysFree: [String]!
     $filterStartTime: String
     $filterEndTime: String
-    $filterMinNumDaysFree: String
-    $filterMinSeatsLeft: String
-    $filterMinHonors: String
+    $filterMinNumDaysFree: Int
+    $filterMinSeatsLeft: Int
+    $filterMinHonors: Int
   ) {
     generateSchedule(
       courses: $courses

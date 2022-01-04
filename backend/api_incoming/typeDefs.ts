@@ -8,16 +8,16 @@ const typeDef = gql`
             filterStartTime: String
             filterEndTime: String
             filterDaysFree: [String]!
-            filterMinNumDaysFree: String
-            filterMinSeatsLeft: String
-            filterMinHonors: String): Results
+            filterMinNumDaysFree: Int
+            filterMinSeatsLeft: Int
+            filterMinHonors: Int): Results!
     }
     type Course {
         name: String!
         subject: String!
         classId: String!
         termId: String!
-        coreqs: JSON
+        coreqs: JSON!
     }
 
     type Section {
@@ -28,7 +28,7 @@ const typeDef = gql`
         seatsRemaining: Int!
         waitCapacity: Int!
         waitRemaining: Int!
-        lastUpdateTime: Float
+        lastUpdateTime: Float!
         campus: String!
         honors: Boolean!
         url: String!
@@ -40,7 +40,7 @@ const typeDef = gql`
         numCombinations: Int!
     }
     type Results {
-        results: [[String]]!
+        results: [[String!]!]!
         sections: [Section!]!
         courses: [Course!]!
         stats: Stats!

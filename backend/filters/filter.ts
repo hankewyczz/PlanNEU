@@ -24,9 +24,9 @@ export class FilterBuilder {
      * @param start The start time in seconds, or null (has no effect on the start time)
      * @returns this, for ease of chaining
      */
-    setStartTime(start: number | null): FilterBuilder {
+    setStartTime(start: number | undefined): FilterBuilder {
         // Null check, and ensuring that the number is a valid one
-        if (start !== null && start >= 0 && start <= SECONDS_IN_DAY) {
+        if (start !== undefined && start >= 0 && start <= SECONDS_IN_DAY) {
             this._start_time = start;
         }
 
@@ -38,9 +38,9 @@ export class FilterBuilder {
      * @param end The end time in seconds, or null (no effect)
      * @returns this, for chaining
      */
-    setEndTime(end: number | null): FilterBuilder {
+    setEndTime(end: number | undefined): FilterBuilder {
         // Null & validity check
-        if (end !== null && end >= 0 && end <= SECONDS_IN_DAY) {
+        if (end !== undefined && end >= 0 && end <= SECONDS_IN_DAY) {
             this._end_time = end;
         }
         return this;
@@ -61,9 +61,9 @@ export class FilterBuilder {
      * @param num_days_free The **minimum** number of days free we want in the schedule
      * @returns this
      */
-    setMinDaysFree(num_days_free: number | null): FilterBuilder {
+    setMinDaysFree(num_days_free: number | undefined): FilterBuilder {
         // Null & validity check
-        if (num_days_free !== null && num_days_free >= 0) {
+        if (num_days_free !== undefined && num_days_free >= 0) {
             this._min_num_days_free = num_days_free;
         }
         return this;
@@ -74,9 +74,9 @@ export class FilterBuilder {
      * @param seats_left The minimum number of seats left we want to consider
      * @returns this
      */
-    setSeatsLeft(seats_left: number | null): FilterBuilder {
+    setSeatsLeft(seats_left: number | undefined): FilterBuilder {
         // Null and validity checks
-        if (seats_left !== null && seats_left >= 0) {
+        if (seats_left !== undefined && seats_left >= 0) {
             this._min_seats_left = seats_left;
         }
         return this;
@@ -87,10 +87,10 @@ export class FilterBuilder {
      * @param min_honors_courses The minimum number of honors courses we want in a schedule
      * @returns this
      */
-    setMinHonorsCourses(min_honors_courses: number | null): FilterBuilder {
+    setMinHonorsCourses(min_honors_courses: number | undefined): FilterBuilder {
         // This is really onlt helpful for honors students as is -
         // we might want to allow a '-1', to signify NO honors courses allowed
-        if (min_honors_courses !== null && min_honors_courses >= 0) {
+        if (min_honors_courses !== undefined && min_honors_courses >= 0) {
             this._min_honors_courses = min_honors_courses;
         }
         return this;

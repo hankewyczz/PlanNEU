@@ -4,9 +4,9 @@ query generateSchedule(
     $filterDaysFree: [String]!
     $filterStartTime: String
     $filterEndTime: String
-    $filterMinNumDaysFree: String
-    $filterMinSeatsLeft: String
-    $filterMinHonors: String
+    $filterMinNumDaysFree: Int
+    $filterMinSeatsLeft: Int
+    $filterMinHonors: Int
 ) {
     generateSchedule(
         courses: $courses

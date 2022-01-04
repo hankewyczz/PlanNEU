@@ -1,11 +1,6 @@
 import { GraphQLClient } from "graphql-request";
 import { GenerateScheduleQuery, getSdk } from "../../generated/graphql";
-import {
-    CourseWithoutSections,
-    Results,
-    ResultStats,
-    SectionWithCourse,
-} from "../../types/types";
+import { CourseWithoutSections, Results, ResultStats, SectionWithCourse } from "../../types/types";
 
 export const gqlClient = getSdk(new GraphQLClient("http://localhost:4001"));
 
@@ -51,38 +46,19 @@ export async function generateSchedule(
 /**
  * Converts the GraphQL result to our Result type.
  */
-function parseApiResults(
-    gql_results: GenerateScheduleQuery["generateSchedule"]
-): Results {
-    // Clean up the section data
-    const raw_sections = gql_results?.sections;
-    if (raw_sections === null || raw_sections === undefined) {
-        throw Error(`sections cannot be undefined: ${raw_sections}`);
-    }
-
+function parseApiResults(gql_results: GenerateScheduleQuery["generateSchedule"]): Results {
     // Create a section mapping - CRN to section
     const section_mapping: Record<string, SectionWithCourse> = {};
-    raw_sections
-        .filter((c): c is SectionWithCourse => c !== null && c !== undefined)
-        .forEach((sec) => (section_mapping[sec.crn] = sec));
+    gql_results.sections.forEach((sec) => (section_mapping[sec.crn] = sec));
 
-    // Clean up course data
-    const raw_courses = gql_results?.courses;
-    if (raw_courses === null || raw_courses === undefined) {
-        throw Error(`courses cannot be undefined: ${raw_courses}`);
-    }
+    // Create a course mapping - subject & classId to a section
     const course_mapping: Record<string, CourseWithoutSections> = {};
-
-    raw_courses
-        .filter(
-            (c): c is CourseWithoutSections => c !== null && c !== undefined
-        )
-        .forEach((c) => (course_mapping[`${c.subject}${c.classId}`] = c));
+    gql_results.courses.forEach((c) => (course_mapping[`${c.subject}${c.classId}`] = c));
 
     return {
         courses: course_mapping,
-        results: gql_results?.results as string[][],
+        results: gql_results.results,
         sections: section_mapping,
-        stats: gql_results?.stats as ResultStats,
+        stats: gql_results.stats,
     };
 }
