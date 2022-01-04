@@ -1,0 +1,39 @@
+{
+  "env": {
+    "node": true
+  },
+  "ignorePatterns": ["/old/**"],
+  "parserOptions": {
+    "project": "./tsconfig.eslint.json",
+    "ecmaVersion": 2021
+  },
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint/eslint-plugin"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier",
+    "prettier/prettier",
+    "plugin:promise/recommended"
+  ],
+  "rules": {
+    "react/-in-jsx-scope": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/camelcase": "off"
+  },
+  "overrides": [
+    {
+      "files": ["*.js", "*.ts"],
+      "rules": {
+        "@typescript-eslint/explicit-function-return-type": [
+          "warn",
+          {
+            "allowExpressions": true
+          }
+        ],
+        "@typescript-eslint/explicit-module-boundary-types": "off"
+      }
+    }
+  ]
+}

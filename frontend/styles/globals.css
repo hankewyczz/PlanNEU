@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,200;0,300;0,400;0,700;1,400&display=swap');
+
+
+html,
+body {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  font-family: Lato, sans-serif, Segoe UI, Roboto, Helvetica Neue, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.column-container {
+  display: flex;
+  flex-wrap: wrap;
+  text-align: center;
+  height: 100%;
+  align-items: stretch;
+}
+
+.column-left {
+  background-color: #F6F6F6;
+  padding: 10px;
+  flex: 30%;
+}
+
+.column-right {
+  padding: 10px;
+  flex: 70%;
+}
+
+/* Responsive layout - makes a one column-layout instead of a two-column layout */
+@media (max-width: 1000px) {
+  .column-right, .column-left {
+    flex: 100%;
+  }
+}

@@ -1,0 +1,25 @@
+query getCourse($subject: String!, $classId: String!, $termId: String!) {
+	class(subject: $subject, classId: $classId) {
+    occurrence(termId: $termId) {
+      termId
+      subject
+      classId
+      name
+      coreqs
+      sections {
+        classType
+        crn
+        seatsCapacity
+        seatsRemaining
+        waitCapacity
+        waitRemaining
+        lastUpdateTime
+        campus
+        honors
+        url
+        profs
+        meetings
+      }
+    }
+  }
+}
