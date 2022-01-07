@@ -6,7 +6,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "generate:graphql": "graphql-codegen --config codegen.yml"
+    "generate:graphql": "graphql-codegen --config codegen.yml", 
+    "test": "echo 'TODO'"
   },
   "dependencies": {
     "dayjs": "^1.10.7",
