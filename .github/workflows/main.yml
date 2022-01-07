@@ -21,10 +21,9 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: yarn install --frozen-lockfile
       working-directory: backend
-    - name: TestCoverage
-      id: testCoverage
-      uses: anuraag016/Jest-Coverage-Diff@master
-      with:
-        fullCoverageDiff: false
-        runCommand: "cd backend && npx jest --collectCoverageFrom='[\"src/**/*.{js,jsx,ts,tsx}\"]' --coverage --collectCoverage=true --coverageDirectory='./' --coverageReporters='json-summary' --forceExit --detectOpenHandles test/.*test.*"
-        delta: 0.5
+    - run: yarn test
+      working-directory: backend
+    - run: yarn install --frozen-lockfile
+      working-directory: frontend
+    - run: yarn test
+      working-directory: frontend
