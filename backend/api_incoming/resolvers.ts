@@ -57,16 +57,16 @@ export function stringToTime(time: string | undefined): number | undefined {
  * @param filterMinHonors The minimum number of sections which are honors in a schedule
  * @returns Schedule results
  */
-async function apiGenerateSchedule(
+export async function apiGenerateSchedule(
     courses: string[],
     termId: string,
-    filterStartTime: string | undefined,
-    filterEndTime: string | undefined,
     filterDaysFree: string[] = [],
-    filterMinNumDaysFree: number | undefined,
-    filterMinSeatsLeft: number | undefined,
-    filterMinHonors: number | undefined,
-    offset: string[] | undefined
+    filterStartTime?: string | undefined,
+    filterEndTime?: string | undefined,
+    filterMinNumDaysFree?: number | undefined,
+    filterMinSeatsLeft?: number | undefined,
+    filterMinHonors?: number | undefined,
+    offset?: string[] | undefined
 ): Promise<Results> {
     const meeting_days = filterDaysFree.map((day) => toMeetingDay(day));
 
@@ -125,9 +125,9 @@ const resolvers = {
             return apiGenerateSchedule(
                 args.courses,
                 args.termId,
+                args.filterDaysFree,
                 args.filterStartTime,
                 args.filterEndTime,
-                args.filterDaysFree,
                 args.filterMinNumDaysFree,
                 args.filterMinSeatsLeft,
                 args.filterMinHonors,

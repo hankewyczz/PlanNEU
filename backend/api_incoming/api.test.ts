@@ -1,6 +1,5 @@
 import { stringToTime } from "./resolvers"
 
-
 describe("string to time", () => {
     test("undefined", () => {
         expect(stringToTime(undefined)).toBeUndefined();
