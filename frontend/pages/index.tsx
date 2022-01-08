@@ -8,6 +8,7 @@ const Home: NextPage = () => {
             <div className="column-left">
                 <Filters />
             </div>
+            <div className="column-spacer"></div>
             <div className="column-right">
                 <Results />
             </div>

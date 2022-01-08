@@ -35,7 +35,6 @@ export async function generateSchedule(
             return parseApiResults(results.generateSchedule);
         }
     } catch (error) {
-        //TODO - pass the error to the user
         console.error(error);
         throw error;
     }

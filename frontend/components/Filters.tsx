@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-
+import styles from "../styles/Filters.module.css"
 
 
 // Without this, React complains that it doesn't know if this is a controlled input or not
@@ -35,20 +35,25 @@ const Filters: NextPage = () => {
         <form id="filters-parent">
             {HiddenInput("courses")}
             {HiddenInput("term-id")}
-            <div className="form-group row">
+            <div className="form-group">
+                <div className="col text-center">
+                    <button type="submit" className={`${styles["submit-button"]} btn`}> 
+                        Apply Filters 
+                    </button>
+                </div>
+            </div>
+            <div className="form-group">
                 <label
                     htmlFor="min-seats-left"
-                    className="col-4 col-form-label"
+                    className={styles["filter-label"]}
                 >
-                    Seats free
+                    Minimum Seats Free
                 </label>
-                <div className="col-8">
-                    <input
+                <input
                         id="min-seats-left"
                         name="min-seats-left"
                         type="number"
                         min="0"
-                        placeholder="0"
                         defaultValue={router.query["min-seats-left"]}
                         className="form-control"
                         aria-describedby="min-seats-leftHelpBlock"
@@ -57,66 +62,45 @@ const Filters: NextPage = () => {
                         id="min-seats-leftHelpBlock"
                         className="form-text text-muted"
                     >
-                        What is the minimum number of seats free you'd like in
-                        each section?
+                        How many seats should be free (at least) in each class?
                     </span>
-                </div>
             </div>
 
-            <div className="form-group row">
-                <label htmlFor="start-time" className="col-4 col-form-label">
-                    Earliest start
+            <div className="form-group">
+                <label htmlFor="start-time" className={styles["filter-label"]}>
+                    Earliest Start Time
                 </label>
-                <div className="col-8">
                     <input
                         id="start-time"
                         name="start-time"
                         type="time"
-                        defaultValue={router.query["start-time"] || "01:00"}
+                        defaultValue={router.query["start-time"]}
                         aria-describedby="start-timeHelpBlock"
                         className="form-control"
                     />
-                    <span
-                        id="start-timeHelpBlock"
-                        className="form-text text-muted"
-                    >
-                        What is the earliest start time you want for your
-                        schedule?
-                    </span>
-                </div>
             </div>
-            <div className="form-group row">
-                <label htmlFor="end-time" className="col-4 col-form-label">
-                    Latest end
+            <div className="form-group">
+                <label htmlFor="end-time" className={styles["filter-label"]}>
+                    Latest End Time
                 </label>
-                <div className="col-8">
                     <input
                         id="end-time"
                         name="end-time"
                         type="time"
-                        defaultValue={router.query["end-time"] || "23:59"}
+                        defaultValue={router.query["end-time"]}
                         className="form-control"
                         aria-describedby="end-timeHelpBlock"
                     />
-                    <span
-                        id="end-timeHelpBlock"
-                        className="form-text text-muted"
-                    >
-                        What is the latest end time you want for your schedule?
-                    </span>
-                </div>
             </div>
-            <div className="form-group row">
-                <label htmlFor="min-days-free" className="col-4 col-form-label">
-                    Min. days off
+            <div className="form-group">
+                <label htmlFor="min-days-free" className={styles["filter-label"]}>
+                    Minimum Days Off
                 </label>
-                <div className="col-8">
                     <input
                         id="min-days-free"
                         name="min-days-free"
                         type="number"
                         min="0"
-                        placeholder="0"
                         defaultValue={router.query["min-days-free"]}
                         className="form-control"
                         aria-describedby="min-days-freeHelpBlock"
@@ -125,14 +109,13 @@ const Filters: NextPage = () => {
                         id="min-days-freeHelpBlock"
                         className="form-text text-muted"
                     >
-                        What is the minimum number of days off you'd like?
+                        At least how many days without classes do you want? 
                         (including weekends)
                     </span>
-                </div>
             </div>
-            <div className="form-group row">
-                <label className="col-4">Specific days off</label>
-                <div className="col-8">
+            <div className="form-group">
+                <label className={styles["filter-label"]}>Specific Days Off</label>
+                <div>
                     <div className="custom-control custom-checkbox custom-control-inline">
                         <input
                             name="specific-days-free"
@@ -260,19 +243,18 @@ const Filters: NextPage = () => {
                     </span>
                 </div>
             </div>
-            <div className="form-group row">
+            <div className="form-group">
                 <label
                     htmlFor="min-honors-courses"
-                    className="col-4 col-form-label"
+                    className={styles["filter-label"]}
                 >
-                    Min. honors courses
+                    Minimum Honors Courses
                 </label>
-                <div className="col-8">
                     <input
                         id="min-honors-courses"
                         name="min-honors-courses"
                         type="number"
-                        defaultValue={router.query["min-honors-courses"] || 0}
+                        defaultValue={router.query["min-honors-courses"]}
                         className="form-control"
                         aria-describedby="min-honors-coursesHelpBlock"
                     />
@@ -280,16 +262,8 @@ const Filters: NextPage = () => {
                         id="min-honors-coursesHelpBlock"
                         className="form-text text-muted"
                     >
-                        What is the minimum number of honors courses you'd like?
+                        How many (if any) honors courses do you want?
                     </span>
-                </div>
-            </div>
-            <div className="form-group row">
-                <div className="offset-4 col-8">
-                    <button type="submit" className="btn btn-primary">
-                        Apply
-                    </button>
-                </div>
             </div>
         </form>
     );

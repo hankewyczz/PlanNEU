@@ -20,21 +20,29 @@ a {
 
 .column-container {
   display: flex;
-  flex-wrap: wrap;
-  text-align: center;
-  height: 100%;
-  align-items: stretch;
 }
 
 .column-left {
   background-color: #F6F6F6;
-  padding: 10px;
-  flex: 30%;
+  padding: 25px 15px;
+  width: 300px;
+  position: fixed;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  top: 0;
+  bottom: 0;
+}
+
+.column-spacer {
+  flex-basis: 300px;
+  flex-shrink: 0;
 }
 
 .column-right {
-  padding: 10px;
-  flex: 70%;
+  max-width: 1800px;
+  flex-grow: 1;
+  text-align: center;
 }
 
 /* Responsive layout - makes a one column-layout instead of a two-column layout */
@@ -42,4 +50,10 @@ a {
   .column-right, .column-left {
     flex: 100%;
   }
+}
+
+/* Label text for the filters */
+.text-muted {
+  font-size:  0.9rem;
+  line-height: 1.25;
 }

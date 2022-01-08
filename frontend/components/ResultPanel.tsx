@@ -88,9 +88,9 @@ const ResultPanel: NextPage<Props> = ({ crns, courses, sections }) => {
                                 section.classType.toLowerCase() === "online";
 
                             return (
-                                <tr>
+                                <tr key={section.url}>
                                     <td>
-                                        <a href={section.url} target="_blank">
+                                        <a href={section.url} target="_blank" rel="noopener">
                                             {crn}
                                         </a>
                                     </td>

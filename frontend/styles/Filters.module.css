@@ -1,0 +1,12 @@
+.submit-button {
+    background-color: #E63946;
+    color: white;
+}
+
+.filter-label {
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 900;
+    margin-bottom: 12px;
+    margin-top: 20px;
+}

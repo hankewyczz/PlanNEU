@@ -122,16 +122,18 @@ export type ParsedSection = Omit<Section, "meetings"> & Record<"meetings", Binar
 // A list of CRNs of the sections
 export type CRNsResult = string[];
 
-export interface ResultStats {
-    numCombinations: number;
-    time: number;
+export interface ResultsGenerator {
+    courses: CourseWithoutSections[];
+    sections: SectionWithCourse[];
+    results: Generator<CRNsResult>;
 }
 
-export interface Results {
+export interface Results { 
+    hasNextPage: boolean;
     courses: CourseWithoutSections[];
     sections: SectionWithCourse[];
     results: CRNsResult[];
-    stats: ResultStats;
+    offset?: CRNsResult;
 }
 
 export interface BackendMeeting {

@@ -1,28 +1,36 @@
 import { parseCourses } from "../../parsers/parseCourse";
-import { generateCombinations, generateSchedules } from "../generateSchedules";
+import { generateCombinations, generateSchedules, incrementIndexesOverflow } from "../generateSchedules";
 import courses from "../../parsers/tests/data/courses.data";
 import results from "./data/genSchedules.data";
 import { nestedArrayEquality, MAX_NUM_RESULTS } from "../../utils/global";
-import { FilterBuilder } from "../../filters/filter";
+import { Filter, FilterBuilder } from "../../filters/filter";
 import sections from "../../parsers/tests/data/sections.data";
 import { MeetingDay } from "../../types/types";
 
 describe("Generating combinations", () => {
+    let filter: Filter;
+    beforeAll(() => {
+        filter = new FilterBuilder().build();
+    });
+
     test("Only one course", () => {
         // The results should return the same sections, since they won't be scheduled against anything else
-        expect([...generateCombinations([courses.cs3000_202210_parsed().sections])]).toEqual(
-            results.cs3000_202210_only
-        );
+        expect([
+            ...generateCombinations([courses.cs3000_202210_parsed().sections], filter),
+        ]).toEqual(results.cs3000_202210_only);
     });
 
     test("Two courses, partial overlap", () => {
         // CS3800 and CS3000
         nestedArrayEquality(
             [
-                ...generateCombinations([
-                    courses.cs3000_202210_parsed().sections,
-                    courses.cs3800_202210_parsed().sections,
-                ]),
+                ...generateCombinations(
+                    [
+                        courses.cs3000_202210_parsed().sections,
+                        courses.cs3800_202210_parsed().sections,
+                    ],
+                    filter
+                ),
             ],
             results.cs3000_and_cs3800_202210
         );
@@ -30,10 +38,10 @@ describe("Generating combinations", () => {
 
     test("Two courses, no overlap", () => {
         const results_1 = [
-            ...generateCombinations([
-                courses.cs3000_202210_parsed().sections,
-                courses.cs3001_202210_parsed().sections,
-            ]),
+            ...generateCombinations(
+                [courses.cs3000_202210_parsed().sections, courses.cs3001_202210_parsed().sections],
+                filter
+            ),
         ];
 
         // This is the max number of combinations possible
@@ -49,11 +57,14 @@ describe("Generating combinations", () => {
         // CS3001 has no conflict with either CS3000 or CS3800
         // However, CS3000 and CS3800 have conflicts with one another
         const results_1 = [
-            ...generateCombinations([
-                courses.cs3000_202210_parsed().sections,
-                courses.cs3001_202210_parsed().sections,
-                courses.cs3800_202210_parsed().sections,
-            ]),
+            ...generateCombinations(
+                [
+                    courses.cs3000_202210_parsed().sections,
+                    courses.cs3001_202210_parsed().sections,
+                    courses.cs3800_202210_parsed().sections,
+                ],
+                filter
+            ),
         ];
 
         // We've already tested CS3000 and CS3800 - now we add CS3001 into the mix
@@ -67,12 +78,15 @@ describe("Generating combinations", () => {
 
     test("Complex example", () => {
         const results_1 = [
-            ...generateCombinations([
-                courses.cs3000_202210_parsed().sections,
-                courses.cs2800_202210_parsed().sections,
-                courses.cs3800_202210_parsed().sections,
-                courses.cs4850_202210_parsed().sections,
-            ]),
+            ...generateCombinations(
+                [
+                    courses.cs3000_202210_parsed().sections,
+                    courses.cs2800_202210_parsed().sections,
+                    courses.cs3800_202210_parsed().sections,
+                    courses.cs4850_202210_parsed().sections,
+                ],
+                filter
+            ),
         ];
 
         nestedArrayEquality(results_1, results.complex_example);
@@ -84,30 +98,38 @@ describe("Generating combinations", () => {
             new FilterBuilder().build()
         );
 
-        nestedArrayEquality(results_1.results, results.complex_example_2);
+        nestedArrayEquality([...results_1.results], results.complex_example_2);
+    });
+
+    test("Offsets", () => {
+        const results_1 = generateSchedules(
+            [courses.cs3000_202210(), courses.eece2323_202210()],
+            new FilterBuilder().build(),
+            results.complex_example_2[4] // Set the offset
+        );
+
+        nestedArrayEquality([...results_1.results], results.complex_example_2.slice(4));
+
+        const results_2 = generateSchedules(
+            [courses.cs3000_202210(), courses.eece2323_202210()],
+            new FilterBuilder().build(),
+            results.complex_example_2[results.complex_example_2.length - 1] // Set the offset
+        );
+
+        nestedArrayEquality([...results_2.results], results.complex_example_2.slice(-1));
     });
 
     test("Complex example #3", () => {
         const results_1 = generateSchedules(
             [courses.cs3000_202210(), courses.eece2323_202210(), courses.eece2322_202210()],
-            new FilterBuilder().build(),
-            300 // Don't limit result number for this
+            new FilterBuilder().build()
         );
 
-        nestedArrayEquality(results_1.results, results.complex_example_3);
-    });
-
-    test("Limit number of results", () => {
-        const results_1 = generateSchedules(
-            [courses.honr1102_202210(), courses.thtr1170_202210()],
-            new FilterBuilder().build()
-        ).results;
-
-        expect(results_1.length <= MAX_NUM_RESULTS).toBeTruthy();
+        nestedArrayEquality([...results_1.results], results.complex_example_3);
     });
 
     test("Remove filtered courses", () => {
-        const results = generateCombinations([courses.cs3000_202210_parsed().sections, []]);
+        const results = generateCombinations([courses.cs3000_202210_parsed().sections, []], filter);
 
         expect([...results]).toEqual([]);
     });
@@ -149,31 +171,18 @@ describe("Testing complete result generation", () => {
 
     test("Default result", () => {
         expect(generateSchedules([], new FilterBuilder().build())).toMatchObject({
-            results: [],
-            sections: {},
+            results: (function* () {})(),
+            sections: [],
             courses: [],
-            stats: {
-                numCombinations: 0,
-                time: 0,
-            },
         });
     });
 
     test("Conflict with days", () => {
-        expect(
-            generateSchedules(
-                [courses.cs3800_202210()],
-                new FilterBuilder().setSpecificDaysFree([MeetingDay.TUESDAY]).build()
-            )
-        ).toMatchObject({
-            results: [],
-            sections: {},
-            courses: [],
-            stats: {
-                numCombinations: 0,
-                time: 0,
-            },
-        });
+        const result_1 = generateSchedules(
+            [courses.cs3800_202210()],
+            new FilterBuilder().setSpecificDaysFree([MeetingDay.TUESDAY]).build()
+        );
+        expect([...result_1.results]).toEqual([]);
     });
 
     test("Make sure all sections are listed & unparsed", () => {
@@ -200,4 +209,36 @@ describe("Testing complete result generation", () => {
             parseCourses([courses.cs3800_202210(), courses.cs3000_202210()]).sort()
         );
     });
+
+    test("Simple incrementer", () => {
+        const indexes = [0,0,0]
+        const sizes = [1,2,2]
+
+        expect(indexes).toEqual([0,0,0])
+        expect(incrementIndexesOverflow(indexes, sizes)).toBeFalsy();
+        expect(indexes).toEqual([0,0,1])
+        expect(incrementIndexesOverflow(indexes, sizes)).toBeFalsy();
+        expect(indexes).toEqual([0,1,0])
+        expect(incrementIndexesOverflow(indexes, sizes)).toBeFalsy();
+        expect(indexes).toEqual([0,1,1])
+        expect(incrementIndexesOverflow(indexes, sizes)).toBeTruthy();
+    })
+
+    test("Incrementer with skips", () => {
+        const indexes = [0,0,0]
+        const sizes = [2,2,2]
+
+        expect(indexes).toEqual([0,0,0])
+        expect(incrementIndexesOverflow(indexes, sizes)).toBeFalsy();
+        expect(indexes).toEqual([0,0,1])
+        expect(incrementIndexesOverflow(indexes, sizes)).toBeFalsy();
+        expect(indexes).toEqual([0,1,0])
+        expect(incrementIndexesOverflow(indexes, sizes, 1)).toBeFalsy();
+        expect(indexes).toEqual([1,0,0])
+        expect(incrementIndexesOverflow(indexes, sizes)).toBeFalsy();
+        expect(indexes).toEqual([1,0,1])
+        expect(incrementIndexesOverflow(indexes, sizes)).toBeFalsy();
+        expect(indexes).toEqual([1,1,0])
+        expect(incrementIndexesOverflow(indexes, sizes, 1)).toBeTruthy();
+    })
 });

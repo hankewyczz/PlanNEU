@@ -10,7 +10,8 @@ const typeDef = gql`
             filterDaysFree: [String]!
             filterMinNumDaysFree: Int
             filterMinSeatsLeft: Int
-            filterMinHonors: Int): Results!
+            filterMinHonors: Int, 
+            offset: [String!]): Results!
     }
     type Course {
         name: String!
@@ -35,15 +36,12 @@ const typeDef = gql`
         profs: [String!]!
         meetings: JSON!
     }
-    type Stats {
-        time: Int!
-        numCombinations: Int!
-    }
     type Results {
+        hasNextPage: Boolean!
         results: [[String!]!]!
         sections: [Section!]!
         courses: [Course!]!
-        stats: Stats!
+        offset: [String!]
     }
 `;
 

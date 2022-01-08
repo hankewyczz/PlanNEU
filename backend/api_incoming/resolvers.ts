@@ -2,6 +2,7 @@ import { getCourse, getSection } from "../api_outgoing/queryApi";
 import { FilterBuilder } from "../filters/filter";
 import { generateSchedules } from "../generate_schedules/generateSchedules";
 import { Course, isCourseHash, isSectionHash, Results, toMeetingDay } from "../types/types";
+import { MAX_NUM_RESULTS } from "../utils/global";
 
 /**
  * Converts a string-based hash to a Course
@@ -22,27 +23,33 @@ async function hashToCourse(hash: string, termId: string): Promise<Course | neve
     throw Error(`'${hash}': is not recognized as a valid course/section hash`);
 }
 
-// Returns time in seconds
-function stringToTime(time: string | undefined): number | undefined {
-    if (time === undefined || time.length !== 4) {
+/**
+ * Converts a time string to seconds
+ * @param time A time (hours and minutes), in 24-hour time, separated by a color
+ * @returns The number of seconds this time represents
+ */
+export function stringToTime(time: string | undefined): number | undefined {
+    if (time === undefined || time.length !== 5) {
         return undefined;
     }
 
     const times = time.split(":");
-    if (times.length !== 2 && times[0].length !== 2) {
+    if (times.length !== 2 || times[0].length !== 2) {
         return undefined;
     }
 
+    // As long as it's formatted correctly, we don't care what the hour/minute values are
+    // You want "-1:61" in seconds? Order up
     const hours = Number.parseInt(times[0]);
     const minutes = Number.parseInt(times[1]);
     return hours * (60 * 60) + minutes * 60;
 }
 
 /**
- * 
+ *
  * @param courses A list of hashes representing a Course or a Section
  * @param termId The termID for which we generate this schedule
- * @param filterStartTime A minimum start time, in seconds  
+ * @param filterStartTime A minimum start time, in seconds
  * @param filterEndTime A maximum end time, in seconds
  * @param filterDaysFree An array of specific days which should not have any meetings scheudled
  * @param filterMinNumDaysFree The minimum number of days which should have no meetings
@@ -58,10 +65,9 @@ async function apiGenerateSchedule(
     filterDaysFree: string[] = [],
     filterMinNumDaysFree: number | undefined,
     filterMinSeatsLeft: number | undefined,
-    filterMinHonors: number | undefined
+    filterMinHonors: number | undefined,
+    offset: string[] | undefined
 ): Promise<Results> {
-    const start = new Date();
-    // Fixing the input
     const meeting_days = filterDaysFree.map((day) => toMeetingDay(day));
 
     const filter = new FilterBuilder()
@@ -84,9 +90,31 @@ async function apiGenerateSchedule(
         })
     );
 
-    const results = generateSchedules(course_objs, filter);
-    results.stats.time = new Date().getTime() - start.getTime();
-    return results;
+    const results_generator = generateSchedules(course_objs, filter, offset);
+
+    // Return some entries, and note if we have a next page
+    const results_array = [];
+    for (let i = 0; i < MAX_NUM_RESULTS; i++) {
+        const next = results_generator.results.next();
+        if (next.done) {
+            return { ...results_generator, hasNextPage: false, results: results_array };
+        }
+
+        results_array.push(next.value);
+    }
+
+    // Once we've gotten however many we wanted, we do a final check to see if there's a last page
+    // However, we can't do this without actually getting the next object
+    // So we get it, store it as the offset, and DON'T return it this time
+    const next = results_generator.results.next();
+    if (next.done) {
+        return { ...results_generator, hasNextPage: false, results: results_array };
+    }
+    else {
+        return { ...results_generator, hasNextPage: true, results: results_array, offset: next.value };
+    }
+
+    
 }
 
 const resolvers = {
@@ -100,7 +128,8 @@ const resolvers = {
                 args.filterDaysFree,
                 args.filterMinNumDaysFree,
                 args.filterMinSeatsLeft,
-                args.filterMinHonors
+                args.filterMinHonors,
+                args.offset
             );
         },
     },

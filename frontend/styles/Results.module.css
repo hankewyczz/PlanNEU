@@ -3,4 +3,14 @@
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
+    width: 100%;
+}
+
+.results-message-container {
+    border-radius: 5px;
+    background-color: #FAFAFA;
+    border-bottom: 1px solid rgba(34,36,38,.5);
+    width: 80%;
+    padding: 30px;
+    margin-top: 200px;
 }

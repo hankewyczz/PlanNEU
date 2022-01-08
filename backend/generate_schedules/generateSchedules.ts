@@ -3,30 +3,28 @@ import { Filter } from "../filters/filter";
 import { BinaryMeetingTime } from "../parsers/meetingTimes";
 import {
     CRNsResult,
-    Results,
+    ResultsGenerator,
     Course,
     SectionWithCourse,
     ParsedSection,
-    MeetingDay,
 } from "../types/types";
-import { MAX_COURSES, MAX_POSSIBILITIES, MAX_NUM_RESULTS } from "../utils/global";
+import { MAX_COURSES, MAX_POSSIBILITIES } from "../utils/global";
 
 export function generateSchedules(
     courses: Course[],
     course_filter: Filter,
-    limit_results = MAX_NUM_RESULTS
-): Results {
+    offset?: string[]
+): ResultsGenerator {
     // Create a CRN -> unparsed section mapping (do this first, since the sections will be mutated)
     const unparsed_sections = courses
         .map((c) => {
-            // Sections are composed of primative types, so this is an OK way to clone
+            // Sections are composed of nested primitive types, so JSON is an OK way to deep clone
             const sections: Partial<SectionWithCourse>[] = JSON.parse(JSON.stringify(c.sections));
             sections.forEach((sec) => (sec["classId"] = `${c.subject}${c.classId}`));
             return sections as SectionWithCourse[];
         })
         .flat();
 
-    // Filter the sections, and remove any courses that are now empty lists
     const sections = parseCourses(courses)
         .map((course) => course.sections)
         .map((secs) => secs.filter((sec) => course_filter.sectionCompatible(sec)));
@@ -36,20 +34,11 @@ export function generateSchedules(
         throw Error(`Only ${MAX_COURSES} courses are allowed; please remove some and try again.`);
     }
 
-    // Check if the days are compatible - minor optimization.
-    // Some classes MUST have meetings on a given day - knowing this, we can calculate the max possible
-    //  days free. If it doesn't meet the requirement, just return here
-    const day_compatibility = course_filter.daysCompatible(checkMandatoryDays(sections));
-
-    if (sections.length === 0 || !day_compatibility) {
+    if (sections.length === 0) {
         return {
-            results: [],
+            results: (function* () {})(), // An empty Generator object - sucks that there's less verbose way of doing it
             sections: [],
             courses: [],
-            stats: {
-                numCombinations: 0,
-                time: 0,
-            },
         };
     }
 
@@ -60,121 +49,109 @@ export function generateSchedules(
         Please try removing a course with many sections (like a lab or recitation) and try agian.`);
     }
 
-    // Create the result Generator object
-    const result_generator = generateCombinations(sections);
-
-    // Filter the results
-    const section_mapping: Record<string, ParsedSection> = {};
-    sections.forEach((secs) =>
-        secs.forEach((sec) => {
-            section_mapping[sec.crn] = sec;
-        })
-    );
-
-    const filtered_results = [];
-
-    for (const result of result_generator) {
-        const compatible = course_filter.resultCompatible(result.map((crn) => section_mapping[crn]));
-
-        if (compatible) {
-            filtered_results.push(result);
-
-            if (filtered_results.length >= limit_results) {
-                break;
-            }
-        }
-    }
-
     return {
-        results: filtered_results,
+        results: generateCombinations(sections, course_filter, offset),
         sections: unparsed_sections,
         courses: courses,
-        stats: {
-            numCombinations: num_combinations,
-            time: 0, // will be overridden
-        },
     };
 }
 
 /**
- * Checks which days are mandatory for courses (ie. days such that every section has a meeting then)
- * @param courses A list of lists of parsed sections (ie. a list of courses)
- * @returns A set of the days, on which we must have class meetings
+ *  A helper function to increment the indexes, like an odometer - increments the first digit until overflow,
+ * then the second, etc. Returns a boolean indicating if the last digit overflowed.
+ * 
+ * Example: sizes = [1,2,2]
+ * 
+ * 000 -> 001 -> 010 -> 011
+ * @param indexes An array of indexes, which will be mutated
+ * @param sizes An array of sizes, representing the size of the array at each index
+ * @param start_at The index at which we start
+ * @returns A boolean indicating if the indexes have overflowed
  */
-export function checkMandatoryDays(courses: ParsedSection[][]): Set<MeetingDay> {
-    const all_days: Set<MeetingDay> = new Set();
-    for (const course of courses) {
-        let course_days = new Set(Object.values(MeetingDay));
+export function incrementIndexesOverflow(
+    indexes: number[],
+    sizes: number[],
+    start_at = sizes.length - 1
+): boolean {
+    for (let i = start_at; i >= 0; i--) {
+        indexes[i] += 1;
 
-        for (const section of course) {
-            course_days = new Set([...course_days].filter((i) => section.meetings.days().has(i)));
+        // Reset this digit & carry the rest
+        if (indexes[i] >= sizes[i]) {
+            indexes[i] = 0;
+        } else {
+            return false;
         }
-
-        course_days.forEach((elem) => all_days.add(elem));
     }
 
-    return all_days;
+    return true;
 }
 
-/*
-Generating a schedule is, computationally speaking, a tricky problem.
-The scheduling problem is generally NP-Complete, and there's been plenty of research on it.
-
-Due to the factorially-expanding runtime, we need to reduce the complexity as much as possible.
-- Limit the number of classes (TODO: what's a reasonable number? 6? 7?)
-- Limit the number of sections
-    - For each class, we should only consider a max number of sections (maybe 10?)
-    - If the users want different sections, they can select more specific filters
-- Block-based scheduling
-    - This is an optimized way of checking time overlaps.
-    - Assume that the class schedules are on time blocks. In our case, I ~think~ the largest block we can be sure about is 5 mins.
-*/
-export function* generateCombinations(courses: ParsedSection[][]): Generator<CRNsResult> {
+/**
+ * Creates a Generator object, returning the results.
+ *
+ * Generating a schedule is generally NP-Complete, so we need to agressivly reduce the complexity of our problem.
+ * We limit the number of classes & number of sections (after filtering), and also use a block-based schedule
+ * to optimize time overlaps.
+ * @param courses A list of lists of sections
+ * @param offset A list of CRNs, indicating where in the results we should jump to (useful for pagination)
+ * @returns A Generator of Results
+ */
+export function* generateCombinations(
+    courses: ParsedSection[][],
+    course_filter: Filter,
+    offset?: string[]
+): Generator<CRNsResult> {
     // We sort so that the courses with the fewest number of sections are handled first
     // When there aren't many sections, each time conflict will reduce the number of work done down the line dramatically
     courses.sort((a, b) => a.length - b.length);
+    // Sort each course's sections, so we have a consistent order for the offsets
+    courses.forEach((c) => c.sort((a, b) => a.crn.localeCompare(b.crn)));
 
     const sizes = courses.map((c) => c.length);
 
-    // Check if any of the course arrays are empty
-    // This means we filtered out all the sections - no possible results, so just return right away
+    // Check if any of the course arrays are empty - no possible results
     if (sizes.includes(0)) {
         return;
     }
 
     // Initialize the indexes at 0 each
-    let indexes: number[] = new Array(courses.length).fill(0);
+    const indexes: number[] = new Array(courses.length).fill(0);
 
-    // Determines if we carry the digit over
-    let carry = 0;
-    // If the carry is not 0 at the main loop, that means we've overflowed
-    while (carry === 0) {
+    // If we are passed an offset, we handle it here. The offset is a list of CRNs.
+    // We want to skip the generation ahead to those CRNs (inclusive, so these CRNs are the first ones we check)
+    // This allows us to handle pagination via the API
+    if (offset !== undefined) {
+        for (const [c_idx, course] of courses.entries()) {
+            for (const [s_idx, sec] of course.entries()) {
+                if (offset.includes(sec.crn)) {
+                    indexes[c_idx] = s_idx;
+                    break;
+                }
+            }
+        }
+    }
+
+    // Now, generate results and keep going until we overflow
+    while (true) {
         const sections = indexes.map((section, course) => courses[course][section]);
-        const combined = BinaryMeetingTime.combineMany(sections.map((s) => s.meetings));
+        const combined_meetings = BinaryMeetingTime.combineMany(sections.map((s) => s.meetings));
 
-        let i = sizes.length - 1; // Set this up here, so we can override it
-        carry = 1;
+        let i = sizes.length - 1;
 
-        if (combined instanceof BinaryMeetingTime) {
-            yield sections.map((s) => s.crn);
+        if (combined_meetings instanceof BinaryMeetingTime) {
+            if (course_filter.resultCompatible(sections)) {
+                yield sections.map((s) => s.crn);
+            }
         } else {
             // There was a conflict - we want to increment that column, to save time
-            i = combined;
+            i = combined_meetings;
         }
 
         // Increase the index counter
-        for (; i >= 0; i--) {
-            // The leading semicolon skips variable initialization
-            indexes[i] += carry;
-
-            // Reset this digit
-            if (indexes[i] >= sizes[i]) {
-                indexes[i] = 0;
-                carry = 1;
-            } else {
-                carry = 0;
-                break;
-            }
+        const overflow = incrementIndexesOverflow(indexes, sizes, i);
+        if (overflow) {
+            break;
         }
     }
 }

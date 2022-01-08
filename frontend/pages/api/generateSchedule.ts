@@ -27,7 +27,7 @@ export async function generateScheduleFromQuery(
     let courses;
     const raw_courses = query["courses"];
     if (raw_courses === undefined) {
-        throw Error("No courses specified")
+        throw Error("No courses specified - please select some courses and try again")
     }
     // Only one course was specified - isn't going to be much of a schedule, but we'll allow it
     else if (typeof raw_courses === "string") {
@@ -60,15 +60,26 @@ export async function generateScheduleFromQuery(
         filter_days_free = [] as string[];
     }
 
-    return await generateSchedule(
-        courses,
-        term_id,
-        filter_days_free,
-        // For the rest - they can either be a string or undefined, we don't care which one
-        parseQueryString(query["start-time"]),
-        parseQueryString(query["end-time"]),
-        parseQueryInt(query["min-days-free"]),
-        parseQueryInt(query["min-seats-left"]),
-        parseQueryInt(query["min-honors-courses"])
-    )
+    try {
+        const results = await generateSchedule(
+            courses,
+            term_id,
+            filter_days_free,
+            // For the rest - they can either be a string or undefined, we don't care which one
+            parseQueryString(query["start-time"]),
+            parseQueryString(query["end-time"]),
+            parseQueryInt(query["min-days-free"]),
+            parseQueryInt(query["min-seats-left"]),
+            parseQueryInt(query["min-honors-courses"])
+        );
+
+        return results;
+    } catch (err: any) {
+        console.error(err);
+        const message = err["response"]["errors"][0]["message"];
+        if (message !== undefined) {
+            throw Error(`${message} (API Error)`)
+        }
+        throw Error("Unknown API error");
+    }
 }
