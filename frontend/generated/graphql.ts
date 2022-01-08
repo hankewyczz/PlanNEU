@@ -45,15 +45,17 @@ export type QueryGenerateScheduleArgs = {
   filterMinNumDaysFree?: InputMaybe<Scalars["Int"]>;
   filterMinSeatsLeft?: InputMaybe<Scalars["Int"]>;
   filterStartTime?: InputMaybe<Scalars["String"]>;
+  offset?: InputMaybe<Array<Scalars["String"]>>;
   termId: Scalars["String"];
 };
 
 export type Results = {
   __typename?: "Results";
   courses: Array<Course>;
+  hasNextPage: Scalars["Boolean"];
+  offset?: Maybe<Array<Scalars["String"]>>;
   results: Array<Array<Scalars["String"]>>;
   sections: Array<Section>;
-  stats: Stats;
 };
 
 export type Section = {
@@ -73,12 +75,6 @@ export type Section = {
   waitRemaining: Scalars["Int"];
 };
 
-export type Stats = {
-  __typename?: "Stats";
-  numCombinations: Scalars["Int"];
-  time: Scalars["Int"];
-};
-
 export type GenerateScheduleQueryVariables = Exact<{
   courses: Array<InputMaybe<Scalars["String"]>> | InputMaybe<Scalars["String"]>;
   termId: Scalars["String"];
@@ -90,12 +86,14 @@ export type GenerateScheduleQueryVariables = Exact<{
   filterMinNumDaysFree?: InputMaybe<Scalars["Int"]>;
   filterMinSeatsLeft?: InputMaybe<Scalars["Int"]>;
   filterMinHonors?: InputMaybe<Scalars["Int"]>;
+  offset?: InputMaybe<Array<Scalars["String"]> | Scalars["String"]>;
 }>;
 
 export type GenerateScheduleQuery = {
   __typename?: "Query";
   generateSchedule: {
     __typename?: "Results";
+    offset?: Array<string> | null | undefined;
     results: Array<Array<string>>;
     sections: Array<{
       __typename?: "Section";
@@ -121,7 +119,6 @@ export type GenerateScheduleQuery = {
       classId: string;
       coreqs: any;
     }>;
-    stats: { __typename?: "Stats"; time: number; numCombinations: number };
   };
 };
 
@@ -135,6 +132,7 @@ export const GenerateScheduleDocument = gql`
     $filterMinNumDaysFree: Int
     $filterMinSeatsLeft: Int
     $filterMinHonors: Int
+    $offset: [String!]
   ) {
     generateSchedule(
       courses: $courses
@@ -145,7 +143,9 @@ export const GenerateScheduleDocument = gql`
       filterMinNumDaysFree: $filterMinNumDaysFree
       filterMinSeatsLeft: $filterMinSeatsLeft
       filterMinHonors: $filterMinHonors
+      offset: $offset
     ) {
+      offset
       results
       sections {
         classId
@@ -168,10 +168,6 @@ export const GenerateScheduleDocument = gql`
         termId
         classId
         coreqs
-      }
-      stats {
-        time
-        numCombinations
       }
     }
   }

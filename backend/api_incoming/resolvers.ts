@@ -92,12 +92,14 @@ async function apiGenerateSchedule(
 
     const results_generator = generateSchedules(course_objs, filter, offset);
 
+    
+
     // Return some entries, and note if we have a next page
     const results_array = [];
     for (let i = 0; i < MAX_NUM_RESULTS; i++) {
         const next = results_generator.results.next();
         if (next.done) {
-            return { ...results_generator, hasNextPage: false, results: results_array };
+            return { ...results_generator, results: results_array };
         }
 
         results_array.push(next.value);
@@ -108,10 +110,10 @@ async function apiGenerateSchedule(
     // So we get it, store it as the offset, and DON'T return it this time
     const next = results_generator.results.next();
     if (next.done) {
-        return { ...results_generator, hasNextPage: false, results: results_array };
+        return { ...results_generator, results: results_array };
     }
     else {
-        return { ...results_generator, hasNextPage: true, results: results_array, offset: next.value };
+        return { ...results_generator, results: results_array, offset: next.value };
     }
 
     

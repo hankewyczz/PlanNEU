@@ -37,7 +37,6 @@ const typeDef = gql`
         meetings: JSON!
     }
     type Results {
-        hasNextPage: Boolean!
         results: [[String!]!]!
         sections: [Section!]!
         courses: [Course!]!

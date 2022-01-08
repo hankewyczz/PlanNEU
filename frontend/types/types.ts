@@ -1,16 +1,20 @@
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 
-export interface Results {
+export interface useScheduleType {
+    loaded: boolean;
+    hasNextPage: boolean;
+    error: any;
     courses: Record<string, CourseWithoutSections>;
     sections: Record<string, SectionWithCourse>;
     results: string[][];
-    stats: ResultStats;
+    loadMore: () => void;
 }
-
-export interface ResultStats {
-    numCombinations: number;
-    time: number;
+export interface Results {
+    nextPageOffset?: string[];
+    results: string[][];
+    courses: Record<string, CourseWithoutSections>;
+    sections: Record<string, SectionWithCourse>;
 }
 
 export interface Course {
@@ -22,7 +26,7 @@ export interface Course {
     sections: Section[];
 }
 
-export type CourseWithoutSections = Omit<Course, "sections">
+export type CourseWithoutSections = Omit<Course, "sections">;
 
 export type Requisite = string | BooleanReq | CourseReq;
 
@@ -54,7 +58,7 @@ export interface Section {
 }
 export interface SectionWithCourse extends Section {
     classId: string;
-  }
+}
 
 export interface BackendMeeting {
     startDate: number; // Number of days since epoch
@@ -95,7 +99,6 @@ export function meetingDayToString(day: MeetingDay): string {
     }
 }
 
-
 export type MeetingTimes = Partial<Record<MeetingDay, MeetingTime[]>>;
 
 // A single meeting time, ex: "9:50-11:30am"
@@ -104,21 +107,19 @@ export interface MeetingTime {
     end: number;
 }
 
-
-dayjs.extend(utc)
+dayjs.extend(utc);
 export function meetingToString(meeting: MeetingTime): string {
-    const start = dayjs.utc(meeting.start * 1000).format("h:mm")
-    const end = dayjs.utc(meeting.end * 1000).format("h:mm a")
+    const start = dayjs.utc(meeting.start * 1000).format("h:mm");
+    const end = dayjs.utc(meeting.end * 1000).format("h:mm a");
 
-    return `${start}–${end}`
+    return `${start}–${end}`;
 }
 
 export function scheduleMeetingToString(meeting: ScheduleMeeting): string {
-    return `${meetingToString(meeting.meeting)} | ${meeting.name}`
-
+    return `${meetingToString(meeting.meeting)} | ${meeting.name}`;
 }
 
 export type ScheduleMeeting = {
     name: string;
     meeting: MeetingTime;
-}
+};

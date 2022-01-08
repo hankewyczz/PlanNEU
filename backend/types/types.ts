@@ -129,7 +129,6 @@ export interface ResultsGenerator {
 }
 
 export interface Results { 
-    hasNextPage: boolean;
     courses: CourseWithoutSections[];
     sections: SectionWithCourse[];
     results: CRNsResult[];

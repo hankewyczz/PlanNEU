@@ -6,7 +6,8 @@ query generateSchedule(
     $filterEndTime: String
     $filterMinNumDaysFree: Int
     $filterMinSeatsLeft: Int
-    $filterMinHonors: Int
+    $filterMinHonors: Int,
+    $offset: [String!]
 ) {
     generateSchedule(
         courses: $courses
@@ -17,7 +18,9 @@ query generateSchedule(
         filterMinNumDaysFree: $filterMinNumDaysFree
         filterMinSeatsLeft: $filterMinSeatsLeft
         filterMinHonors: $filterMinHonors
+        offset: $offset
     ) {
+        offset
         results
         sections {
             classId
@@ -40,10 +43,6 @@ query generateSchedule(
             termId
             classId
             coreqs
-        }
-        stats {
-            time
-            numCombinations
         }
     }
 }

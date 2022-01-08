@@ -1,50 +1,47 @@
 import type { NextPage } from "next";
-import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { generateScheduleFromQuery } from "../pages/api/generateSchedule";
-import { CourseWithoutSections, Results, SectionWithCourse } from "../types/types";
+import { useSchedule } from "../pages/api/generateSchedule";
+import { Results } from "../types/types";
 import { FadeLoader } from "react-spinners";
 import ResultPanel from "./ResultPanel";
 import styles from "../styles/Results.module.css";
-import Stats from "./Stats";
+import ResultsLoader from "./ResultsLoader";
 
 const Results: NextPage = () => {
     const router = useRouter();
 
-    const [schedule, setSchedule] = useState({
-        results: [] as string[][],
-        courses: {} as Record<string, CourseWithoutSections>,
-        sections: {} as Record<string, SectionWithCourse>,
-    } as Results);
+    const { loaded, hasNextPage, error, courses, sections, results, loadMore } =
+        useSchedule(router);
 
-    const [err, setErr] = useState(null);
-
-    useEffect(() => {
-        if (!router.isReady) return;
-        generateScheduleFromQuery(router.query)
-            .then((schedules) => setSchedule(schedules))
-            .catch((error) => setErr(error.toString()));
-    }, [router.isReady]);
+    const errToMsg = (err: any) => {
+        console.error(err)
+        try {
+            return err.response.errors[0].message 
+        }
+        catch (e) {
+            return "Unknown Error"
+        }
+    }
 
     return (
         <div className={styles["results-container"]}>
-            {err !== null ? (
+            {error ? (
+                
                 <div className={styles["results-message-container"]}>
                     <h4>We ran into a problem</h4>
-                    <p>{err}</p>
+                    <p>{errToMsg(error)}</p>
                 </div>
             ) : // Now, we handle the case with no error (ie. normal usage)
-            schedule.hasOwnProperty("stats") ? (
+            loaded ? (
                 // Normal, non-zero results
-                schedule.results.length > 0 ? (
-                    schedule.results.map((crns) => (
-                        <ResultPanel
-                            key={crns.join(",")}
-                            crns={crns}
-                            courses={schedule.courses}
-                            sections={schedule.sections}
-                        />
-                    ))
+                results.length > 0 ? (
+                    <ResultsLoader
+                        results={results}
+                        courses={courses}
+                        sections={sections}
+                        loadMore={loadMore}
+                        hasNextPage={hasNextPage}
+                    />
                 ) : (
                     // Handle the case when zero results are returned
                     <div className={styles["results-message-container"]}>
