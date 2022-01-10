@@ -1,4 +1,5 @@
-import { BinaryMeetingTime } from "../parsers/meetingTimes";
+import { BinaryMeetingTime } from "../parsers/binaryMeetings";
+import { TimestampMeeting, TimestampMeetings } from "../parsers/timestampMeetings";
 
 export type CourseHash = {
     subject: string;
@@ -112,8 +113,9 @@ export interface Section {
     meetings: BackendMeeting[];
 }
 
-export interface SectionWithCourse extends Section {
+export interface ResultsSection extends Section {
     classId: string;
+    timestamp_meetings: TimestampMeeting[]; 
 }
 
 // The same as a section, but with parsed meetings
@@ -124,13 +126,13 @@ export type CRNsResult = string[];
 
 export interface ResultsGenerator {
     courses: CourseWithoutSections[];
-    sections: SectionWithCourse[];
+    sections: ResultsSection[];
     results: Generator<CRNsResult>;
 }
 
 export interface Results { 
     courses: CourseWithoutSections[];
-    sections: SectionWithCourse[];
+    sections: ResultsSection[];
     results: CRNsResult[];
     offset?: CRNsResult;
 }

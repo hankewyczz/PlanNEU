@@ -1,11 +1,16 @@
 import { parseCourses } from "../../parsers/parseCourse";
-import { generateCombinations, generateSchedules, incrementIndexesOverflow } from "../generateSchedules";
+import {
+    generateCombinations,
+    generateSchedules,
+    incrementIndexesOverflow,
+} from "../generateSchedules";
 import courses from "../../parsers/tests/data/courses.data";
 import results from "./data/genSchedules.data";
 import { nestedArrayEquality, MAX_NUM_RESULTS } from "../../utils/global";
 import { Filter, FilterBuilder } from "../../filters/filter";
 import sections from "../../parsers/tests/data/sections.data";
 import { MeetingDay } from "../../types/types";
+import { TimestampMeetings } from "../../parsers/timestampMeetings";
 
 describe("Generating combinations", () => {
     let filter: Filter;
@@ -191,11 +196,31 @@ describe("Testing complete result generation", () => {
         const results = generateSchedules(course_list, filter);
 
         expect(results.sections.sort()).toEqual([
-            { ...sections.cs3800_202210_1(), classId: "CS3800" },
-            { ...sections.cs3800_202210_2(), classId: "CS3800" },
-            { ...sections.cs3000_202210_1(), classId: "CS3000" },
-            { ...sections.cs3000_202210_2(), classId: "CS3000" },
-            { ...sections.cs3000_202210_3(), classId: "CS3000" },
+            {
+                ...sections.cs3800_202210_1(),
+                classId: "CS3800",
+                timestamp_meetings: new TimestampMeetings(sections.cs3800_202210_1().meetings),
+            },
+            {
+                ...sections.cs3800_202210_2(),
+                classId: "CS3800",
+                timestamp_meetings: new TimestampMeetings(sections.cs3800_202210_2().meetings),
+            },
+            {
+                ...sections.cs3000_202210_1(),
+                classId: "CS3000",
+                timestamp_meetings: new TimestampMeetings(sections.cs3000_202210_1().meetings),
+            },
+            {
+                ...sections.cs3000_202210_2(),
+                classId: "CS3000",
+                timestamp_meetings: new TimestampMeetings(sections.cs3000_202210_2().meetings),
+            },
+            {
+                ...sections.cs3000_202210_3(),
+                classId: "CS3000",
+                timestamp_meetings: new TimestampMeetings(sections.cs3000_202210_3().meetings),
+            },
         ]);
     });
 
@@ -211,34 +236,34 @@ describe("Testing complete result generation", () => {
     });
 
     test("Simple incrementer", () => {
-        const indexes = [0,0,0]
-        const sizes = [1,2,2]
+        const indexes = [0, 0, 0];
+        const sizes = [1, 2, 2];
 
-        expect(indexes).toEqual([0,0,0])
+        expect(indexes).toEqual([0, 0, 0]);
         expect(incrementIndexesOverflow(indexes, sizes)).toBeFalsy();
-        expect(indexes).toEqual([0,0,1])
+        expect(indexes).toEqual([0, 0, 1]);
         expect(incrementIndexesOverflow(indexes, sizes)).toBeFalsy();
-        expect(indexes).toEqual([0,1,0])
+        expect(indexes).toEqual([0, 1, 0]);
         expect(incrementIndexesOverflow(indexes, sizes)).toBeFalsy();
-        expect(indexes).toEqual([0,1,1])
+        expect(indexes).toEqual([0, 1, 1]);
         expect(incrementIndexesOverflow(indexes, sizes)).toBeTruthy();
-    })
+    });
 
     test("Incrementer with skips", () => {
-        const indexes = [0,0,0]
-        const sizes = [2,2,2]
+        const indexes = [0, 0, 0];
+        const sizes = [2, 2, 2];
 
-        expect(indexes).toEqual([0,0,0])
+        expect(indexes).toEqual([0, 0, 0]);
         expect(incrementIndexesOverflow(indexes, sizes)).toBeFalsy();
-        expect(indexes).toEqual([0,0,1])
+        expect(indexes).toEqual([0, 0, 1]);
         expect(incrementIndexesOverflow(indexes, sizes)).toBeFalsy();
-        expect(indexes).toEqual([0,1,0])
+        expect(indexes).toEqual([0, 1, 0]);
         expect(incrementIndexesOverflow(indexes, sizes, 1)).toBeFalsy();
-        expect(indexes).toEqual([1,0,0])
+        expect(indexes).toEqual([1, 0, 0]);
         expect(incrementIndexesOverflow(indexes, sizes)).toBeFalsy();
-        expect(indexes).toEqual([1,0,1])
+        expect(indexes).toEqual([1, 0, 1]);
         expect(incrementIndexesOverflow(indexes, sizes)).toBeFalsy();
-        expect(indexes).toEqual([1,1,0])
+        expect(indexes).toEqual([1, 1, 0]);
         expect(incrementIndexesOverflow(indexes, sizes, 1)).toBeTruthy();
-    })
+    });
 });

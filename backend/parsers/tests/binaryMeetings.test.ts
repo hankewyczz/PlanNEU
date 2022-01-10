@@ -1,7 +1,7 @@
 import { parseBackendMeeting, parseBackendMeetings, parseSection } from "../parseCourse";
 import meetings from "./data/meetingTimes.data";
 import sections from "./data/sections.data";
-import { BinaryMeetingTime } from "../meetingTimes";
+import { BinaryMeetingTime } from "../binaryMeetings";
 import { MeetingDay } from "../../types/types";
 
 describe("parsing meeting times & checking overlap", () => {

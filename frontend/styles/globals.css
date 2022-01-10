@@ -57,3 +57,8 @@ a {
   font-size:  0.9rem;
   line-height: 1.25;
 }
+
+/* Remove the 'all-day' row for the calendar view */
+.rbc-allday-cell {
+  display: none;
+}

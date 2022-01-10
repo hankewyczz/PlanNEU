@@ -1,4 +1,4 @@
-import { BinaryMeetingTime } from "../parsers/meetingTimes";
+import { BinaryMeetingTime } from "../parsers/binaryMeetings";
 import { MeetingDay, ParsedSection } from "../types/types";
 import { INTERVALS_IN_DAY, INTERVAL_LENGTH, SECONDS_IN_DAY } from "../utils/global";
 

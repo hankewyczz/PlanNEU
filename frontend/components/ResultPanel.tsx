@@ -8,6 +8,7 @@ import {
     SectionWithCourse,
 } from "../types/types";
 import styles from "../styles/ResultPanel.module.css";
+import ResultCalendar from "./ResultCalendar";
 
 type Props = {
     crns: string[];
@@ -16,58 +17,6 @@ type Props = {
 };
 
 const ResultPanel: NextPage<Props> = ({ crns, courses, sections }) => {
-    const schedule: Record<MeetingDay, ScheduleMeeting[]> = {
-        "0": [],
-        "1": [],
-        "2": [],
-        "3": [],
-        "4": [],
-        "5": [],
-        "6": [],
-    };
-
-    for (const crn of crns) {
-        const section = sections[crn];
-        for (const meeting of section.meetings) {
-            // Ignore exams
-            if (meeting.type.toLowerCase().includes('exam')) {
-                continue;
-            }
-            for (const [day, day_meetings] of Object.entries(meeting.times)) {
-                // Break it down into objects
-                // Each object contains a CRN, and a single meeting (one start and one end time)
-                day_meetings.forEach((m) => {
-                    schedule[day as MeetingDay].push({
-                        name: section.classId,
-                        meeting: m,
-                    });
-                });
-            }
-        }
-    }
-
-    const schedule_elements = [];
-    for (const [day, meetings] of Object.entries(schedule)) {
-        if (meetings.length === 0) {
-            continue;
-        }
-
-        // Sort the times by start
-        meetings.sort((a, b) => a.meeting.start - b.meeting.start);
-
-        schedule_elements.push(
-            <div key={meetingDayToString(day as MeetingDay)}>
-                <b>{meetingDayToString(day as MeetingDay)}</b>
-                <ul>
-                    {meetings.map((m) => {
-                        const str = scheduleMeetingToString(m);
-                        return <li key={str}>{str}</li>;
-                    })}
-                </ul>
-            </div>
-        );
-    }
-
     return (
         <div className={styles["result-panel"]}>
             <div className={styles["result-panel-header"]}>
@@ -76,6 +25,7 @@ const ResultPanel: NextPage<Props> = ({ crns, courses, sections }) => {
                         <tr>
                             <th>CRN</th>
                             <th>Course name</th>
+                            <th>Campus</th>
                             <th>Professor(s)</th>
                             <th>Seats left</th>
                         </tr>
@@ -102,6 +52,9 @@ const ResultPanel: NextPage<Props> = ({ crns, courses, sections }) => {
                                         {section.honors ? <b>[Honors] </b> : ""}
                                     </td>
                                     <td>
+                                        {section.campus ? section.campus : <i>No campus listed</i>}
+                                    </td>
+                                    <td>
                                         {section.profs.length > 0 ? (
                                             section.profs.join(", ")
                                         ) : (
@@ -119,7 +72,7 @@ const ResultPanel: NextPage<Props> = ({ crns, courses, sections }) => {
                 </table>
             </div>
             <div className={styles["result-panel-schedule"]}>
-                {schedule_elements}
+                <ResultCalendar crns={crns} sections={sections}/>
             </div>
         </div>
     );

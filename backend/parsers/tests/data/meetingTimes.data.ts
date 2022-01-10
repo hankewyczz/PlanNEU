@@ -1,4 +1,4 @@
-import { BinaryMeetingTime } from "../../meetingTimes";
+import { BinaryMeetingTime } from "../../binaryMeetings";
 import { BackendMeeting, MeetingDay } from "../../../types/types";
 
 export default {

@@ -36,6 +36,7 @@ query generateSchedule(
             url
             profs
             meetings
+            timestamp_meetings
         }
         courses {
             name

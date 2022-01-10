@@ -35,6 +35,7 @@ const typeDef = gql`
         url: String!
         profs: [String!]!
         meetings: JSON!
+        timestamp_meetings: JSON!
     }
     type Results {
         results: [[String!]!]!

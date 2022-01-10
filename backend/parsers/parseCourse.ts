@@ -1,6 +1,6 @@
 import { Section, BackendMeeting, Course, ParsedCourse, ParsedSection, toMeetingDay } from "../types/types";
 import { INTERVALS_IN_DAY, INTERVAL_LENGTH } from "../utils/global";
-import { BinaryMeetingTime } from "./meetingTimes";
+import { BinaryMeetingTime } from "./binaryMeetings";
 
 /**
  * Parses a list of courses in place (mutating them)

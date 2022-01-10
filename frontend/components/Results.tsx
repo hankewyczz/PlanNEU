@@ -19,7 +19,8 @@ const Results: NextPage = () => {
             return err.response.errors[0].message 
         }
         catch (e) {
-            return "Unknown Error"
+            console.log(err.toString())
+            return err.toString();
         }
     }
 

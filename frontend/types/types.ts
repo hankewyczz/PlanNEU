@@ -56,8 +56,15 @@ export interface Section {
     profs: string[];
     meetings: BackendMeeting[];
 }
+
+type TimestampMeeting = {
+    start: number;
+    end: number;
+};
+
 export interface SectionWithCourse extends Section {
     classId: string;
+    timestamp_meetings: TimestampMeeting[]; 
 }
 
 export interface BackendMeeting {

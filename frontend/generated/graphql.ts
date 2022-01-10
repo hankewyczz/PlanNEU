@@ -52,7 +52,6 @@ export type QueryGenerateScheduleArgs = {
 export type Results = {
   __typename?: "Results";
   courses: Array<Course>;
-  hasNextPage: Scalars["Boolean"];
   offset?: Maybe<Array<Scalars["String"]>>;
   results: Array<Array<Scalars["String"]>>;
   sections: Array<Section>;
@@ -70,6 +69,7 @@ export type Section = {
   profs: Array<Scalars["String"]>;
   seatsCapacity: Scalars["Int"];
   seatsRemaining: Scalars["Int"];
+  timestamp_meetings: Scalars["JSON"];
   url: Scalars["String"];
   waitCapacity: Scalars["Int"];
   waitRemaining: Scalars["Int"];
@@ -110,6 +110,7 @@ export type GenerateScheduleQuery = {
       url: string;
       profs: Array<string>;
       meetings: any;
+      timestamp_meetings: any;
     }>;
     courses: Array<{
       __typename?: "Course";
@@ -161,6 +162,7 @@ export const GenerateScheduleDocument = gql`
         url
         profs
         meetings
+        timestamp_meetings
       }
       courses {
         name

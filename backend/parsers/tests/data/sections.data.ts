@@ -1,4 +1,4 @@
-import { BinaryMeetingTime } from "../../meetingTimes";
+import { BinaryMeetingTime } from "../../binaryMeetings";
 import { MeetingDay, Section } from "../../../types/types";
 
 // These are all functions, because we have methods which mutate them

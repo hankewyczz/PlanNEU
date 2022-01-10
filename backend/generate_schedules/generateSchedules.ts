@@ -1,27 +1,32 @@
 import { parseCourses } from "../parsers/parseCourse";
 import { Filter } from "../filters/filter";
-import { BinaryMeetingTime } from "../parsers/meetingTimes";
+import { BinaryMeetingTime } from "../parsers/binaryMeetings";
 import {
     CRNsResult,
     ResultsGenerator,
     Course,
-    SectionWithCourse,
+    ResultsSection,
     ParsedSection,
+    BackendMeeting,
 } from "../types/types";
 import { MAX_COURSES, MAX_POSSIBILITIES } from "../utils/global";
-
+import { TimestampMeetings } from "../parsers/timestampMeetings";
 export function generateSchedules(
     courses: Course[],
     course_filter: Filter,
     offset?: string[]
 ): ResultsGenerator {
-    // Create a CRN -> unparsed section mapping (do this first, since the sections will be mutated)
+    // Parse sections to include course IDs, and to have the meetings converted to UNIX timestamps
     const unparsed_sections = courses
         .map((c) => {
             // Sections are composed of nested primitive types, so JSON is an OK way to deep clone
-            const sections: Partial<SectionWithCourse>[] = JSON.parse(JSON.stringify(c.sections));
-            sections.forEach((sec) => (sec["classId"] = `${c.subject}${c.classId}`));
-            return sections as SectionWithCourse[];
+            const sections: Partial<ResultsSection>[] = JSON.parse(JSON.stringify(c.sections));
+            sections.forEach((sec) => {
+                // We're mutating these sections on the spot
+                sec.classId = `${c.subject}${c.classId}`;
+                sec.timestamp_meetings = new TimestampMeetings(sec.meetings as BackendMeeting[]).meetings;
+            });
+            return sections as ResultsSection[];
         })
         .flat();
 
@@ -59,9 +64,9 @@ export function generateSchedules(
 /**
  *  A helper function to increment the indexes, like an odometer - increments the first digit until overflow,
  * then the second, etc. Returns a boolean indicating if the last digit overflowed.
- * 
+ *
  * Example: sizes = [1,2,2]
- * 
+ *
  * 000 -> 001 -> 010 -> 011
  * @param indexes An array of indexes, which will be mutated
  * @param sizes An array of sizes, representing the size of the array at each index
