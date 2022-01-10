@@ -1,5 +1,4 @@
 import { BinaryMeetingTime } from "../parsers/binaryMeetings";
-import { TimestampMeeting, TimestampMeetings } from "../parsers/timestampMeetings";
 
 export type CourseHash = {
     subject: string;
@@ -113,6 +112,10 @@ export interface Section {
     meetings: BackendMeeting[];
 }
 
+export type TimestampMeeting = {
+    start: number;
+    end: number;
+};
 export interface ResultsSection extends Section {
     classId: string;
     timestamp_meetings: TimestampMeeting[]; 

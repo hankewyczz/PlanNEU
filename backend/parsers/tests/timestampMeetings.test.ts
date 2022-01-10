@@ -1,5 +1,5 @@
 import { MeetingDay } from "../../types/types";
-import { TimestampMeetings } from "../timestampMeetings";
+import { parseMeetingsToTimestamps, secondsToTimestamp } from "../timestampMeetings";
 import sections from "./data/sections.data";
 import {
     fromUnixTime,
@@ -14,17 +14,19 @@ import {
     isFriday,
     isSaturday,
 } from "date-fns";
-import { nestedArrayEquality } from "../../utils/global";
 
 describe("secondsToTimestamp", () => {
     test("Days are correct", () => {
-        const sunday = TimestampMeetings.secondsToTimestamp(MeetingDay.SUNDAY, 0);
+        // NOTE - these tests are dependant on the timezone of the computer running this
+        // (thanks to JS Date objects)
+        const sunday = secondsToTimestamp(MeetingDay.SUNDAY, 0, "BOSTON");
         const sunday_date = fromUnixTime(sunday);
+
 
         expect(isSunday(sunday_date)).toBeTruthy();
         expect(getSeconds(sunday_date)).toBe(0);
 
-        const monday = TimestampMeetings.secondsToTimestamp(MeetingDay.MONDAY, 48900);
+        const monday = secondsToTimestamp(MeetingDay.MONDAY, 48900, "BOSTON");
         const monday_date = fromUnixTime(monday);
 
         expect(isMonday(monday_date)).toBeTruthy();
@@ -32,7 +34,7 @@ describe("secondsToTimestamp", () => {
         expect(getMinutes(monday_date)).toBe(35);
         expect(getHours(monday_date)).toBe(13);
 
-        const tuesday = TimestampMeetings.secondsToTimestamp(MeetingDay.TUESDAY, 54900);
+        const tuesday = secondsToTimestamp(MeetingDay.TUESDAY, 54900, "BOSTON");
         const tuesday_date = fromUnixTime(tuesday);
 
         expect(isTuesday(tuesday_date)).toBeTruthy();
@@ -40,7 +42,7 @@ describe("secondsToTimestamp", () => {
         expect(getMinutes(tuesday_date)).toBe(15);
         expect(getHours(tuesday_date)).toBe(15);
 
-        const wednesday = TimestampMeetings.secondsToTimestamp(MeetingDay.WEDNESDAY, 54900);
+        const wednesday = secondsToTimestamp(MeetingDay.WEDNESDAY, 54900, "BOSTON");
         const wednesday_date = fromUnixTime(wednesday);
 
         expect(isWednesday(wednesday_date)).toBeTruthy();
@@ -48,33 +50,29 @@ describe("secondsToTimestamp", () => {
         expect(getMinutes(wednesday_date)).toBe(15);
         expect(getHours(wednesday_date)).toBe(15);
 
-        const thursday = fromUnixTime(
-            TimestampMeetings.secondsToTimestamp(MeetingDay.THURSDAY, 54900)
-        );
+        const thursday = fromUnixTime(secondsToTimestamp(MeetingDay.THURSDAY, 54900, "BOSTON"));
         expect(isThursday(thursday)).toBeTruthy();
 
-        const friday = fromUnixTime(TimestampMeetings.secondsToTimestamp(MeetingDay.FRIDAY, 54900));
+        const friday = fromUnixTime(secondsToTimestamp(MeetingDay.FRIDAY, 54900, "BOSTON"));
         expect(isFriday(friday)).toBeTruthy();
 
-        const saturday = fromUnixTime(
-            TimestampMeetings.secondsToTimestamp(MeetingDay.SATURDAY, 54900)
-        );
+        const saturday = fromUnixTime(secondsToTimestamp(MeetingDay.SATURDAY, 54900, "BOSTON"));
         expect(isSaturday(saturday)).toBeTruthy();
     });
 
     test("timestampMeetings construction", () => {
-        const meetings = new TimestampMeetings(sections.cs3000_202210_1().meetings);
+        const meetings = parseMeetingsToTimestamps(sections.cs3000_202210_1().meetings);
 
         const ts_meetings = [];
         ts_meetings.push({
-            start: TimestampMeetings.secondsToTimestamp(MeetingDay.TUESDAY, 48900),
-            end: TimestampMeetings.secondsToTimestamp(MeetingDay.TUESDAY, 54900),
+            start: secondsToTimestamp(MeetingDay.TUESDAY, 48900, "Boston"),
+            end: secondsToTimestamp(MeetingDay.TUESDAY, 54900, "Boston"),
         });
         ts_meetings.push({
-            start: TimestampMeetings.secondsToTimestamp(MeetingDay.FRIDAY, 48900),
-            end: TimestampMeetings.secondsToTimestamp(MeetingDay.FRIDAY, 54900),
+            start: secondsToTimestamp(MeetingDay.FRIDAY, 48900, "Boston"),
+            end: secondsToTimestamp(MeetingDay.FRIDAY, 54900, "Boston"),
         });
 
-        expect(ts_meetings.sort()).toEqual(meetings.meetings.sort());
+        expect(ts_meetings.sort()).toEqual(meetings.sort());
     });
 });

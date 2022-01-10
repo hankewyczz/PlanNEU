@@ -10,7 +10,7 @@ import { nestedArrayEquality, MAX_NUM_RESULTS } from "../../utils/global";
 import { Filter, FilterBuilder } from "../../filters/filter";
 import sections from "../../parsers/tests/data/sections.data";
 import { MeetingDay } from "../../types/types";
-import { TimestampMeetings } from "../../parsers/timestampMeetings";
+import { parseMeetingsToTimestamps } from "../../parsers/timestampMeetings";
 
 describe("Generating combinations", () => {
     let filter: Filter;
@@ -199,27 +199,27 @@ describe("Testing complete result generation", () => {
             {
                 ...sections.cs3800_202210_1(),
                 classId: "CS3800",
-                timestamp_meetings: new TimestampMeetings(sections.cs3800_202210_1().meetings),
+                timestamp_meetings: parseMeetingsToTimestamps(sections.cs3800_202210_1().meetings),
             },
             {
                 ...sections.cs3800_202210_2(),
                 classId: "CS3800",
-                timestamp_meetings: new TimestampMeetings(sections.cs3800_202210_2().meetings),
+                timestamp_meetings: parseMeetingsToTimestamps(sections.cs3800_202210_2().meetings),
             },
             {
                 ...sections.cs3000_202210_1(),
                 classId: "CS3000",
-                timestamp_meetings: new TimestampMeetings(sections.cs3000_202210_1().meetings),
+                timestamp_meetings: parseMeetingsToTimestamps(sections.cs3000_202210_1().meetings),
             },
             {
                 ...sections.cs3000_202210_2(),
                 classId: "CS3000",
-                timestamp_meetings: new TimestampMeetings(sections.cs3000_202210_2().meetings),
+                timestamp_meetings: parseMeetingsToTimestamps(sections.cs3000_202210_2().meetings),
             },
             {
                 ...sections.cs3000_202210_3(),
                 classId: "CS3000",
-                timestamp_meetings: new TimestampMeetings(sections.cs3000_202210_3().meetings),
+                timestamp_meetings: parseMeetingsToTimestamps(sections.cs3000_202210_3().meetings),
             },
         ]);
     });

@@ -10,7 +10,7 @@ import {
     BackendMeeting,
 } from "../types/types";
 import { MAX_COURSES, MAX_POSSIBILITIES } from "../utils/global";
-import { TimestampMeetings } from "../parsers/timestampMeetings";
+import { parseMeetingsToTimestamps } from "../parsers/timestampMeetings";
 export function generateSchedules(
     courses: Course[],
     course_filter: Filter,
@@ -24,7 +24,10 @@ export function generateSchedules(
             sections.forEach((sec) => {
                 // We're mutating these sections on the spot
                 sec.classId = `${c.subject}${c.classId}`;
-                sec.timestamp_meetings = new TimestampMeetings(sec.meetings as BackendMeeting[]).meetings;
+                sec.timestamp_meetings = parseMeetingsToTimestamps(
+                    sec.meetings as BackendMeeting[],
+                    sec.campus
+                );
             });
             return sections as ResultsSection[];
         })
