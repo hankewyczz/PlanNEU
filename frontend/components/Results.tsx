@@ -1,9 +1,8 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
-import { useSchedule } from "../pages/api/generateSchedule";
+import { useSchedule } from "../pages/api/useSchedule";
 import { Results } from "../types/types";
 import { FadeLoader } from "react-spinners";
-import ResultPanel from "./ResultPanel";
 import styles from "../styles/Results.module.css";
 import ResultsLoader from "./ResultsLoader";
 
@@ -14,20 +13,18 @@ const Results: NextPage = () => {
         useSchedule(router);
 
     const errToMsg = (err: any) => {
-        console.error(err)
+        console.error(err);
         try {
-            return err.response.errors[0].message 
-        }
-        catch (e) {
-            console.log(err.toString())
+            return err.response.errors[0].message;
+        } catch (e) {
+            console.log(err.toString());
             return err.toString();
         }
-    }
+    };
 
     return (
         <div className={styles["results-container"]}>
             {error ? (
-                
                 <div className={styles["results-message-container"]}>
                     <h4>We ran into a problem</h4>
                     <p>{errToMsg(error)}</p>

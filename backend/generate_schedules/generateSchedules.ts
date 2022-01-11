@@ -23,7 +23,9 @@ export function generateSchedules(
             const sections: Partial<ResultsSection>[] = JSON.parse(JSON.stringify(c.sections));
             sections.forEach((sec) => {
                 // We're mutating these sections on the spot
-                sec.classId = `${c.subject}${c.classId}`;
+                sec.classId = c.classId;
+                sec.subject = c.subject;
+                sec.class = `${c.subject}${c.classId}`
                 sec.timestamp_meetings = parseMeetingsToTimestamps(
                     sec.meetings as BackendMeeting[],
                     sec.campus

@@ -117,6 +117,8 @@ export type TimestampMeeting = {
     end: number;
 };
 export interface ResultsSection extends Section {
+    class: string;
+    subject: string;
     classId: string;
     timestamp_meetings: TimestampMeeting[]; 
 }

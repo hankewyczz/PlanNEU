@@ -1,10 +1,25 @@
 import '../styles/bootstrap.min.css'
 import '../styles/globals.css'
+import type { NextPage } from "next";
+import { FiltersProvider } from "./contexts/FiltersContext";
+import Filters from "../components/Filters";
+import Results from "../components/Results";
 
-import type { AppProps } from 'next/app'
+const Home: NextPage = () => {
 
-function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
-}
+    return (
+        <FiltersProvider>
+            <div className="column-container">
+                <div className="column-left">
+                    <Filters />
+                </div>
+                <div className="column-spacer"></div>
+                <div className="column-right">
+                    <Results />
+                </div>
+            </div>
+        </FiltersProvider>
+    );
+};
 
-export default MyApp
+export default Home;

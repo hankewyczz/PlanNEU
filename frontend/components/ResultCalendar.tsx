@@ -35,7 +35,7 @@ const ResultCalendar = (props: Props) => {
     const events = schedule_sections.flatMap((sec, idx) =>
         sec.timestamp_meetings.map((meeting) => {
             return {
-                title: sec.classId,
+                title: sec.class,
                 start: fromUnixTime(meeting.start),
                 end: fromUnixTime(meeting.end),
                 allDay: false,

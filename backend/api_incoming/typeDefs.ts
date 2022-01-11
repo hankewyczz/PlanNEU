@@ -22,6 +22,8 @@ const typeDef = gql`
     }
 
     type Section {
+        class: String!
+        subject: String!
         classId: String!
         classType: String!
         crn: String!

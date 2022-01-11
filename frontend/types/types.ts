@@ -63,6 +63,8 @@ type TimestampMeeting = {
 };
 
 export interface SectionWithCourse extends Section {
+    class: string;
+    subject: string;
     classId: string;
     timestamp_meetings: TimestampMeeting[]; 
 }

@@ -60,6 +60,7 @@ export type Results = {
 export type Section = {
   __typename?: "Section";
   campus: Scalars["String"];
+  class: Scalars["String"];
   classId: Scalars["String"];
   classType: Scalars["String"];
   crn: Scalars["String"];
@@ -69,6 +70,7 @@ export type Section = {
   profs: Array<Scalars["String"]>;
   seatsCapacity: Scalars["Int"];
   seatsRemaining: Scalars["Int"];
+  subject: Scalars["String"];
   timestamp_meetings: Scalars["JSON"];
   url: Scalars["String"];
   waitCapacity: Scalars["Int"];
@@ -97,6 +99,8 @@ export type GenerateScheduleQuery = {
     results: Array<Array<string>>;
     sections: Array<{
       __typename?: "Section";
+      class: string;
+      subject: string;
       classId: string;
       classType: string;
       crn: string;
@@ -149,6 +153,8 @@ export const GenerateScheduleDocument = gql`
       offset
       results
       sections {
+        class
+        subject
         classId
         classType
         crn

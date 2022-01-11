@@ -23,6 +23,8 @@ query generateSchedule(
         offset
         results
         sections {
+            class
+            subject
             classId
             classType
             crn

@@ -8,7 +8,6 @@ import {
 } from "../../types/types";
 import { gqlClient } from "./apiClient";
 import useSWRInfinite from "swr/infinite";
-import { useEffect } from "react";
 
 /**
  * Takes an unknown type, and returns it IF it is a string (otherwise, returns undefined)
@@ -81,8 +80,8 @@ export function useSchedule(router: NextRouter): useScheduleType {
         if (!router.isReady) {
             return null; // Don't return until ready
         }
-        
-        const offset = (prevPageData === null) ? undefined : prevPageData.nextPageOffset;
+
+        const offset = prevPageData === null ? undefined : prevPageData.nextPageOffset;
         return JSON.stringify({ ...parseVarsFromQuery(router.query), offset });
     };
 
@@ -95,7 +94,6 @@ export function useSchedule(router: NextRouter): useScheduleType {
             return transformGraphQLToSchedule(results);
         }
     );
-
 
     if (data === undefined) {
         return {
@@ -135,7 +133,6 @@ function transformGraphQLToSchedule(gql: GenerateScheduleQuery): Results {
     // Create a course mapping - subject & classId to a section
     const course_mapping: Record<string, CourseWithoutSections> = {};
     gql_results.courses.forEach((c) => (course_mapping[`${c.subject}${c.classId}`] = c));
-
 
     return {
         courses: course_mapping,
