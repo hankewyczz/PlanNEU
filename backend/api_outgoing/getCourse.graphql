@@ -6,6 +6,7 @@ query getCourse($subject: String!, $classId: String!, $termId: String!) {
       classId
       name
       coreqs
+      desc
       sections {
         classType
         crn

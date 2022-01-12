@@ -6,7 +6,7 @@ query generateSchedule(
     $filterEndTime: String
     $filterMinNumDaysFree: Int
     $filterMinSeatsLeft: Int
-    $filterMinHonors: Int,
+    $filterMinHonors: Int
     $offset: [String!]
 ) {
     generateSchedule(
@@ -38,7 +38,14 @@ query generateSchedule(
             url
             profs
             meetings
-            timestamp_meetings
+            timestamp_meetings {
+                where
+                start
+                end
+                startDate
+                endDate
+                type
+            }
         }
         courses {
             name

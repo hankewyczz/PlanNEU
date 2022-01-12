@@ -198,27 +198,37 @@ describe("Testing complete result generation", () => {
         expect(results.sections.sort()).toEqual([
             {
                 ...sections.cs3800_202210_1(),
-                classId: "CS3800",
+                subject: "CS", 
+                class: "CS3800",
+                classId: "3800",
                 timestamp_meetings: parseMeetingsToTimestamps(sections.cs3800_202210_1().meetings),
             },
             {
                 ...sections.cs3800_202210_2(),
-                classId: "CS3800",
+                class: "CS3800",
+                classId: "3800",
+                subject: "CS",
                 timestamp_meetings: parseMeetingsToTimestamps(sections.cs3800_202210_2().meetings),
             },
             {
                 ...sections.cs3000_202210_1(),
-                classId: "CS3000",
+                class: "CS3000",
+                classId: "3000",
+                subject: "CS", 
                 timestamp_meetings: parseMeetingsToTimestamps(sections.cs3000_202210_1().meetings),
             },
             {
                 ...sections.cs3000_202210_2(),
-                classId: "CS3000",
+                class: "CS3000",
+                classId: "3000",
+                subject: "CS",
                 timestamp_meetings: parseMeetingsToTimestamps(sections.cs3000_202210_2().meetings),
             },
             {
                 ...sections.cs3000_202210_3(),
-                classId: "CS3000",
+                class: "CS3000",
+                classId: "3000",
+                subject: "CS",
                 timestamp_meetings: parseMeetingsToTimestamps(sections.cs3000_202210_3().meetings),
             },
         ]);

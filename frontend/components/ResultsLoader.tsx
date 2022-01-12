@@ -1,7 +1,7 @@
 import { ReactElement } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { CourseWithoutSections, SectionWithCourse } from "../types/types";
-import ResultPanel from "./ResultPanel";
+import ResultPanel from "./ResultPanel/ResultPanel";
 import styles from "../styles/ResultsLoader.module.css"
 
 interface ResultsLoaderProps {

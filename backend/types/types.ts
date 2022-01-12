@@ -74,6 +74,7 @@ export interface Course {
     subject: string;
     classId: string;
     name: string;
+    desc: string;
     coreqs: Requisite;
     sections: Section[];
 }
@@ -113,8 +114,12 @@ export interface Section {
 }
 
 export type TimestampMeeting = {
+    where: string;
+    type: string;
     start: number;
     end: number;
+    startDate: number;
+    endDate: number;
 };
 export interface ResultsSection extends Section {
     class: string;

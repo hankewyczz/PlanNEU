@@ -22,7 +22,6 @@ describe("secondsToTimestamp", () => {
         const sunday = secondsToTimestamp(MeetingDay.SUNDAY, 0, "BOSTON");
         const sunday_date = fromUnixTime(sunday);
 
-
         expect(isSunday(sunday_date)).toBeTruthy();
         expect(getSeconds(sunday_date)).toBe(0);
 
@@ -67,10 +66,18 @@ describe("secondsToTimestamp", () => {
         ts_meetings.push({
             start: secondsToTimestamp(MeetingDay.TUESDAY, 48900, "Boston"),
             end: secondsToTimestamp(MeetingDay.TUESDAY, 54900, "Boston"),
+            endDate: 1638921600,
+            startDate: 1631055600,
+            type: "Class",
+            where: "Cargill Hall 097",
         });
         ts_meetings.push({
             start: secondsToTimestamp(MeetingDay.FRIDAY, 48900, "Boston"),
             end: secondsToTimestamp(MeetingDay.FRIDAY, 54900, "Boston"),
+            endDate: 1638921600,
+            startDate: 1631055600,
+            type: "Class",
+            where: "Cargill Hall 097",
         });
 
         expect(ts_meetings.sort()).toEqual(meetings.sort());

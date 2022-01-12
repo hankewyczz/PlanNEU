@@ -26,6 +26,7 @@ export type Course = {
   __typename?: "Course";
   classId: Scalars["String"];
   coreqs: Scalars["JSON"];
+  desc: Scalars["String"];
   name: Scalars["String"];
   subject: Scalars["String"];
   termId: Scalars["String"];
@@ -71,10 +72,20 @@ export type Section = {
   seatsCapacity: Scalars["Int"];
   seatsRemaining: Scalars["Int"];
   subject: Scalars["String"];
-  timestamp_meetings: Scalars["JSON"];
+  timestamp_meetings: Array<TimestampMeetings>;
   url: Scalars["String"];
   waitCapacity: Scalars["Int"];
   waitRemaining: Scalars["Int"];
+};
+
+export type TimestampMeetings = {
+  __typename?: "TimestampMeetings";
+  end: Scalars["Int"];
+  endDate: Scalars["Int"];
+  start: Scalars["Int"];
+  startDate: Scalars["Int"];
+  type: Scalars["String"];
+  where: Scalars["String"];
 };
 
 export type GenerateScheduleQueryVariables = Exact<{
@@ -114,7 +125,15 @@ export type GenerateScheduleQuery = {
       url: string;
       profs: Array<string>;
       meetings: any;
-      timestamp_meetings: any;
+      timestamp_meetings: Array<{
+        __typename?: "TimestampMeetings";
+        where: string;
+        start: number;
+        end: number;
+        startDate: number;
+        endDate: number;
+        type: string;
+      }>;
     }>;
     courses: Array<{
       __typename?: "Course";
@@ -168,7 +187,14 @@ export const GenerateScheduleDocument = gql`
         url
         profs
         meetings
-        timestamp_meetings
+        timestamp_meetings {
+          where
+          start
+          end
+          startDate
+          endDate
+          type
+        }
       }
       courses {
         name

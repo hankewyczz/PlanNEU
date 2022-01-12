@@ -2,12 +2,9 @@ import { Calendar, dateFnsLocalizer, Views, Formats } from "react-big-calendar";
 import { format, parse, startOfWeek, getDay, getHours, fromUnixTime } from "date-fns";
 import enUS from "date-fns/locale/en-US";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { SectionWithCourse } from "../types/types";
-import { COLORS } from "../global";
-
-const locales = {
-    "en-US": enUS,
-};
+import { CourseWithoutSections, SectionWithCourse } from "../../types/types";
+import { COLORS } from "../../global";
+import { ReactElement } from "react";
 
 const formats: Formats = {
     dayFormat: "EEE",
@@ -18,19 +15,19 @@ const localizer = dateFnsLocalizer({
     parse,
     startOfWeek,
     getDay,
-    locales,
+    locales: {
+        "en-US": enUS,
+    },
 });
 
 interface Props {
+    courses: Record<string, CourseWithoutSections>;
     sections: Record<string, SectionWithCourse>;
     crns: string[];
 }
 
-const ResultCalendar = (props: Props) => {
+const ResultCalendar = (props: Props): ReactElement => {
     const schedule_sections = props.crns.map((crn) => props.sections[crn]);
-
-    
-
 
     const events = schedule_sections.flatMap((sec, idx) =>
         sec.timestamp_meetings.map((meeting) => {
@@ -64,11 +61,11 @@ const ResultCalendar = (props: Props) => {
                 timeslots={4}
                 step={15}
                 formats={formats}
-                eventPropGetter={event => ({
+                eventPropGetter={(event) => ({
                     style: {
-                      backgroundColor: event.color,
+                        backgroundColor: event.color,
                     },
-                  })}
+                })}
             />
         </div>
     );

@@ -1,0 +1,40 @@
+.section-table {
+    width: 100%;
+    border-spacing: 0;
+    font-size: 14px;
+}
+
+.section-table > thead {
+    background-color: #EEE;
+}
+
+.section-table > thead > tr > th {
+    padding: 3px 10px;
+    text-align: left;
+}
+
+.section-table td {
+    border: 1px solid #e9e9e9;
+    padding: 3px 10px;
+    font-size: 14px;
+}
+
+.section-table td.section-lock {
+    cursor: pointer;
+    font-size: 1.75em;
+}
+
+.section-table td:nth-child(odd) {
+    border-left: none;
+    border-right: none;
+}
+.section-table tr:nth-child(even) {
+    background: #fff;
+}
+.section-table tr:nth-child(even) td {
+    border-top: none;
+    border-bottom: none;
+}
+.section-table > tbody > tr:nth-child(odd) {
+    background: #fafafb;
+}

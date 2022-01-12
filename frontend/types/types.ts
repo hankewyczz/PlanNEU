@@ -22,6 +22,7 @@ export interface Course {
     subject: string;
     classId: string;
     name: string;
+    desc: string;
     coreqs: Requisite;
     sections: Section[];
 }
@@ -57,9 +58,13 @@ export interface Section {
     meetings: BackendMeeting[];
 }
 
-type TimestampMeeting = {
+export type TimestampMeeting = {
+    where: string;
+    type: string;
     start: number;
     end: number;
+    startDate: number;
+    endDate: number;
 };
 
 export interface SectionWithCourse extends Section {

@@ -234,6 +234,7 @@ export type GetCourseQuery = {
               classId: string;
               name: string;
               coreqs?: any | null | undefined;
+              desc: string;
               sections: Array<{
                 __typename?: "Section";
                 classType: string;
@@ -266,6 +267,7 @@ export const GetCourseDocument = gql`
         classId
         name
         coreqs
+        desc
         sections {
           classType
           crn

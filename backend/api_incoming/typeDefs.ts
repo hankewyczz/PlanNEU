@@ -19,8 +19,17 @@ const typeDef = gql`
         classId: String!
         termId: String!
         coreqs: JSON!
+        desc: String!
     }
 
+    type TimestampMeetings {
+        where: String!
+        type: String!
+        start: Int!
+        end: Int!
+        startDate: Int!
+        endDate: Int!
+    }
     type Section {
         class: String!
         subject: String!
@@ -37,7 +46,7 @@ const typeDef = gql`
         url: String!
         profs: [String!]!
         meetings: JSON!
-        timestamp_meetings: JSON!
+        timestamp_meetings: [TimestampMeetings!]!
     }
     type Results {
         results: [[String!]!]!

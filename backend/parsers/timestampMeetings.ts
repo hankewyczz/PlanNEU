@@ -1,6 +1,14 @@
-import { set, getUnixTime } from "date-fns";
+import { set, getUnixTime, addDays, isDate } from "date-fns";
 import { BackendMeeting, MeetingDay, TimestampMeeting } from "../types/types";
 import { zonedTimeToUtc } from "date-fns-tz";
+import fromUnixTime from "date-fns/fromUnixTime";
+import isSunday from "date-fns/isSunday";
+import isMonday from "date-fns/isMonday";
+import isTuesday from "date-fns/isTuesday";
+import isWednesday from "date-fns/isWednesday";
+import isThursday from "date-fns/isThursday";
+import isFriday from "date-fns/isFriday";
+import isSaturday from "date-fns/isSaturday";
 
 /**
  * Converts meetings to UNIX timestamp format
@@ -20,9 +28,17 @@ export function parseMeetingsToTimestamps(
         }
         for (const [day, times] of Object.entries(meeting.times)) {
             for (const time of times) {
+                const start_date = addDays(fromUnixTime(0), meeting.startDate);
+                const end_date = addDays(fromUnixTime(0), meeting.endDate);
+
+                
                 timestamp_meetings.push({
                     start: secondsToTimestamp(day as MeetingDay, time.start, campus),
                     end: secondsToTimestamp(day as MeetingDay, time.end, campus),
+                    where: meeting.where,
+                    type: meeting.type,                    
+                    startDate: getUnixTime(start_date),
+                    endDate: getUnixTime(end_date)
                 });
             }
         }
@@ -30,13 +46,15 @@ export function parseMeetingsToTimestamps(
 
     return timestamp_meetings;
 }
+
+
 /**
  * Converts a MeetingDay and seconds into  UNIX timestamp, keeping the weekday consistent
  * @param day The weekday of this event
  * @param seconds The time (not duraction) of this event time, in seconds, from the start of the day
  * @returns A UNIX timestamp, with the same time and weekday
  */
-export function secondsToTimestamp(day: MeetingDay, seconds: number, campus: string): number {
+ export function secondsToTimestamp(day: MeetingDay, seconds: number, campus: string): number {
     // We don't care about the meeting DATE, we only care about the WEEKDAY
     // So, we just use the week of 1970-01-04, which is a Sunday
     const meeting_date = Number.parseInt(day) + 4;
