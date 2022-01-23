@@ -1,14 +1,7 @@
 import { set, getUnixTime, addDays, isDate } from "date-fns";
 import { BackendMeeting, MeetingDay, TimestampMeeting } from "../types/types";
-import { zonedTimeToUtc } from "date-fns-tz";
+import { utcToZonedTime, zonedTimeToUtc } from "date-fns-tz";
 import fromUnixTime from "date-fns/fromUnixTime";
-import isSunday from "date-fns/isSunday";
-import isMonday from "date-fns/isMonday";
-import isTuesday from "date-fns/isTuesday";
-import isWednesday from "date-fns/isWednesday";
-import isThursday from "date-fns/isThursday";
-import isFriday from "date-fns/isFriday";
-import isSaturday from "date-fns/isSaturday";
 
 /**
  * Converts meetings to UNIX timestamp format
@@ -31,7 +24,6 @@ export function parseMeetingsToTimestamps(
                 const start_date = addDays(fromUnixTime(0), meeting.startDate);
                 const end_date = addDays(fromUnixTime(0), meeting.endDate);
 
-                
                 timestamp_meetings.push({
                     start: secondsToTimestamp(day as MeetingDay, time.start, campus),
                     end: secondsToTimestamp(day as MeetingDay, time.end, campus),

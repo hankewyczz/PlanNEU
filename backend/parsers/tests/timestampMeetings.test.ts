@@ -31,7 +31,6 @@ describe("secondsToTimestamp", () => {
         expect(isMonday(monday_date)).toBeTruthy();
         expect(getSeconds(monday_date)).toBe(0);
         expect(getMinutes(monday_date)).toBe(35);
-        expect(getHours(monday_date)).toBe(13);
 
         const tuesday = secondsToTimestamp(MeetingDay.TUESDAY, 54900, "BOSTON");
         const tuesday_date = fromUnixTime(tuesday);
@@ -39,7 +38,6 @@ describe("secondsToTimestamp", () => {
         expect(isTuesday(tuesday_date)).toBeTruthy();
         expect(getSeconds(tuesday_date)).toBe(0);
         expect(getMinutes(tuesday_date)).toBe(15);
-        expect(getHours(tuesday_date)).toBe(15);
 
         const wednesday = secondsToTimestamp(MeetingDay.WEDNESDAY, 54900, "BOSTON");
         const wednesday_date = fromUnixTime(wednesday);
@@ -47,7 +45,6 @@ describe("secondsToTimestamp", () => {
         expect(isWednesday(wednesday_date)).toBeTruthy();
         expect(getSeconds(wednesday_date)).toBe(0);
         expect(getMinutes(wednesday_date)).toBe(15);
-        expect(getHours(wednesday_date)).toBe(15);
 
         const thursday = fromUnixTime(secondsToTimestamp(MeetingDay.THURSDAY, 54900, "BOSTON"));
         expect(isThursday(thursday)).toBeTruthy();
@@ -67,7 +64,7 @@ describe("secondsToTimestamp", () => {
             start: secondsToTimestamp(MeetingDay.TUESDAY, 48900, "Boston"),
             end: secondsToTimestamp(MeetingDay.TUESDAY, 54900, "Boston"),
             endDate: 1638921600,
-            startDate: 1631055600,
+            startDate: 1631059200,
             type: "Class",
             where: "Cargill Hall 097",
         });
@@ -75,11 +72,11 @@ describe("secondsToTimestamp", () => {
             start: secondsToTimestamp(MeetingDay.FRIDAY, 48900, "Boston"),
             end: secondsToTimestamp(MeetingDay.FRIDAY, 54900, "Boston"),
             endDate: 1638921600,
-            startDate: 1631055600,
+            startDate: 1631059200,
             type: "Class",
             where: "Cargill Hall 097",
         });
 
-        expect(ts_meetings.sort()).toEqual(meetings.sort());
+        expect(meetings.sort()).toEqual(ts_meetings.sort());
     });
 });
