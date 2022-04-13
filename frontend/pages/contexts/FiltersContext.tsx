@@ -36,7 +36,7 @@ export const FiltersProvider = ({ children }): ReactElement => {
                 termId: termid,
             });
         }
-    }, [router.isReady]);
+    }, [router.isReady, router.query]);
 
     const { Provider } = FiltersContext;
     return <Provider value={formData}>{children}</Provider>;

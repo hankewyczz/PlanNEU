@@ -10,7 +10,7 @@ export const LOCKED = (
     <svg
         stroke="currentColor"
         fill="currentColor"
-        stroke-width="0"
+        strokeWidth="0"
         version="1.1"
         viewBox="0 0 16 16"
         height="1em"
@@ -24,7 +24,7 @@ export const UNLOCKED = (
     <svg
         stroke="currentColor"
         fill="currentColor"
-        stroke-width="0"
+        strokeWidth="0"
         version="1.1"
         viewBox="0 0 16 16"
         height="1em"
@@ -131,7 +131,7 @@ const SectionsTable: NextPage<Props> = ({ crns, courses, sections }) => {
                                     : UNLOCKED}
                             </td>
                             <td>
-                                <a href={section.url} target="_blank" rel="noopener">
+                                <a href={section.url} target="_blank" rel="noreferrer">
                                     {crn}
                                 </a>
                             </td>
