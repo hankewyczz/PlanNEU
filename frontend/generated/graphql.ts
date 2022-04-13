@@ -137,6 +137,7 @@ export type GenerateScheduleQuery = {
     }>;
     courses: Array<{
       __typename?: "Course";
+      desc: string;
       name: string;
       subject: string;
       termId: string;

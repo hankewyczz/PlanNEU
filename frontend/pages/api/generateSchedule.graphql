@@ -53,6 +53,7 @@ query generateSchedule(
             termId
             classId
             coreqs
+            desc
         }
     }
 }
