@@ -61,10 +61,14 @@ body {
 
 .popup-content {  
   border-radius: 10px; 
-  width: 70% !important;  
+  width: 50% !important;
   padding: 3% 5% !important;
+  max-height: 70vh;
+  overflow-y: auto;
 }
-
+.modalContainer {
+  font-size: 16px;
+}
 .modalContainer > .header {
   width: 100%;
   border-bottom: 1px solid gray;
@@ -81,4 +85,8 @@ body {
   padding: 10px 5px;
   margin: auto;
   text-align: center;
+}
+
+.gap {
+  margin: 0 1%;
 }

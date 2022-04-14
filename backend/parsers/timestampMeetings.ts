@@ -43,7 +43,7 @@ export function parseMeetingsToTimestamps(
 /**
  * Converts a MeetingDay and seconds into  UNIX timestamp, keeping the weekday consistent
  * @param day The weekday of this event
- * @param seconds The time (not duraction) of this event time, in seconds, from the start of the day
+ * @param seconds The time (not duration) of this event time, in seconds, from the start of the day
  * @returns A UNIX timestamp, with the same time and weekday
  */
  export function secondsToTimestamp(day: MeetingDay, seconds: number, campus: string): number {
@@ -74,7 +74,7 @@ export function campusToTimezone(campus: string): string {
         case "CHARLOTTE, NC":
         case "BURLINGTON":
         case "NAHANT":
-            return "US/Eastern";
+            return "America/New_York";
 
         case "TORONTO, CANADA":
             return "America/Toronto";
@@ -86,10 +86,10 @@ export function campusToTimezone(campus: string): string {
         case "SILICON VALLEY, CA":
         case "SAN FRANCISCO, CA":
         case "FRIDAY HARBOR, WASHINGTON":
-            return "US/Pacific";
+            return "America/Los_Angeles";
 
         case "HAWAII":
-            return "US/Hawaii";
+            return "Pacific/Honolulu";
 
         case "LONDON":
             return "Europe/London";

@@ -24,7 +24,9 @@ function ResultsLoader({
             dataLength={results.length}
             next={loadMore}
             hasMore={hasNextPage}
-            loader={null}
+            loader={<h4>Loading more schedules...</h4>}
+            endMessage={<h5>That's all, folks! You've loaded all possible schedules for the given filters/courses.</h5>}
+
         >
             <div className={styles["results-inner-container"]}>
             {results.map((crns) => (
