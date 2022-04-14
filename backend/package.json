@@ -10,7 +10,7 @@
     "style": "yarn prettier --write . --ignore-path .gitignore",
     "lint": "yarn eslint --ignore-path .gitignore --ext .js,.jsx,.ts,.tsx .",
     "generate:graphql": "graphql-codegen --config codegen.yml",
-    "prod": "node dist/graphql/index.js"
+    "prod": "node dist/api_incoming/index.js"
 
   },
   "devDependencies": {
