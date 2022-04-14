@@ -16,6 +16,7 @@ RUN yarn install --production --frozen-lockfile
 
 FROM node:14.19.0-alpine
 WORKDIR /usr/src/app
+COPY package.json ./
 
 COPY --from=deps /usr/src/app/node_modules ./node_modules/
 COPY --from=build /usr/src/app/dist ./dist/
