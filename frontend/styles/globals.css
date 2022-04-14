@@ -57,3 +57,28 @@ body {
 .rbc-allday-cell {
   display: none;
 }
+
+
+.popup-content {  
+  border-radius: 10px; 
+  width: 70% !important;  
+  padding: 3% 5% !important;
+}
+
+.modalContainer > .header {
+  width: 100%;
+  border-bottom: 1px solid gray;
+  font-size: 28px;
+  text-align: center;
+  padding: 5px;
+}
+.modalContainer > .content {
+  width: 100%;
+  padding: 10px 5px;
+}
+.modalContainer > .actions {
+  width: 100%;
+  padding: 10px 5px;
+  margin: auto;
+  text-align: center;
+}
