@@ -22,7 +22,7 @@ on:
 env:
   PROJECT_ID: ${{ secrets.GCE_PROJECT }}
   GCE_INSTANCE: planneu-backend  # TODO: update to instance name
-  GCE_INSTANCE_ZONE: us-east1-b   # TODO: update to instance zone
+  GCE_INSTANCE_ZONE: us-east1-b  # TODO: update to instance zone
 
 jobs:
   setup-build-publish-deploy:
