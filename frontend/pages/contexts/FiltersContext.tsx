@@ -40,12 +40,12 @@ export const FiltersProvider = ({ children }): ReactElement => {
             const courses = arrCourses.map((c) => c.toUpperCase());
             const termid = typeof rawTermId === "string" ? rawTermId : rawTermId[0];
 
-            setFormData({
+            setFormData(formData => ({
                 ...formData,
                 setFormData,
                 courses: courses,
                 termId: termid,
-            });
+            }));
         }
     }, [router.isReady, router.query]);
 
@@ -79,7 +79,7 @@ export const FiltersProvider = ({ children }): ReactElement => {
         : <Popup defaultOpen={true} closeOnDocumentClick={false} closeOnEscape={false}>
             <div className="modalContainer">
                 <h2 className="header">Schedule Setup</h2>
-                <p>Please enter the courses you'd like to schedule, and the term/semester.</p>
+                <p>Please enter the courses you&apos;d like to schedule, and the term/semester.</p>
                 <p><b>Courses</b> should be formatted with the subject code followed by the course ID number.</p>
                 <ul>
                     <li>✅ CS2500</li>
@@ -112,7 +112,7 @@ export const FiltersProvider = ({ children }): ReactElement => {
                             <ol>
                                 <li>Go to <a href="https://searchneu.com/NEU">searchneu.com</a>, pick the term you want, and press the search button.</li>
                                 <li>In the address bar, your URL should look like <pre>https://searchneu.com/NEU/202310/search</pre></li>
-                                <li>Copy the string in between "/NEU/" and "/search" (in this case - "202310")</li>
+                                <li>Copy the string in between &quot;/NEU/&quot; and &quot;/search&quot; (in this case - &quot;202310&quot;)</li>
                                 <li>Paste that string into the term ID input below</li>
                             </ol>
                             <Field name='termId' validate={validTermId}>
