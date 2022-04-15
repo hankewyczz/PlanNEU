@@ -112,7 +112,7 @@ export const FiltersProvider = ({ children }): ReactElement => {
                             <ol>
                                 <li>Go to <a href="https://searchneu.com/NEU">searchneu.com</a>, pick the term you want, and press the search button.</li>
                                 <li>In the address bar, your URL should look like <pre>https://searchneu.com/NEU/202310/search</pre></li>
-                                <li>Copy the string in between &quot;/NEU/&quot; and &quot;/search&quot; (in this case - &quot;202310&quot;)</li>
+                                <li>Copy the string in between &quot;/NEU/&quot; and &quot;/search&quot; (in this case - &quot;202310&quot; [this is the term ID for Fall 2022-23, btw])</li>
                                 <li>Paste that string into the term ID input below</li>
                             </ol>
                             <Field name='termId' validate={validTermId}>
