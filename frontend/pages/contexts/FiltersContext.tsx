@@ -119,7 +119,7 @@ export const FiltersProvider = ({ children }): ReactElement => {
                                 {({ input, meta }) => (
                                     <div>
                                         <label>Term ID:</label><span className='gap'></span>
-                                        <input {...input} type="text" value="202310" placeholder="Term ID" />
+                                        <input {...input} type="text" placeholder="Term ID (use 202310 for Fall 2022)" />
                                         <span className='gap'></span>
                                         {meta.error && meta.touched && <span>{meta.error}</span>}
                                     </div>
