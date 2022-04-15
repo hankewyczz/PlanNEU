@@ -64,12 +64,15 @@ jobs:
     # Build the Docker image
     - name: Build
       run: |-
-        docker build -f backend/Dockerfile --tag "gcr.io/$PROJECT_ID/planneu-image:$GITHUB_SHA" backend
+        docker build -f backend/Dockerfile \
+          --tag "gcr.io/$PROJECT_ID/planneu-image:$GITHUB_SHA" \
+          --tag "gcr.io/$PROJECT_ID/planneu-image:latest" \
+          backend
 
     # Push the Docker image to Google Container Registry
     - name: Publish
       run: |-
-        docker push "gcr.io/$PROJECT_ID/planneu-image:$GITHUB_SHA"
+        docker push "gcr.io/$PROJECT_ID/planneu-image:latest"
 
     - name: Deploy
       run: |-
