@@ -1,5 +1,5 @@
 overwrite: true
-schema: ${BACKEND_API}
+schema: ${NEXT_PUBLIC_GRAPHQL_ENDPOINT}
 documents:
   - 'pages/api/*.graphql'
 generates:
