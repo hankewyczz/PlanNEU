@@ -57,7 +57,6 @@ export const FiltersProvider = ({ children }): ReactElement => {
         return undefined;
     };
 
-    const validTermId = value => !TERMID_PATTERN.test(value) ? 'Invalid term ID format' : undefined;
     const onSubmit = (form) => {
         const courses = form.courses
             .filter(c => c)
@@ -108,22 +107,14 @@ export const FiltersProvider = ({ children }): ReactElement => {
                             </Field>))}
                             <br />
                             <hr />
-                            For the time being:
-                            <ol>
-                                <li>Go to <a href="https://searchneu.com/NEU">searchneu.com</a>, pick the term you want, and press the search button.</li>
-                                <li>In the address bar, your URL should look like <pre>https://searchneu.com/NEU/202310/search</pre></li>
-                                <li>Copy the string in between &quot;/NEU/&quot; and &quot;/search&quot; (in this case - &quot;202310&quot; [this is the term ID for Fall 2022-23, btw])</li>
-                                <li>Paste that string into the term ID input below</li>
-                            </ol>
-                            <Field name='termId' validate={validTermId}>
-                                {({ input, meta }) => (
-                                    <div>
-                                        <label>Term ID:</label><span className='gap'></span>
-                                        <input {...input} type="text" placeholder="Term ID (use 202310 for Fall 2022)" />
-                                        <span className='gap'></span>
-                                        {meta.error && meta.touched && <span>{meta.error}</span>}
-                                    </div>
-                                )}
+                            <label>Semester/Term:</label><span className='gap'></span>
+                            <Field name="termId" component="select" initialValue="202310">
+                                <option value="202310">Fall 2022 Semester</option>
+                                <option value="202260">Summer 2 2022 Semester</option>
+                                <option value="202250">Summer Full 2022 Semester</option>
+                                <option value="202240">Summer 1 2022 Semester</option>
+                                <option value="202230">Spring 2022 Semester</option>
+                                <option value="202210">Fall 2021 Semester</option>
                             </Field>
                             <hr />
                             <div className="buttons" style={{ textAlign: 'center' }}>
