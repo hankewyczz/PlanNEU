@@ -73,4 +73,5 @@ jobs:
 
     - name: Deploy
       run: |-
-        gcloud compute instance-groups managed rolling-action replace "$GCE_INSTANCE_GROUP"
+        gcloud compute instance-groups managed rolling-action replace "$GCE_INSTANCE_GROUP" \
+          --zone "$GCE_INSTANCE_ZONE"
