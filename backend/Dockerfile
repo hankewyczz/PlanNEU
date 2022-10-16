@@ -22,5 +22,5 @@ COPY --from=deps /usr/src/app/node_modules ./node_modules/
 COPY --from=build /usr/src/app/dist ./dist/
 ENV NODE_ENV=prod
 
-EXPOSE 4001 8080
+EXPOSE 8080
 CMD ["yarn", "prod"]
