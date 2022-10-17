@@ -15,7 +15,7 @@ const server = new ApolloServer({
     resolvers,
 });
 
-server.listen(8080).then(({ url }) => {
+server.listen(80).then(({ url }) => {
     console.log(`GraphQL API ready at ${url}`);
 });
 
