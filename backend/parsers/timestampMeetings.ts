@@ -85,6 +85,7 @@ export function campusToTimezone(campus: string): string {
         case "SEATTLE, WA":
         case "SILICON VALLEY, CA":
         case "SAN FRANCISCO, CA":
+        case "OAKLAND, CA":
         case "FRIDAY HARBOR, WASHINGTON":
             return "America/Los_Angeles";
 
@@ -101,6 +102,6 @@ export function campusToTimezone(campus: string): string {
             console.error(
                 `Uh oh! Aoun must've bought a new campus - add it to the list: ${parsed_campus}`
             );
-            return "UTC";
+            return "America/New_York";
     }
 }
