@@ -5,8 +5,8 @@
   "scripts": {
     "build": "tsc",
     "test": "jest",
-    "dev": "COURSE_CATALOG_URL='https://api.searchneu.com' nodemon api_incoming/index.ts",
-    "dev:local": "COURSE_CATALOG_URL='http://localhost:4000' nodemon api_incoming/index.ts & yarn --cwd /home/zachar/coding/Sandbox/course-catalog-api/ dev",
+    "dev": "PORT=8080 COURSE_CATALOG_URL='https://api.searchneu.com' nodemon api_incoming/index.ts",
+    "dev:local": "PORT=8080 COURSE_CATALOG_URL='http://localhost:4000' nodemon api_incoming/index.ts & yarn --cwd /home/zachar/coding/Sandbox/course-catalog-api/ dev",
     "style": "yarn prettier --write . --ignore-path .gitignore",
     "lint": "yarn eslint --ignore-path .gitignore --ext .js,.jsx,.ts,.tsx .",
     "generate:graphql": "graphql-codegen --config codegen.yml",

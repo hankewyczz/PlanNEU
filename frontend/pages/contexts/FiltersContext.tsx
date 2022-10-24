@@ -108,7 +108,8 @@ export const FiltersProvider = ({ children }): ReactElement => {
                             <br />
                             <hr />
                             <label>Semester/Term:</label><span className='gap'></span>
-                            <Field name="termId" component="select" initialValue="202310">
+                            <Field name="termId" component="select" initialValue="202330">
+                                <option value="202330">Spring 2023 Semester</option>
                                 <option value="202310">Fall 2022 Semester</option>
                                 <option value="202260">Summer 2 2022 Semester</option>
                                 <option value="202250">Summer Full 2022 Semester</option>
